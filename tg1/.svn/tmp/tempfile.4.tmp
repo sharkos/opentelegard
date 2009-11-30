@@ -1,0 +1,1118 @@
+#!/usr/bin/env ruby
+# 
+=begin
+                ===============================================
+                              OpenTG BBS Project
+                        Copyright (C) 2008  Chris Tusa
+                http://www.opentg.org | telnet://bbs.opentg.org
+                ===============================================
+
+
+---[ License & Distribution ]------------------------------------------------
+
+OpenTG is distributed under the GNU General Public License version 3 (GPLv3)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+---[ File Info ]-------------------------------------------------------------
+
+ Source File: tgconfig.rb
+     Version: 0.02
+   Author(s): Chris Tusa <chris.tusa@opentg.org>
+ Description: Configuration Routines
+
+
+---[ Changelog ]-------------------------------------------------------------
+
+
+---[ TODO Items ]------------------------------------------------------------
+ 
+
+=end
+#
+# ---[ Program Code Begins ]-------------------------------------------------
+
+# Require version file
+require 'tgversion.rb'
+
+## Require ruby default libs
+require 'yaml'			# Config file format uses YAML standard
+require 'fileutils'
+require 'tmpdir'
+
+## Require add-on gems (keep this separate for tracking & documentation)
+require 'rubygems'			# Third party items
+require 'ncurses'				# Ncurses Library
+require 'dbi'
+
+## Config File Locations
+Confdir = "/etc/opentg"
+Configfile	= "#{Confdir}/opentg.conf"
+
+## Operating System's Temporary Directory
+Ostempdir = Dir.tmpdir
+
+##--------------------------------------------------------------##
+# Configuration file handling routines :: Uses YAML 		        #
+##--------------------------------------------------------------##
+class TGconfig
+	attr_accessor :makeconfig, :cfgout, :cfgin, :devmode, :osfp,
+		:newvalue, :revision, :ncscheme, :user_pwexpires, 
+		:login_maxpercall, :login_maxfailed, :login_asksecret,
+		:path_prefix, :path_ansi, :path_sqlitedb, :path_fileareas, :path_sqldumps,
+		:bbs_hostname, :bbs_name, :bbs_city, :bbs_state, :bbs_country,
+		:bbs_enabled, :bbs_allownew, :bbs_private, :bbs_consoleurl,
+		:default_gid, :sysop_alias, :sysop_mail, :sysop_name, :sysop_avail,
+		:db_driver, :db_type, :db_host, :db_port, :db_name, :db_user,
+		:db_pass, :db_usesocket, :db_socketpath
+		
+
+
+
+
+	# Config defaults - used by build
+	def initialize
+			@revision		= TGversion['version']
+			# Main BBS Values
+			@bbs_allownew	= true
+			@bbs_enabled	= true
+			@bbs_private	= false
+			@bbs_name		= "A Default OpenTG Installation"
+			@bbs_city		= "Denver"
+			@bbs_consoleurl= "ssh://bbs.opentg.org"
+			@bbs_state		= "CO"
+			@bbs_country	= "US"
+			@bbs_hostname	= "localhost"
+			@user_pwexpires= 90
+			@default_gid	= 5
+			@ncscheme		= "Telegard"
+			@login_maxpercall = "5"
+			@login_maxfailed = "10"
+			@login_asksecret = "3"
+
+			# Database Values
+			@db_driver		= "Pg"
+			@db_type 		= "PostgreSQL"
+			@db_host 		= "localhost"
+			@db_port			= "5432"
+			@db_name 		= "opentg_db"
+			@db_user 		= "opentg_user"
+			@db_pass 		= "secret_pwd"
+			@db_usesocket	= true
+			@db_socketpath = "/tmp"
+
+			# Path Values
+			@path_prefix 	= "/usr/local/opentg"
+			@path_ansi		= "#{@path_prefix}/ansi"
+			@path_fileareas= "#{@path_prefix}/fileareas"
+			@path_sqlitedb = "#{@path_prefix}/sql/DB"
+			@path_sqldumps = "#{@path_prefix}/sql/backups"
+	end
+
+##--------------------------------------------------------------##
+# This routine autogenerates a default configuration file        #
+##--------------------------------------------------------------##
+def build(osfp)
+   # Build configuration with program recommended defaults.
+		print "Do you want to create a default configuration file now? [y/N]: "
+		makeconfig = STDIN.gets.chomp
+		# Create default config values
+		if makeconfig.upcase == "Y"
+			# Check if logfile directory exists.
+			logpath="#{Logdir}"
+			if File.exists?(logpath) && File.directory?(logpath)
+			else
+				Dir.mkdir(logpath, 0655)
+				bout(Masterlog, 1, nil, "Build Config: Created directory #{Logdir}")
+			end
+			# Check if config directory exists.
+			if File.exists?(Confdir) && File.directory?(Confdir)
+			else
+				Dir.mkdir(Confdir, 0655)
+				bout(Masterlog, 1, nil, "Build Config: Created directory #{Confdir}")
+			end
+		   puts "Creating default configuration file..."
+				cfgout = TGconfig.new
+			   cfgout.revision		= @revision
+
+				cfgout.bbs_allownew	= @bbs_allownew
+				cfgout.bbs_enabled	= @bbs_enabled
+				cfgout.bbs_name 		= @bbs_name
+				cfgout.bbs_private	= @bbs_private
+				cfgout.bbs_hostname 	= @bbs_hostname
+				cfgout.bbs_city		= @bbs_city
+				cfgout.bbs_state		= @bbs_state
+				cfgout.bbs_country	= @bbs_country
+				cfgout.bbs_consoleurl= @bbs_consoleurl
+				cfgout.default_gid	= @default_gid
+				cfgout.user_pwexpires= @user_pwexpires
+				cfgout.login_maxpercall=@login_maxpercall
+				cfgout.login_maxfailed=@login_maxfailed
+				cfgout.login_asksecret=@login_asksecret
+
+				cfgout.ncscheme		= @ncscheme
+
+				cfgout.db_type 		= @db_type
+				cfgout.db_driver		= @db_driver
+				cfgout.db_host 		= @db_host
+				cfgout.db_port 		= @db_port
+				cfgout.db_name 		= @db_name
+				cfgout.db_user 		= @db_user
+				cfgout.db_pass 		= @db_pass
+				cfgout.db_usesocket 	= @db_usesocket
+				cfgout.db_socketpath	= @db_socketpath
+
+				cfgout.path_prefix	= @path_prefix
+				cfgout.path_ansi		= @path_ansi
+				cfgout.path_fileareas= @path_fileareas
+				cfgout.path_sqlitedb	= @path_sqlitedb
+				cfgout.path_sqldumps = @path_sqldumps
+
+				f = File.open(Configfile, "w")
+				f.puts YAML::dump(cfgout)
+				f.close
+				bout(Masterlog, 1, "Default configuration created", "Build Config: #{cfgout.inspect}")
+				puts "[done!]"
+				puts "Re-run this program again with --config to edit."
+   	else # Do nothing
+			puts "Skipping configuration file build."
+		end
+end
+
+
+##--------------------------------------------------------------##
+# Initialize Ncurses Interface		                             #
+##--------------------------------------------------------------##
+def ncstart(ncscheme)
+	 Ncurses.initscr		
+	 self.setnccolors(ncscheme)
+	 Ncurses.cbreak           # provide unbuffered input
+  	 Ncurses.nonl             # turn off newline translation
+	 Ncurses.clear
+end # end def ncinit
+
+
+
+
+def setnccolors(ncscheme)
+
+	Ncurses.start_color
+
+# Color Pair Reference Chart:
+#  1 = Normal Text
+#  2 = Input Form 
+#  3 = Item Value Text
+#	4 = Input Form alt
+#  5 = Section Title
+#  6 = Prompt
+#	7 = Sub Header Bar
+# 	8 = Box Color
+#	9 = Banner Color
+
+
+	case ncscheme
+		# Telegard Color Scheme
+		when "Telegard"
+			Ncurses.init_pair(1, Ncurses::COLOR_BLUE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(2, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLUE)
+			Ncurses.init_pair(3, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(4, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLUE)
+			Ncurses.init_pair(5, Ncurses::COLOR_YELLOW, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(6, Ncurses::COLOR_MAGENTA, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(7, Ncurses::COLOR_BLACK, Ncurses::COLOR_CYAN)
+			Ncurses.init_pair(8, Ncurses::COLOR_BLUE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(9, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLUE)
+	
+		# Renegade Color Scheme
+		when "Renegade"
+			Ncurses.init_pair(1, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(2, Ncurses::COLOR_YELLOW, Ncurses::COLOR_BLUE)
+			Ncurses.init_pair(3, Ncurses::COLOR_YELLOW, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(4, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLUE)
+			Ncurses.init_pair(5, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(6, Ncurses::COLOR_BLUE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(7, Ncurses::COLOR_BLACK, Ncurses::COLOR_CYAN)
+			Ncurses.init_pair(8, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(9, Ncurses::COLOR_CYAN, Ncurses::COLOR_BLUE)
+
+	 	# Monochrome Color Scheme
+	 	when "Monochrome"
+			Ncurses.init_pair(1, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(2, Ncurses::COLOR_BLACK, Ncurses::COLOR_WHITE)
+			Ncurses.init_pair(3, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(4, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(5, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(6, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(7, Ncurses::COLOR_BLACK, Ncurses::COLOR_WHITE)
+			Ncurses.init_pair(8, Ncurses::COLOR_WHITE, Ncurses::COLOR_BLACK)
+			Ncurses.init_pair(9, Ncurses::COLOR_BLACK, Ncurses::COLOR_WHITE)
+
+
+	end #end case
+
+
+
+
+end # end def ncscheme
+
+
+
+##--------------------------------------------------------------##
+# Finalize Ncurses Admin Interface                               #
+##--------------------------------------------------------------##
+def ncstop
+   Ncurses.endwin
+   return 0
+end
+
+
+##--------------------------------------------------------------##
+# NCURSES based configuration editor                             #
+#
+# TODO: By far not the best way to build this menu. 
+# This section should be revisited for cleanup in the future.
+# However, the end result is to mimik the look and feel of the
+# original telegard, so any changes should be stricly limited to
+# better ruby coding practices than actual end-user functionality 
+# In other words, this section is highly repetitive, but what 
+# built that way to have a clear understanding of the layout
+# and end result requirements.
+##--------------------------------------------------------------##
+def ncmenumain(cfgin)
+
+begin	
+	self.ncstart(cfgin.ncscheme)
+
+	 clearline = " " * 78
+
+	 mainmenuloop = 1
+	 while mainmenuloop > 0	
+	 newvalue = "" # clear the newvalue variable each loop
+
+ 	 mainwin = Ncurses.newwin(25,80,0,0)
+	 Ncurses.keypad(mainwin, true)
+		mainwin.attron(Ncurses.COLOR_PAIR(8))
+#		 mainwin.attron(Ncurses::A_BOLD)
+		 mainwin.box(0,0)
+		 mainwin.mvhline(2,1,0,78)
+	    mainwin.mvhline(17,1,0,51)
+#	    mainwin.mvhline(23,1,0,78)
+	    mainwin.mvaddstr(17,10,"[         ]")
+	    mainwin.mvaddstr(2,10, "[             ]")
+	 	 mainwin.mvaddstr(2,60, "[           ]")
+	 	 mainwin.mvaddstr(24,4, "[           ]")
+	 	 mainwin.mvaddstr(24,64, "[           ]")
+	    mainwin.mvvline(3,52,0,21)
+
+
+		mainwin.attroff(Ncurses.COLOR_PAIR(1))
+    # <START> of menu bar color scheme
+	 mainwin.attron(Ncurses.COLOR_PAIR(9))
+  	 mainwin.mvaddstr(1, 1, "#{clearline}")
+	 mainwin.attron(Ncurses::A_BOLD)
+  	 mainwin.mvaddstr(1, 1, " #{TGversion['longname']} v#{TGversion['version']}  |  #{TGversion['copyright']} #{TGversion['author']}  #{TGversion['vendor']}  |  #{TGversion['license']}")
+
+	 mainwin.attroff(Ncurses.COLOR_PAIR(4))
+    # </END> of menu bar color scheme
+    # <START> of menu title color scheme
+	 mainwin.attron(Ncurses.COLOR_PAIR(5))
+	 mainwin.attron(Ncurses::A_BOLD)
+	 mainwin.attron(Ncurses::A_UNDERLINE)
+	 	mainwin.mvaddstr(2, 12, "Main Config")
+	 	mainwin.mvaddstr(2, 62, "Sub Menus")
+	    mainwin.mvaddstr(17,12,"Toggles")
+	 mainwin.attroff(Ncurses.COLOR_PAIR(5))
+	 mainwin.attroff(Ncurses::A_BOLD)
+	 mainwin.attroff(Ncurses::A_UNDERLINE)
+
+	 # </END> of menu title color scheme
+    # <START> of attribute color scheme
+	 mainwin.attron(Ncurses.COLOR_PAIR(1))
+    # <START> of col 1 menu attributes
+  	 mainwin.mvaddstr(4, 2, "1. Hostname   : ")
+  	 mainwin.mvaddstr(5, 2, "2. BBS name   : ")
+  	 mainwin.mvaddstr(6, 2, "3. BBS city   : ")
+  	 mainwin.mvaddstr(7, 2, "4. BBS state  : ")
+  	 mainwin.mvaddstr(8, 2, "5. BBS country: ")
+  	 mainwin.mvaddstr(9, 2, "6. Console Url: ")
+#  	 mainwin.mvaddstr(10,2, "7. Website Url: ")
+#  	 mainwin.mvaddstr(11,2, "7. FTP Url    : ")
+#  	 mainwin.mvaddstr(9, 2, "6. SysOP Name : ")
+#  	 mainwin.mvaddstr(10, 2, "7. SysOP Alias: ")
+#  	 mainwin.mvaddstr(11, 2, "8. SysOP Mail : ")
+#  	 mainwin.mvaddstr(12, 2, "9. ")
+#  	 mainwin.mvaddstr(13, 2, "0. ")
+#  	 mainwin.mvaddstr(14, 2, "A. ")
+#  	 mainwin.mvaddstr(15, 2, "B. ")
+  	 mainwin.mvaddstr(19, 2, "!. BBS is enabled : ")
+  	 mainwin.mvaddstr(20, 2, "@. SysOp available: ")
+  	 mainwin.mvaddstr(21, 2, "#. Allow new users: ")
+  	 mainwin.mvaddstr(22, 2, "$. NC Color Scheme: ")
+
+
+
+
+    # </END> of col 1 menu attributes
+    # <START> of col 2 menu attributes
+	 mainwin.mvaddstr(4, 58, "rchivers")
+	 mainwin.mvaddstr(5, 58, "BS settings")
+	 mainwin.mvaddstr(6, 58, "olor schemes")
+	 mainwin.mvaddstr(7, 58, "atabase Admin")
+  	 mainwin.mvaddstr(8, 58, "xtension modules")
+  	 mainwin.mvaddstr(9, 58, "ile areas")
+	 mainwin.mvaddstr(10,58, "roup editor") 
+	 mainwin.mvaddstr(11,58, "anguage editor")
+  	 mainwin.mvaddstr(12,58, "essage areas")
+  	 mainwin.mvaddstr(13,58, "etwork settings")
+	 mainwin.mvaddstr(14,58, "ath settings") 
+	 mainwin.mvaddstr(15,58, "ser editor") 
+ 	 mainwin.mvaddstr(16,58, "eb server setup") 
+
+    mainwin.mvaddstr(24,66, "rev = #{cfgin.revision.to_s}")
+    # </END> of col 2 menu attributes
+
+         colnum = 4
+         colvalue = ["A", "B", "C", "D", "E", "F", "G", "L", "M", "N", "P", "U", "W"]
+         colidx = 0
+         while colnum < 17
+         mainwin.mvaddstr(colnum, 55, "(")
+         mainwin.attron(Ncurses::A_BOLD)
+         mainwin.mvaddstr(colnum, 56, "#{colvalue[colidx]}")
+         mainwin.attroff(Ncurses::A_BOLD)
+         mainwin.mvaddstr(colnum, 57, ")")
+                colnum = colnum + 1
+                colidx = colidx +1
+         end
+
+         mainwin.mvaddstr(21, 55, "(")
+         mainwin.attron(Ncurses::A_BOLD)
+         mainwin.mvaddstr(21, 56, "X")
+         mainwin.attroff(Ncurses::A_BOLD)
+         mainwin.mvaddstr(21, 57, ")")
+		   mainwin.attroff(Ncurses::A_BOLD)
+ 	 		mainwin.mvaddstr(21,59, " Exit")
+	 		mainwin.attroff(Ncurses.COLOR_PAIR(3))
+
+
+	 # display menu prompt
+	 mainwin.attron(Ncurses::A_BOLD)
+	 mainwin.attron(Ncurses.COLOR_PAIR(6))
+	 mainwin.mvaddstr(24, 6, "Select:")
+	 mainwin.attroff(Ncurses::A_BOLD);
+	 mainwin.attroff(Ncurses.COLOR_PAIR(6))
+
+    # </END> of attribute color scheme
+    # <START> of config value color scheme
+    mainwin.attron(Ncurses.COLOR_PAIR(3))
+    # <START> of config values
+	 mainwin.attron(Ncurses::A_BOLD)
+	 mainwin.mvaddstr(4, 18, "#{cfgin.bbs_hostname}")
+	 mainwin.mvaddstr(5, 18, "#{cfgin.bbs_name}")
+	 mainwin.mvaddstr(6, 18, "#{cfgin.bbs_city}")
+	 mainwin.mvaddstr(7, 18, "#{cfgin.bbs_state}")
+	 mainwin.mvaddstr(8,18, "#{cfgin.bbs_country}")
+	 mainwin.mvaddstr(9,18, "#{cfgin.bbs_consoleurl}")
+
+	 mainwin.mvaddstr(19,22, "#{cfgin.bbs_enabled}")
+	 mainwin.mvaddstr(20,22, "#{cfgin.sysop_avail}")
+	 mainwin.mvaddstr(21,22, "#{cfgin.bbs_allownew}")
+	 mainwin.mvaddstr(22,22, "#{cfgin.ncscheme}")
+
+	 mainwin.attroff(Ncurses::A_BOLD)
+    # </END> of config values
+	 mainwin.attroff(Ncurses.COLOR_PAIR(3))
+    # </END> of config value color scheme
+    # <START> of prompt
+	 mainwin.attron(Ncurses.COLOR_PAIR(2))
+	 mainwin.attron(Ncurses::A_BOLD)
+	 mainwin.mvaddstr(24, 14, " ")
+	 mainwin.mvaddstr(24, 14, "")
+    # </END> of prompt
+    mainwin.refresh
+	 menuitem = mainwin.getch()
+	 case menuitem
+		when Ncurses::KEY_UP, Ncurses::KEY_DOWN
+		  menuitem = nil
+		when '!'[0] # Toggle BBS enabled status off/on
+			 if cfgin.bbs_enabled == true
+				cfgin.bbs_enabled = false
+			 else
+				cfgin.bbs_enabled = true
+			 end
+		when '$'[0] # Toggle BBS enabled status off/on
+			 if cfgin.ncscheme == "Telegard"
+				cfgin.ncscheme = "Renegade"
+			 else
+				cfgin.ncscheme = "Telegard"
+			 end
+			 setnccolors(cfgin.ncscheme)
+
+		when '#'[0] # Toggle Allow NEW Users feature off/on
+			 if cfgin.bbs_allownew == true
+				cfgin.bbs_allownew = false
+			 else
+				cfgin.bbs_allownew = true
+			 end
+
+		when '@'[0] # Toggle SysOP Available status off/on
+			 if cfgin.sysop_avail == true
+				cfgin.sysop_avail = false
+			 else
+				cfgin.sysop_avail = true
+			 end
+	 	when '1'[0]	# HOSTNAME INPUT
+			 clearline = " " * 33
+			 mainwin.mvaddstr(4, 18, "#{clearline}")
+			 mainwin.move(4,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_hostname = newvalue
+				end
+		when '2'[0]	# BBS NAME INPUT
+			 clearline = " " * 33
+			 mainwin.mvaddstr(5, 18, "#{clearline}")
+			 mainwin.move(5,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_name = newvalue
+				end
+		when '3'[0]	# BBS CITY INPUT
+			 clearline = " " * 20
+			 mainwin.mvaddstr(6, 18, "#{clearline}")
+			 mainwin.move(6,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_city = newvalue
+				end
+		when '4'[0]	# BBS STATE INPUT
+			 clearline = " " * 4
+			 mainwin.mvaddstr(7, 18, "#{clearline}")
+			 mainwin.move(7,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_state = newvalue.upcase
+				end
+		when '5'[0]	# BBS COUNTRY INPUT
+			 clearline = " " * 3
+			 mainwin.mvaddstr(8, 18, "#{clearline}")
+			 mainwin.move(8,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_country = newvalue.upcase
+				end
+	   when '6'[0] # Console URL
+			 clearline = " " * 33
+			 mainwin.mvaddstr(9, 18, "#{clearline}")
+			 mainwin.move(9,18)
+	  		 mainwin.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.bbs_consoleurl = newvalue
+				end
+		when 'B'[0], 'b'[0]
+		 	 self.ncadminbbs(cfgin)
+		when 'D'[0], 'd'[0]
+			 self.ncmenudb(cfgin)
+		when 'P'[0], 'p'[0]
+			 self.ncmenupaths(cfgin)
+		when 'F'[0], 'f'[0]
+			filesmenu = Fileareas.new
+			filesmenu.cfgeditor
+		when 'U'[0], 'u'[0]
+			usermenu = User.new
+			 usermenu.cfgeditor
+		when 'G'[0], 'g'[0]
+			groupmenu = Group.new
+			 cfgin.default_gid = groupmenu.cfgeditor
+
+		when 'X'[0], 'x'[0]
+			bout(Masterlog, 1, "Saving changes to system settings...", "Conf Editor: changes logged to #{Masterlog}")
+			f = File.open(Configfile, "w")
+			f.puts YAML::dump(cfgin)
+			f.close
+			curtime = Time.now
+			lout(Masterlog, 1, "Config Editor: Changes saved @ #{curtime}")
+			lout(Masterlog, 1, "Config OUT: #{cfgin.inspect}")
+			mainmenuloop = 0
+	 end # end case
+		 mainwin.attroff(Ncurses::A_BOLD)
+	 	 mainwin.attroff(Ncurses.COLOR_PAIR(2))
+		 mainwin.delwin
+ end # end while
+ensure
+self.ncstop
+end
+end
+
+##--------------------------------------------------------------##
+# BBS Main Configuration Settings                                #
+##--------------------------------------------------------------##
+def ncadminbbs(cfgin)
+	submenuloop = 1
+	while submenuloop > 0
+	 	newvalue = "" # clear the newvalue variable each loop
+		submenu = Ncurses.newwin(23,78,2,1)
+		submenu.attron(Ncurses.COLOR_PAIR(8))
+		submenu.box(0,0)
+	   submenu.mvhline(20,1,0,76)
+		submenu.mvaddstr(0, 28, "[                   ]")
+		submenu.attroff(Ncurses.COLOR_PAIR(1))
+		submenu.clear
+	 	submenu.attron(Ncurses.COLOR_PAIR(5))
+	 	submenu.attron(Ncurses::A_BOLD)
+	 	submenu.attron(Ncurses::A_UNDERLINE)
+	 	submenu.mvaddstr(0, 30, "BBS Settings Menu")
+	 	submenu.attroff(Ncurses::A_UNDERLINE)
+ 		submenu.attron(Ncurses.COLOR_PAIR(1))
+		submenu.mvaddstr(2,2, "1. User Password Expiration:")
+		submenu.mvaddstr(3,2, "2. Default Group ID for NEW:")
+		submenu.mvaddstr(4,2, "3. Max login tries per call:")
+		submenu.mvaddstr(5,2, "4. Lock account after fails:")
+		submenu.mvaddstr(6,2, "5. Ask Secret after # fails:")
+#		submenu.mvaddstr(9,2, "6.                   :")
+#		submenu.mvaddstr(10,2,"7.                   :")
+#		submenu.mvaddstr(11,2,"8.                   :")
+#		submenu.mvaddstr(12,2,"9.                   :")
+#		submenu.mvaddstr(13,2,"0.                   :")
+	
+ 		submenu.attroff(Ncurses.COLOR_PAIR(1))
+
+		# display menu prompt
+	 	submenu.attron(Ncurses.COLOR_PAIR(6))
+	   submenu.mvaddstr(21, 2, "Selection [0-9,A-X] :")
+	   submenu.attroff(Ncurses.COLOR_PAIR(6))
+
+    	submenu.attron(Ncurses.COLOR_PAIR(3))
+	 	submenu.mvaddstr(2, 31, "#{cfgin.user_pwexpires}")
+	 	submenu.mvaddstr(3, 31, "#{cfgin.default_gid}")
+	 	submenu.mvaddstr(4, 31, "#{cfgin.login_maxpercall}  times")
+	 	submenu.mvaddstr(5, 31, "#{cfgin.login_maxfailed}  times")
+	 	submenu.mvaddstr(6, 31, "#{cfgin.login_asksecret}  times")
+#	 	submenu.mvaddstr(7, 31, "#{cfgin.db_pass}")
+#	 	submenu.mvaddstr(8, 31, "#{cfgin.db_usesocket}")
+#	 	submenu.mvaddstr(9, 31, "#{cfgin.db_socketpath}")
+    	submenu.attroff(Ncurses.COLOR_PAIR(3))
+
+		submenu.attron(Ncurses.COLOR_PAIR(2))
+		submenu.mvaddstr(21, 24, " ")
+		submenu.mvaddstr(21, 24, "")
+		submenu.refresh
+		submenuitem = submenu.getch()
+	   case submenuitem
+			when 'x'[0], 'X'[0]
+			submenuloop = 0
+		when '1'[0] # User Password Expiration
+			 clearline = " " * 3
+			 submenu.mvaddstr(2, 31, "#{clearline}")
+			 submenu.move(2,31)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.user_pwexpires = newvalue.to_i
+				end
+
+		when '2'[0] # Default NEW user GID
+			 clearline = " " * 3
+			 submenu.mvaddstr(3, 31, "#{clearline}")
+			 submenu.move(3,31)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.default_gid = newvalue.to_i
+				end
+
+		when '3'[0] # Max login attempts per connect
+			 clearline = " " * 2
+			 submenu.mvaddstr(4, 31, "#{clearline}")
+			 submenu.move(4,31)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.login_maxpercall = newvalue.to_i
+				end
+
+		when '4'[0] # Number of failed login attempts before user is locked out
+			 clearline = " " * 2
+			 submenu.mvaddstr(5, 31, "#{clearline}")
+			 submenu.move(5,31)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.login_maxfailed = newvalue.to_i
+				end
+
+		when '5'[0] # When to prompt user for secret question during login per call
+			 clearline = " " * 2
+			 submenu.mvaddstr(6, 31, "#{clearline}")
+			 submenu.move(6,31)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.login_asksecret = newvalue.to_i
+				end
+
+
+		end # end case	
+	end # end while
+	submenu.delwin
+end # end def ncadminbbs
+
+
+
+##--------------------------------------------------------------##
+# Database NCurses Sub menu                                      #
+#   TODO: Code audit here, and cleanup                           #
+##--------------------------------------------------------------##
+def ncmenudb(cfgin)
+	submenuloop = 1
+	while submenuloop > 0
+	 	newvalue = "" # clear the newvalue variable each loop
+		submenu = Ncurses.newwin(23,78,2,1)
+		submenu.attron(Ncurses.COLOR_PAIR(8))
+		submenu.box(0,0)
+	   submenu.mvhline(20,1,0,76)
+	   submenu.mvhline(13,1,0,76)
+	   submenu.mvvline(14,38,0,6)
+		submenu.attroff(Ncurses.COLOR_PAIR(1))
+		submenu.clear
+	 	submenu.attron(Ncurses.COLOR_PAIR(5))
+	 	submenu.attron(Ncurses::A_BOLD)
+	 	submenu.attron(Ncurses::A_UNDERLINE)
+	 	submenu.mvaddstr(2, 20, "Database Configuration")
+	 	submenu.mvaddstr(14, 13, "Connections")
+	 	submenu.mvaddstr(14, 51, "Maintainance")
+	 	submenu.attroff(Ncurses::A_UNDERLINE)
+ 		submenu.attron(Ncurses.COLOR_PAIR(1))
+		submenu.mvaddstr(4,2, "   Database Driver  :")
+		# hide irrelevant options for certain DB types
+		unless cfgin.db_type == "SQLite" || cfgin.db_driver == "ODBC"
+			submenu.mvaddstr(5,2, "2. Database Host    :")
+			submenu.mvaddstr(6,2, "3. Database Port    :")
+			submenu.mvaddstr(7,2, "4. Database Name    :")
+			submenu.mvaddstr(8,2, "5. Database User    :")
+			submenu.mvaddstr(9,2, "6. Database Password:")
+			#submenu.mvaddstr(10,2,"7. Use Socket?      :")
+			#submenu.mvaddstr(11,2,"8. Socket Filename  :")
+		end
+		# show database specific settings for SQLite
+		if cfgin.db_type == "SQLite"
+			submenu.mvaddstr(5,2,"2. SQLite DB Path   :")
+		end
+		# show database specific settings for ODBC
+		if cfgin.db_type == "ODBC"
+			submenu.mvaddstr(5,2,"2. Configure ODBC client")
+		end
+		submenu.mvaddstr(16,2,"T. Test Connection to DB Engine")
+		submenu.mvaddstr(16,40,"M. Perform Database Check/Repair")
+		submenu.mvaddstr(17,40,"B. Perform Database Backup")
+		submenu.mvaddstr(18,40,"R. Restore Database from Backup")
+
+	   submenu.attroff(Ncurses.COLOR_PAIR(1))
+
+		# display menu prompt
+	 	submenu.attron(Ncurses.COLOR_PAIR(6))
+	   submenu.mvaddstr(21, 2, "Selection [0-9,A-X] :")
+	   submenu.attroff(Ncurses::A_BOLD);
+	   submenu.attroff(Ncurses.COLOR_PAIR(6))
+
+    	submenu.attron(Ncurses.COLOR_PAIR(3))
+		submenu.attron(Ncurses::A_BOLD)
+	 	submenu.mvaddstr(4, 25, "#{cfgin.db_type} (#{cfgin.db_driver})")
+		# hide irrelevant options for certain DB types
+		unless cfgin.db_type == "SQLite" || cfgin.db_type == "ODBC"
+	 		submenu.mvaddstr(5, 25, "#{cfgin.db_host}")
+	 		submenu.mvaddstr(6, 25, "#{cfgin.db_port}")
+	 		submenu.mvaddstr(7, 25, "#{cfgin.db_name}")
+	 		submenu.mvaddstr(8, 25, "#{cfgin.db_user}")
+	 		submenu.mvaddstr(9, 25, "#{cfgin.db_pass}")
+		#submenu.mvaddstr(10, 24, "#{cfgin.db_usesocket}")
+		#submenu.mvaddstr(11, 24, "#{cfgin.db_socketpath}")
+		end
+		if cfgin.db_type == "SQLite"
+			submenu.mvaddstr(5,25,"#{cfgin.path_sqlitedb}")
+		end
+		submenu.attron(Ncurses.COLOR_PAIR(2))
+		submenu.mvaddstr(21, 24, " ")
+		submenu.mvaddstr(21, 24, "")
+		submenu.refresh
+		submenuitem = submenu.getch()
+	   case submenuitem
+			when 'x'[0], 'X'[0]
+			submenuloop = 0
+=begin # DISABLING DATABASE SELECTION ITEM: ONLY SUPPORT POSTGRES AT THIS TIME
+		when '1'[0] # Database Type 
+			# TODO: Open separate selection window to choose supported type
+				dbtypemenuloop = 1
+				while dbtypemenuloop > 0
+					dbtypemenu = Ncurses.newwin(10,25,6,23)
+					dbtypemenu.box(0,0)
+					dbtypemenu.mvhline(7,1,0,23)
+					dbtypemenu.clear
+					dbtypemenu.mvaddstr(0,3, "[ Select Driver ]")
+ 					dbtypemenu.attron(Ncurses.COLOR_PAIR(3))
+		 	      dbtypemenu.attron(Ncurses::A_BOLD)
+					dbtypemenu.mvaddstr(2,2, "1. PostgreSQL")
+					dbtypemenu.mvaddstr(3,2, "2. MySQL")
+					dbtypemenu.mvaddstr(4,2, "3. SQLite")
+					dbtypemenu.mvaddstr(5,2, "4. ODBC")
+					dbtypemenu.attron(Ncurses.COLOR_PAIR(6))
+					dbtypemenu.mvaddstr(8, 2, "[1-3, X] : ")
+					dbtypemenu.attron(Ncurses.COLOR_PAIR(2))
+	 				dbtypemenu.mvaddstr(8, 11, " ")
+	 				dbtypemenu.mvaddstr(8, 11, "")
+		 	      dbtypemenu.attroff(Ncurses::A_BOLD)
+					dbtypemenu.refresh
+						case(dbtypemenu.getch())
+						 	when '1'[0]	# PostGres
+								cfgin.db_driver = "Pg"
+								cfgin.db_type = "PostgreSQL"
+								cfgin.db_port = "5432"
+								dbtypemenuloop = 0
+							when '2'[0]	# MySQL
+								cfgin.db_driver = "Mysql"
+								cfgin.db_type = "MySQL"
+								cfgin.db_port = "3306"
+								dbtypemenuloop = 0
+							when '3'[0]	# Sqlite
+								cfgin.db_driver = "SQLite3"
+								cfgin.db_type = "SQLite"
+								cfgin.db_port = "file"
+								dbtypemenuloop = 0
+							when '4'[0]	# ODBC
+								cfgin.db_driver = "ODBC"
+								cfgin.db_type = "ODBC"
+								cfgin.db_port = "odbc"
+								dbtypemenuloop = 0
+							when 'x'[0], 'X'[0]
+								dbtypemenuloop = 0
+						end
+				end # End dbtypemenuloop while
+				dbtypemenu.delwin
+=end
+		when '2'[0] # Database Host
+			if cfgin.db_type == "SQLite"
+			 clearline = " " * 50
+			 submenu.mvaddstr(5, 24, "#{clearline}")
+			 submenu.move(5,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.path_sqlitedb = newvalue
+				end
+			elsif cfgin.db_type == "ODBC"
+			 #self.ncmenodbc
+			else # Normal database
+			 clearline = " " * 35
+			 submenu.mvaddstr(5, 24, "#{clearline}")
+			 submenu.move(5,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_host = newvalue
+				end
+			end
+		when '3'[0] # Database Port
+			 clearline = " " * 4
+			 submenu.mvaddstr(6, 24, "#{clearline}")
+			 submenu.move(6,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_port = newvalue
+				end
+		when '4'[0] # Database Name
+			 clearline = " " * 20
+			 submenu.mvaddstr(7, 24, "#{clearline}")
+			 submenu.move(7,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_name = newvalue
+				end
+		when '5'[0] # Database User
+			 clearline = " " * 16
+			 submenu.mvaddstr(8, 24, "#{clearline}")
+			 submenu.move(8,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_user = newvalue
+				end
+		when '6'[0] # Database Password
+			 clearline = " " * 16
+			 submenu.mvaddstr(9, 24, "#{clearline}")
+			 submenu.move(9,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_pass = newvalue
+				end
+=begin #THESE 2 MENU OPTIONS ARE RESERVED FOR FUTURE EHANCEMENT
+		when '7'[0] # Database socket toggle
+			if cfgin.db_usesocket == true
+				cfgin.db_usesocket = false
+			else
+				cfgin.db_usesocket = true
+			end
+		when '8'[0] # Socket File Path
+			 clearline = " " * 45
+			 submenu.mvaddstr(11, 24, "#{clearline}")
+			 submenu.move(11,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.db_socketpath = newvalue
+				end
+=end
+		when 'O'[0], 'o'[0] # ODBC Settings, only when ODBC is the DB type
+		when 'T'[0], 't'[0] # Test connection to database
+		  begin
+			popup = Ncurses.newwin(10,74,6,3)	
+			popup.box(0,0)
+			popup.mvaddstr(0,5,"[ Testing Database Connection ]")
+			popup.wrefresh	
+			dbc = DBI.connect("DBI:#{cfgin.db_driver}:#{cfgin.db_name}:#{cfgin.db_host}", "#{cfgin.db_user}", "#{cfgin.db_pass}")
+			popup.clear
+			row = dbc.select_one("SELECT VERSION()")
+     		dbc.disconnect if dbc
+			unless row.nil?
+				popup.mvaddstr(1,1,"#{row}")
+			end
+		 rescue DBI::DatabaseError => e
+     		popup.mvaddstr(1,1, "Connection Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e.errstr}")
+		 rescue DBI::Error => e
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::InterfaceError => e
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::NotImplementedError => e
+     		popup.mvaddstr(1,1, "DBI Not Implemented Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::OperationalError => e
+     		popup.mvaddstr(1,1, "DBI Operational Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e}")
+
+	    ensure
+			popup.attron(Ncurses::A_REVERSE)
+			popup.mvaddstr(9, 33, "[ CLOSE ]")
+			popup.move(9,37)
+			popup.wrefresh	
+			popup.getch()
+			popup.delwin
+         # disconnect from server
+		 end
+	when 'B'[0], 'b'[0] # Take database backup
+		  begin
+			popup = Ncurses.newwin(8,74,6,3)	
+			popup.box(0,0)
+			popup.mvaddstr(0,5,"[ Dumping Database ]")
+			popup.wrefresh	
+			dbc = DBI.connect("DBI:#{cfgin.db_driver}:#{cfgin.db_name}:#{cfgin.db_host}", "#{cfgin.db_user}", "#{cfgin.db_pass}")
+			popup.clear
+			row = dbc.select_one("SELECT VERSION()")
+     		dbc.disconnect if dbc
+			unless row.nil?
+				curtime = Time.now
+				timestamp = "#{curtime.year}#{curtime.month}#{curtime.day}_#{curtime.hour}#{curtime.min}"
+				dumpfile = "#{cfgin.path_sqldumps}/opentg-#{timestamp}"
+				popup.mvaddstr(1,1,"Starting export to:  #{dumpfile}")
+				popup.mvaddstr(2,1,"please wait...")
+				popup.refresh
+				# TODO: Convert to multi-database capable
+				dumpoutput = `pg_dump --file=#{dumpfile} --format=p --host=#{cfgin.db_host} --username=#{cfgin.db_user} --clean --column-inserts #{cfgin.db_name}`
+				popup.mvaddstr(3,1,"#{dumpoutput}")
+				if File.exists?(dumpfile)
+					popup.mvaddstr(4,1,"Dumpfile created: compressing with gzip...")
+					gzipoutput = `gzip -qf #{dumpfile}`
+					popup.mvaddstr(5,1,"#{gzipoutput}")
+					popup.mvaddstr(4,51,"Done!")
+					popup.refresh
+				end
+			end
+		 rescue DBI::DatabaseError => e
+     		popup.mvaddstr(1,1, "Connection Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e.errstr}")
+		 rescue DBI::Error => e
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::InterfaceError => e
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::NotImplementedError => e
+     		popup.mvaddstr(1,1, "DBI Not Implemented Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e}")
+		rescue DBI::OperationalError => e
+     		popup.mvaddstr(1,1, "DBI Operational Error: #{e.err}")
+     		popup.mvaddstr(2,1, "#{e}")
+   ensure
+			popup.attron(Ncurses::A_REVERSE)
+			popup.mvaddstr(7, 33, "[ CLOSE ]")
+			popup.move(7,37)
+			popup.wrefresh	
+			popup.getch()
+			popup.delwin
+         # disconnect from server
+		end
+		end # end case
+	end # end while
+	submenu.delwin
+end
+
+
+##--------------------------------------------------------------##
+# Paths & Filenames NCurses Sub menu                             #
+#   TODO: Code audit here, and cleanup                           #
+##--------------------------------------------------------------##
+def ncmenupaths(cfgin)
+	submenuloop = 1
+	while submenuloop > 0
+	 	newvalue = "" # clear the newvalue variable each loop
+		submenu = Ncurses.newwin(23,78,2,1)
+		submenu.attron(Ncurses.COLOR_PAIR(8))
+		submenu.box(0,0)
+	   submenu.mvhline(20,1,0,76)
+		submenu.attroff(Ncurses.COLOR_PAIR(1))
+		submenu.clear
+	 	submenu.attron(Ncurses.COLOR_PAIR(5))
+	 	submenu.attron(Ncurses::A_BOLD)
+	 	submenu.attron(Ncurses::A_UNDERLINE)
+	 	submenu.mvaddstr(2, 20, "Path & Filename Configuration Menu")
+	 	submenu.attroff(Ncurses::A_UNDERLINE)
+ 		submenu.attron(Ncurses.COLOR_PAIR(1))
+		submenu.mvaddstr(4,2, "1. TG Install Prefix :")
+		submenu.mvaddstr(5,2, "2. ANSI Files Path   :")
+		submenu.mvaddstr(6,2, "3. File Areas Storage:")
+#		submenu.mvaddstr(7,2, "4.                   :")
+#		submenu.mvaddstr(8,2, "5.                   :")
+#		submenu.mvaddstr(9,2, "6.                   :")
+#		submenu.mvaddstr(10,2,"7.                   :")
+#		submenu.mvaddstr(11,2,"8.                   :")
+#		submenu.mvaddstr(12,2,"9.                   :")
+#		submenu.mvaddstr(13,2,"0.                   :")
+	
+ 		submenu.attroff(Ncurses.COLOR_PAIR(1))
+
+		# display menu prompt
+	 	submenu.attron(Ncurses.COLOR_PAIR(6))
+	   submenu.mvaddstr(21, 2, "Selection [0-9,A-X] :")
+	   submenu.attroff(Ncurses.COLOR_PAIR(6))
+
+    	submenu.attron(Ncurses.COLOR_PAIR(3))
+	 	submenu.mvaddstr(4, 25, "#{cfgin.path_prefix}")
+	 	submenu.mvaddstr(5, 25, "#{cfgin.path_ansi}")
+	 	submenu.mvaddstr(6, 25, "#{cfgin.path_fileareas}")
+#	 	submenu.mvaddstr(7, 25, "#{cfgin.db_name}")
+#	 	submenu.mvaddstr(8, 24, "#{cfgin.db_user}")
+#	 	submenu.mvaddstr(9, 24, "#{cfgin.db_pass}")
+#	 	submenu.mvaddstr(10, 24, "#{cfgin.db_usesocket}")
+#	 	submenu.mvaddstr(11, 24, "#{cfgin.db_socketpath}")
+    	submenu.attroff(Ncurses.COLOR_PAIR(3))
+
+		submenu.attron(Ncurses.COLOR_PAIR(2))
+		submenu.mvaddstr(21, 24, " ")
+		submenu.mvaddstr(21, 24, "")
+		submenu.refresh
+		submenuitem = submenu.getch()
+	   case submenuitem
+			when 'x'[0], 'X'[0]
+			submenuloop = 0
+		when '1'[0] # Install Prefix Path
+			 clearline = " " * 50
+			 submenu.mvaddstr(4, 24, "#{clearline}")
+			 submenu.move(4,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.path_prefix = newvalue
+				end
+		when '2'[0] # Ansi Path
+			 clearline = " " * 50
+			 submenu.mvaddstr(5, 24, "#{clearline}")
+			 submenu.move(5,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.path_ansi = newvalue
+				end
+		when '3'[0] # File Area Storage prefix directory
+			 clearline = " " * 50
+			 submenu.mvaddstr(6, 24, "#{clearline}")
+			 submenu.move(6,24)
+	  		 submenu.getstr(newvalue)
+				unless newvalue.empty?
+					cfgin.path_fileareas = newvalue
+				end
+
+		end # end case	
+	end # end while
+	submenu.delwin
+end
+
+
+
+def edit
+# Edit existing config
+	cfgin = File.open(Configfile)  { |yf| YAML::load( yf ) }
+	curtime = Time.now
+	lout(Masterlog, 1, "Config Editor: started @ #{curtime}")
+	lout(Masterlog, 1, "Config IN: #{cfgin.inspect}")
+	devmode = 0
+		self.ncmenumain(cfgin)
+end
+
+
+	def check
+	# Check if Configuration exists
+		if File.exists?(Configfile)
+		   return 0
+		else
+		   return 1
+		end
+	end
+
+	def error(level)
+		@level = level
+		case @level
+
+		when 1	# File is missing
+			puts "FATAL: #{Configfile} not found\nRe-run this program again with the --config flag."
+		when 2   # File parse failed
+			puts "FATAL: Unable to parse configuration file. Invalid format or syntax error"
+		end
+	end
+
+	def load
+	# Load config and perform sanity checks.
+	# TODO: This can probably be simplified by an each statement. 
+		cfgin = File.open(Configfile)  { |yf| YAML::load( yf ) }
+		# TODO configuration file validation: 
+		return cfgin
+	end
+
+	def upgrade
+	# A function to upgrade a configuration file in place. Used when a value is
+	# missing in the configuration and needs to be populated without losing
+	# the rest of the configuration values. When publishing updates, 
+	# continue to check/append values from all version prior to 1.0 in case
+	# an agent is stale or missed a few revs. aka: beacon was off but now on.
+		# Pull in values
+		cfgin = File.open(Configfile)  { |yf| YAML::load( yf ) }
+			if cfgin.revision < @revision
+				bout(Masterlog, 1, "Upgrading configuration to latest version", "Config Version = #{cfgin.revision} / Running Version = #{@revision}")
+			# Check if value exists, if not then set to default for class
+	### EXAMPLES
+	#
+	#			if cfgin.crontype.nil?
+	#		   	cfgin.crontype = @crontype
+	#			end
+	#			if cfgin.revision.nil?
+	#				cfgin.revision = @revision
+	#		   end
+	###
+
+				cfgin.revision = @revision
+				# Output changes to file
+				bout(Masterlog, 1, "Saving changes...", nil)
+				cfgout = File.open(Configfile, "w")
+				cfgout.puts YAML::dump(cfgin)
+				cfgout.close
+			else
+				bout(Masterlog, 2, "Already at latest version. Skipping upgrade.", nil)
+			end
+	end
+end

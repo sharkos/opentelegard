@@ -1,0 +1,23 @@
+<html>
+  <title><%= controller.controller_name %> <%= controller.action_name %></title>
+  <% if @drails_config["drails"]["toolkit"] == "prototype" %>
+    <%= javascript_include_tag :defaults %>
+  <% else %>
+    <%= javascript_include_tag "dojo/dojo/dojo" %>
+    <% javascript_tag do %>
+      dojo.registerModulePath("/javascript/dojo/drails", "drails");
+      dojo.require("drails.common");
+      dojo.require("drails.monkey");
+    <% end %>
+    
+    <script type="text/javascript">
+      function jsFunc(){
+      }
+      
+      dojo.xhr('post', { content: { foo: 'bar' }, url: 'http://localhost:3000/form_observers/show' });
+    </script>
+  <% end %>
+  <body>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+               ================================================
+                      OpenTelegard/2 Operating SubSystem
+               Copyright (C) 2010, OpenTG Project :: Chris Tusa
+                            http://www.opentg.org
+               ================================================
+
+
+---[ INSTALL ]---------------------------------------------------------------
+
+OpenTelegard does not currently have a fully working environment. In order to
+setup and use the current source code snapshot from the repository, you can
+follow the steps outlined here.
+
+ Prerequisites:
+   - Preferred platform is "Linux-amd64"
+   - Preferred IDE is NetBeans >= 6.7
+   - Install a Java JRE >= 1.6
+   - Install the JRuby Interpretter (http://jruby.org)
+   - Install the following jruby gems:
+       o  gem install   rails \
+			haml \
+		        activerecord-jdbcpostgresql-adapter \
+			dojo-pkg \
+			haml_scaffold \
+			highline \
+			jdbc-postgres \
+		        rack \
+			warbler      
+
+-----------------------------------------------------------------------------
+

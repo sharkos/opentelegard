@@ -1,0 +1,72 @@
+Things I don't like about the current Rails/Prototype Integration:
+==================================================================
+- Prototype does too much in it's constructors, making things very hard to test (e.g. PeriodicalExecuter start's off it's timers by newing up an instance).  Although this is concise, testing is harder.  Maybe we can find a happy medium in Rails 3.
+- There's a lot of inline JS.  Maybe we can minimize this by doing some builder-like things and include the JS at the end of the document in Rails 3?
+
+Dojo Break:
+===========
+- Implement subclass that can call a superclass constructor with different argument arity
+
+Possible Contributions:
+=======================
+- dojox.math needs an average function for an array of numbers
+- dojox.math needs a sum function for an array of numbers
+- dojox.drails
+- toggle function for dojo.fx.Toggler
+
+DOH Contributions:
+==================
+- RSpec style test declarations
+- Nested specs
+- Pending specs
+- doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works.  Might have to create new "matchers"
+- Can't use tests like doh.is() within a deferred test
+- When a test fails, it's hard to distinguish between a syntax error and a legit test failure
+- Baked in support for regenerating a view state: see Form.EventObserver.html... pauseOnDestroy flag for debugging for an individual test?
+- Make single test running possible from within doh
+- Allow doh to run only the previously failed tests
+- Pause/Resume and/or Cancel suite run
+- doh.mock
+
+Dojo Bug Fixes:
+===============
+- dojo build does not appear to work properly when dojo is build from an external profileFile
+- does dojo XHR really put params in the URL if you are doing an HTTP Post? (adding only to content)
+
+DOH Bug Fixes:
+==============
+Setting timeout above 1000 results in weird errors:
+
+spec("it makes fucking dojo.Deferred work", function(){
+  before(function(t){
+    
+  });
+  
+  it("works", function(t){
+    //var foo = false;
+    var d = new doh.Deferred();
+    setTimeout(function() { d.callback(true); }, 2000);
+    return d;
+  });
+})
+
+Results in
+
+1 tests to run in 1 groups
+ ------------------------------------------------------------
+ GROUP "drails.tests.PeriodicalExecuter" has 1 test to run
+ 1 tests to run in 1 groups
+ ------------------------------------------------------------
+ GROUP "it makes fucking dojo.Deferred work" has 1 test to run
+ Error: test timeout in /javascripts/dojo/drails/tests/PeriodicalExecuter.html::it makes fucking dojo.Deferred work::works
+     ERROR IN:
+  (function (t) {var d = new (doh.Deferred);setTimeout(function () {d.callback(true);}, 2000);return d;})
+ FAILED test: /javascripts/dojo/drails/tests/PeriodicalExecuter.html::it makes fucking dojo.Deferred work::works 0 ms
+ PASSED test: /javascripts/dojo/drails/tests/PeriodicalExecuter.html 0 ms
+ WOOHOO!!
+ ------------------------------------------------------------
+ | TEST SUMMARY:
+ ------------------------------------------------------------
+      2 tests in 2 groups
+      1 errors
+      0 failures

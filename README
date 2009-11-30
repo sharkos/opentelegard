@@ -1,0 +1,29 @@
+               ================================================
+                      OpenTelegard/2 Operating SubSystem
+               Copyright (C) 2010, OpenTG Project :: Chris Tusa
+                            http://www.opentg.org
+               ================================================
+
+-------------
+What is this?
+-------------
+This is the OpenTelegard/2 Project (OpenTG) distribution. OpenTG is an 
+opensource project dedicated to reinventing and modernizing the BBS. 
+The concept is based on recreating the look and feel of Telegard, 
+integrated as an Operting SubSystem ontop of another Operating System. 
+
+OpenTG is a Ruby application built around the JRuby platform. 
+
+------------------------
+Installing
+------------------------
+See the INSTALL doc file that came with this file distribution for 
+instructions on getting this software up and running.
+
+
+--------------------
+Building from Source
+--------------------
+Read the BUILD doc file that came with this file distribution
+for instructions on building from source. 
+

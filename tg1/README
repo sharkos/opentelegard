@@ -1,0 +1,34 @@
+tg1 - This a deprecated version, a first attempt at writing this software. tg1 is checked in
+purely for historical purposes and reference code. It contains no code from the original
+pascal code.
+
+
+README
+                ===============================================
+                              OpenTG BBS Project
+                        Copyright (C) 2008  Chris Tusa
+                http://www.opentg.org | telnet://bbs.opentg.org
+                ===============================================
+
+
+-------------
+What is this?
+-------------
+This is the OpenTG BBS Project distribution. OpenTG is an opensource
+project dedicated to reinventing and modernizing the BBS. The concept
+is based on recreating the look and feel of Telegard.
+
+
+------------------------
+Installing
+------------------------
+See the INSTALL doc file that came with this file distribution for 
+instructions on getting this software up and running.
+
+
+--------------------
+Building from Source
+--------------------
+Read the BUILD doc file that came with this file distribution
+for instructions on building from source. 
+

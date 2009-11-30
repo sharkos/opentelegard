@@ -1,0 +1,9 @@
+OpenTG is not a fully functional product at this time. However, you may want to test it
+in a development environment. Here are the current steps to do so:
+
+
+#### CHECK OUT THE LATEST CODE
+svn co  (you probably did this already)
+
+#### See the WIKI for developers
+http://www.sharkos.org/jamwiki/en/Projects/OpenTG

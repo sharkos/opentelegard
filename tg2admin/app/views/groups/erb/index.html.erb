@@ -1,0 +1,80 @@
+<h1>Listing groups</h1>
+
+<table>
+  <tr>
+    <th>Groupname</th>
+    <th>Notes</th>
+    <th>Allowlogin</th>
+    <th>Readmail</th>
+    <th>Sendmail</th>
+    <th>Readpost</th>
+    <th>Writepost</th>
+    <th>Pagesysop</th>
+    <th>Chat</th>
+    <th>Download</th>
+    <th>Upload</th>
+    <th>Extprogs</th>
+    <th>Admin all</th>
+    <th>Admin files</th>
+    <th>Admin posts</th>
+    <th>Admin chat</th>
+    <th>Admin extprogs</th>
+    <th>Admin mail</th>
+    <th>Fileareas</th>
+    <th>Msgareas</th>
+    <th>Dailytimelimit</th>
+    <th>Maxtimedeposit</th>
+    <th>Maxtimewithdraw</th>
+    <th>Maxcredits</th>
+    <th>Maxdownloads</th>
+    <th>Maxdownloadsmb</th>
+    <th>Maxuploads</th>
+    <th>Maxuploadsmb</th>
+    <th>Mailquota</th>
+    <th>Maxbulklists</th>
+    <th>Maxposts</th>
+  </tr>
+
+<% @groups.each do |group| %>
+  <tr>
+    <td><%=h group.groupname %></td>
+    <td><%=h group.notes %></td>
+    <td><%=h group.allowlogin %></td>
+    <td><%=h group.readmail %></td>
+    <td><%=h group.sendmail %></td>
+    <td><%=h group.readpost %></td>
+    <td><%=h group.writepost %></td>
+    <td><%=h group.pagesysop %></td>
+    <td><%=h group.chat %></td>
+    <td><%=h group.download %></td>
+    <td><%=h group.upload %></td>
+    <td><%=h group.extprogs %></td>
+    <td><%=h group.admin_all %></td>
+    <td><%=h group.admin_files %></td>
+    <td><%=h group.admin_posts %></td>
+    <td><%=h group.admin_chat %></td>
+    <td><%=h group.admin_extprogs %></td>
+    <td><%=h group.admin_mail %></td>
+    <td><%=h group.fileareas %></td>
+    <td><%=h group.msgareas %></td>
+    <td><%=h group.dailytimelimit %></td>
+    <td><%=h group.maxtimedeposit %></td>
+    <td><%=h group.maxtimewithdraw %></td>
+    <td><%=h group.maxcredits %></td>
+    <td><%=h group.maxdownloads %></td>
+    <td><%=h group.maxdownloadsmb %></td>
+    <td><%=h group.maxuploads %></td>
+    <td><%=h group.maxuploadsmb %></td>
+    <td><%=h group.mailquota %></td>
+    <td><%=h group.maxbulklists %></td>
+    <td><%=h group.maxposts %></td>
+    <td><%= link_to 'Show', group %></td>
+    <td><%= link_to 'Edit', edit_group_path(group) %></td>
+    <td><%= link_to 'Destroy', group, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New group', new_group_path %>

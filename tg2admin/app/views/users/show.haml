@@ -1,0 +1,155 @@
+%div{ :dojoType => "dijit.layout.ContentPane", :title => "User: "+@user.username }
+  %table
+    %tr
+      %td
+        %strong Gid:
+      %td
+        =h @user.gid
+    %tr
+      %td
+        %strong Username:
+      %td
+        =h @user.username
+    %tr
+      %td
+        %strong Firstname:
+      %td
+        =h @user.firstname
+    %tr
+      %td
+        %strong Lastname:
+      %td
+        =h @user.lastname
+    %tr
+      %td
+        %strong Password:
+      %td
+        =h @user.password
+    %tr
+      %td
+        %strong Pwexpires:
+      %td
+        =h @user.pwexpires
+    %tr
+      %td
+        %strong Pwhint:
+      %td
+        =h @user.pwhint
+    %tr
+      %td
+        %strong Notes:
+      %td
+        =h @user.notes
+    %tr
+      %td
+        %strong City:
+      %td
+        =h @user.city
+    %tr
+      %td
+        %strong State:
+      %td
+        =h @user.state
+    %tr
+      %td
+        %strong Postalcode:
+      %td
+        =h @user.postalcode
+    %tr
+      %td
+        %strong Country:
+      %td
+        =h @user.country
+    %tr
+      %td
+        %strong Email:
+      %td
+        =h @user.email
+    %tr
+      %td
+        %strong Gender:
+      %td
+        =h @user.gender
+    %tr
+      %td
+        %strong Address1:
+      %td
+        =h @user.address1
+    %tr
+      %td
+        %strong Address2:
+      %td
+        =h @user.address2
+    %tr
+      %td
+        %strong Phone1:
+      %td
+        =h @user.phone1
+    %tr
+      %td
+        %strong Phone2:
+      %td
+        =h @user.phone2
+    %tr
+      %td
+        %strong Bday:
+      %td
+        =h @user.bday
+    %tr
+      %td
+        %strong Lastlogin:
+      %td
+        =h @user.lastlogin
+    %tr
+      %td
+        %strong Enabled:
+      %td
+        =h @user.enabled
+    %tr
+      %td
+        %strong Mailbox:
+      %td
+        =h @user.mailbox
+    %tr
+      %td
+        %strong Logintotal:
+      %td
+        =h @user.logintotal
+    %tr
+      %td
+        %strong Timebank:
+      %td
+        =h @user.timebank
+    %tr
+      %td
+        %strong Loginfailed:
+      %td
+        =h @user.loginfailed
+    %tr
+      %td
+        %strong Mailquota:
+      %td
+        =h @user.mailquota
+    %tr
+      %td
+        %strong Totalposts:
+      %td
+        =h @user.totalposts
+    %tr
+      %td
+        %strong Totaluploads:
+      %td
+        =h @user.totaluploads
+    %tr
+      %td
+        %strong Totaldownloads:
+      %td
+        =h @user.totaldownloads
+    %tr
+      %td{ :colspan => 2, :align => "right" }
+        -#= f.submit 'Create'
+        -# MAKE THIS A MODAL POPUP AND EDIT A DIALOG
+        %div{ :id=> "external", :dojoType=>"dijit.Dialog", :title=>"Edit User ::  "+@user.username, :href=>"/users/"+@user.id.to_s+"/edit", :style=>"width: 600px; height: 450px; overflow: auto; margin-left: 5px", :closable => "true", :draggable => "true" }
+        %button{ :dojoType=>"dijit.form.Button", :onClick=>"dijit.byId('external').show();", :type=>"button"}
+          Modify User - 
+          = @user.username.capitalize

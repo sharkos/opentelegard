@@ -1,0 +1,19 @@
+ansi/README
+                ===============================================
+                              OpenTG BBS Project
+                        Copyright (C) 2008  Chris Tusa
+                http://www.opentg.org | telnet://bbs.opentg.org
+                ===============================================
+
+
+-------------
+What is this?
+-------------
+This is the ANSI graphic file storage folder. Included are 2 test ansi
+graphics from the ICE collection. These should NOT be distributed with 
+the final release, as we will make our own. They exist here strictly
+for proof of concept, and we take no credit for these designs.
+
+welcome.ans	- This file should be a native UTF-8 character set compat
+welcome.ans.dos	- MS-DOS compatible ansi. Do we care in the end?
+

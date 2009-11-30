@@ -1,0 +1,626 @@
+--
+-- PostgreSQL database dump
+--
+
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = off;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET escape_string_warning = off;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: fileareas; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE fileareas (
+    areaid serial,
+    name character varying(16),
+    description text,
+    write boolean,
+    moderator integer,
+    mingid integer,
+    autoindex boolean,
+    path character varying(256),
+    password character varying(128),
+    read boolean,
+    lastindex timestamp with time zone
+);
+
+
+ALTER TABLE public.fileareas OWNER TO opentg_user;
+
+--
+-- Name: TABLE fileareas; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON TABLE fileareas IS 'File Areas Configuration';
+
+
+--
+-- Name: COLUMN fileareas.areaid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.areaid IS 'Unique ID';
+
+
+--
+-- Name: COLUMN fileareas.name; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.name IS 'File Area Name';
+
+
+--
+-- Name: COLUMN fileareas.description; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.description IS 'File Area Description';
+
+
+--
+-- Name: COLUMN fileareas.write; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.write IS 'Writeable? Uploads allowed';
+
+
+--
+-- Name: COLUMN fileareas.moderator; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.moderator IS 'Assigned Moderator';
+
+
+--
+-- Name: COLUMN fileareas.mingid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.mingid IS 'Restrict to a specific group id';
+
+
+--
+-- Name: COLUMN fileareas.autoindex; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.autoindex IS 'Allow routine scanning and auto updates';
+
+
+--
+-- Name: COLUMN fileareas.path; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.path IS 'Path to directory where files are stored for this area';
+
+
+--
+-- Name: COLUMN fileareas.password; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.password IS 'If set, require password to enter';
+
+
+--
+-- Name: COLUMN fileareas.read; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN fileareas.read IS 'Allow reads - Useful for dropboxes';
+
+
+--
+<<<<<<< .mine
+-- Name: filecategories; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+=======
+-- Name: COLUMN fileareas.lastindex; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN fileareas.lastindex IS 'Last time filearea was indexed';
+
+
+--
+-- Name: filecategories; Type: TABLE; Schema: public; Owner: ctusa; Tablespace: 
+>>>>>>> .r64
+--
+
+CREATE TABLE filecategories (
+    catid serial,
+    parent integer,
+    name character varying(64) NOT NULL,
+    description text
+);
+
+
+ALTER TABLE public.filecategories OWNER TO opentg_user;
+
+--
+-- Name: TABLE filecategories; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON TABLE filecategories IS 'Cateogies for File Areas and Message Areas';
+
+
+--
+-- Name: COLUMN filecategories.catid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN filecategories.catid IS 'Category ID';
+
+
+--
+-- Name: COLUMN filecategories.parent; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN filecategories.parent IS 'Parent Category ID if this is a sub, otherwise NULL';
+
+
+--
+-- Name: COLUMN filecategories.name; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN filecategories.name IS 'Category Name';
+
+
+--
+-- Name: COLUMN filecategories.description; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN filecategories.description IS 'Category Description';
+
+
+--
+-- Name: files; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE files (
+    fileid serial,
+    areaid integer NOT NULL,
+    filename character varying(255) NOT NULL,
+    catid integer,
+    description text,
+    owner integer,
+    checksum character varying(255),
+    version character varying(32),
+    platform integer,
+    added timestamp with time zone,
+    crcmatch boolean,
+    date timestamp with time zone,
+    size bigint
+);
+
+
+ALTER TABLE public.files OWNER TO opentg_user;
+
+--
+-- Name: TABLE files; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON TABLE files IS 'File Details';
+
+
+--
+-- Name: COLUMN files.fileid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.fileid IS 'Unique File Identifier';
+
+
+--
+-- Name: COLUMN files.areaid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.areaid IS 'File Area ID';
+
+
+--
+-- Name: COLUMN files.filename; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.filename IS 'Filename (no path)';
+
+
+--
+-- Name: COLUMN files.catid; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.catid IS 'Category ID';
+
+
+--
+-- Name: COLUMN files.description; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.description IS 'Long Description';
+
+
+--
+-- Name: COLUMN files.owner; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.owner IS 'UID of uploader or owner';
+
+
+--
+-- Name: COLUMN files.checksum; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN files.checksum IS 'File''s MD5sum for verification';
+
+
+--
+<<<<<<< .mine
+-- Name: COLUMN files.platform; Type: COMMENT; Schema: public; Owner: opentg_user
+=======
+-- Name: COLUMN files.version; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN files.version IS 'Version if applicable';
+
+
+--
+-- Name: COLUMN files.platform; Type: COMMENT; Schema: public; Owner: ctusa
+>>>>>>> .r64
+--
+
+COMMENT ON COLUMN files.platform IS 'Platform ID';
+
+
+--
+<<<<<<< .mine
+-- Name: groups; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+=======
+-- Name: COLUMN files.added; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN files.added IS 'Date this file was added';
+
+
+--
+-- Name: COLUMN files.crcmatch; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN files.crcmatch IS 'Used by index routine. Does the CRC of the file on the FS match the DB version?';
+
+
+--
+-- Name: COLUMN files.date; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN files.date IS 'File''s actual timestamp on filesystem';
+
+
+--
+-- Name: COLUMN files.size; Type: COMMENT; Schema: public; Owner: ctusa
+--
+
+COMMENT ON COLUMN files.size IS 'File''s size expressed in bytes: File.size';
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: ctusa; Tablespace: 
+>>>>>>> .r64
+--
+
+CREATE TABLE groups (
+    gid serial,
+    name character varying(25),
+    description character varying(256)
+);
+
+
+ALTER TABLE public.groups OWNER TO opentg_user;
+
+--
+-- Name: COLUMN groups.description; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN groups.description IS 'Group Short Description';
+
+
+--
+-- Name: languages; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE languages (
+    id serial,
+    lang character varying(3) NOT NULL,
+    name character varying(80) NOT NULL,
+    charset character varying(35)
+);
+
+
+ALTER TABLE public.languages OWNER TO opentg_user;
+
+--
+-- Name: TABLE languages; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON TABLE languages IS 'List of installed languages';
+
+
+--
+-- Name: COLUMN languages.id; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN languages.id IS 'Language ID #';
+
+
+--
+-- Name: COLUMN languages.lang; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN languages.lang IS 'Short Abreviation ex: en, uk, rus, de';
+
+
+--
+-- Name: COLUMN languages.name; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN languages.name IS 'Language''s Longer name';
+
+
+--
+-- Name: COLUMN languages.charset; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN languages.charset IS 'Characterset Used by Lang';
+
+
+--
+-- Name: permissions; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE permissions (
+    uid integer,
+    gid integer,
+    allowlogin boolean,
+    readmail boolean,
+    sendmail boolean,
+    readpost boolean,
+    writepost boolean,
+    pagesysop boolean,
+    chat boolean,
+    downloads boolean,
+    uploads boolean,
+    extprogs boolean,
+    admin_all boolean,
+    admin_system boolean,
+    admin_files boolean,
+    admin_msgs boolean,
+    admin_users boolean,
+    admin_groups boolean,
+    admin_chat boolean,
+    admin_extprogs boolean,
+    admin_mail boolean,
+    msgsarea boolean,
+    filesarea boolean
+);
+
+
+ALTER TABLE public.permissions OWNER TO opentg_user;
+
+--
+-- Name: COLUMN permissions.admin_chat; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN permissions.admin_chat IS 'Allow Chat Admin';
+
+
+--
+-- Name: COLUMN permissions.admin_extprogs; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN permissions.admin_extprogs IS 'Admin external programs';
+
+
+--
+-- Name: COLUMN permissions.admin_mail; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN permissions.admin_mail IS 'Admin Mail Services';
+
+
+--
+-- Name: COLUMN permissions.msgsarea; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN permissions.msgsarea IS 'Allow access to messages area submenu';
+
+
+--
+-- Name: COLUMN permissions.filesarea; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON COLUMN permissions.filesarea IS 'Allow access to files area submenu';
+
+
+--
+-- Name: platforms; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE platforms (
+    osid serial,
+    name character varying(64) NOT NULL,
+    description character varying(255)
+);
+
+
+ALTER TABLE public.platforms OWNER TO opentg_user;
+
+--
+-- Name: TABLE platforms; Type: COMMENT; Schema: public; Owner: opentg_user
+--
+
+COMMENT ON TABLE platforms IS 'List of OS Platforms';
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+CREATE TABLE users (
+    uid serial,
+    gid integer,
+    login character varying(40),
+    password character varying(128),
+    firstname character varying(30),
+    lastname character varying(30),
+    city character varying(40),
+    state character varying(3),
+    country character varying(3),
+    email character varying(60)
+);
+
+
+ALTER TABLE public.users OWNER TO opentg_user;
+
+--
+-- Data for Name: fileareas; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO fileareas VALUES (1, 'DROPBOX', 'SYSOP Dropbox (this area cannot be removed)', true, 1, 4, true, '/bbs/files/DROPBOX', NULL, false, NULL);
+INSERT INTO fileareas VALUES (2, 'PROTECTED', 'Sample Password Protected File Area', false, 1, 3, true, '/bbs/files/2', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', true, NULL);
+INSERT INTO fileareas VALUES (3, 'NEWAREA-3', 'Newly Created File Area 4', false, 1, 1, false, '/bbs/files/3', NULL, true, NULL);
+INSERT INTO fileareas VALUES (4, 'NEWAREA-4', 'Newly Created File Area 5', false, 1, 1, false, '/bbs/files/4', NULL, true, NULL);
+INSERT INTO fileareas VALUES (5, 'NEWAREA-5', 'Newly Created File Area 6', false, 1, 1, false, '/bbs/files/5', NULL, true, NULL);
+INSERT INTO fileareas VALUES (6, 'NEWAREA-6', 'Newly Created File Area 7', false, 1, 1, false, '/bbs/files/6', NULL, true, NULL);
+INSERT INTO fileareas VALUES (7, 'NEWAREA-7', 'Newly Created File Area 8', false, 1, 1, false, '/bbs/files/7', NULL, true, NULL);
+INSERT INTO fileareas VALUES (8, 'NEWAREA-8', 'Newly Created File Area 9', false, 1, 1, false, '/bbs/files/8', NULL, true, NULL);
+
+
+--
+-- Data for Name: filecategories; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO filecategories VALUES (1, NULL, 'Unsorted', 'Files that have not been placed into a category');
+
+
+--
+-- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO files VALUES (6, 2, 'sourdough_x86-1.2.12-r1.src.tar.bz2', 1, 'Source Code to some made up program, testfile in db', 1, NULL, '1.1', 1, NULL, NULL, NULL, NULL);
+INSERT INTO files VALUES (5, 2, 'tgdeps-0.3.tgz', 1, 'TG Dependencies Tarballed', 1, NULL, '1.1', 1, NULL, NULL, NULL, NULL);
+INSERT INTO files VALUES (4, 2, 'tgpub-0.2.zip', 1, 'TG Public files zipped', 1, NULL, '1.1', 1, NULL, NULL, NULL, NULL);
+INSERT INTO files VALUES (3, 2, 'area2filetest.rar', 3, 'Another test file in a different area', 1, 'd41d8cd98f00b204e9800998ecf8427e', '0.1', 4, NULL, NULL, NULL, NULL);
+INSERT INTO files VALUES (2, 2, 'testfile.tgz', 1, 'A test file tarball', 1, 'd41d8cd98f00b204e9800998ecf8427e', '1.1', 1, '2009-04-03 22:11:58-06', true, NULL, NULL);
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO groups VALUES (1, 'super', 'Full Administration Rights (aka: SYSOP)');
+INSERT INTO groups VALUES (6, 'locked', 'No Permissions (Account Locked)');
+INSERT INTO groups VALUES (5, 'new', 'New user default privilges.');
+INSERT INTO groups VALUES (4, 'user', 'Regular User');
+INSERT INTO groups VALUES (3, 'poweruser', 'User with Extended Rights');
+INSERT INTO groups VALUES (2, 'poweradmin', 'Co-SysOP or assistant admin.');
+
+
+--
+-- Data for Name: languages; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO languages VALUES (1, 'us', 'US English', 'UTF-8');
+
+
+--
+-- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO permissions VALUES (2, NULL, true, true, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true);
+INSERT INTO permissions VALUES (1, NULL, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
+INSERT INTO permissions VALUES (NULL, 5, true, true, false, true, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, true, true);
+INSERT INTO permissions VALUES (NULL, 4, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, true, true);
+INSERT INTO permissions VALUES (NULL, 1, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
+INSERT INTO permissions VALUES (NULL, 3, true, true, true, true, true, true, true, false, false, true, false, false, false, false, false, false, false, false, false, true, true);
+INSERT INTO permissions VALUES (NULL, 2, true, true, true, true, true, true, true, false, false, true, false, false, true, true, true, true, true, false, true, true, true);
+INSERT INTO permissions VALUES (NULL, 6, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false);
+
+
+--
+-- Data for Name: platforms; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO platforms VALUES (1, 'linux-x86', 'Linux x86 and compatible');
+INSERT INTO platforms VALUES (2, 'linux-amd64', 'Linux 64-bit AMD64/EMT64');
+INSERT INTO platforms VALUES (3, 'linux-ppc', 'Linux for PowerPC');
+INSERT INTO platforms VALUES (4, 'linux-other', 'Linux on other hardware');
+INSERT INTO platforms VALUES (5, 'no-arch', 'Multi Platform');
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: opentg_user
+--
+
+INSERT INTO users VALUES (1, 1, 'sysop', 'bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2', 'System', 'Operator', 'Denver', 'CO', 'US', 'sysop@localhost');
+INSERT INTO users VALUES (2, 5, 'newuser', NULL, 'NEW', 'User', 'Nowhere', 'NW', 'US', 'new@localhost');
+
+
+--
+-- Name: categories_catid_key; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY filecategories
+    ADD CONSTRAINT categories_catid_key UNIQUE (catid);
+
+
+--
+-- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY filecategories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (name);
+
+
+--
+-- Name: fileareas_id_key; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY fileareas
+    ADD CONSTRAINT fileareas_id_key UNIQUE (areaid);
+
+
+--
+-- Name: files_fileid_key; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY files
+    ADD CONSTRAINT files_fileid_key UNIQUE (fileid);
+
+
+--
+-- Name: files_pkey; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY files
+    ADD CONSTRAINT files_pkey PRIMARY KEY (filename);
+
+
+--
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: opentg_user; Tablespace: 
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

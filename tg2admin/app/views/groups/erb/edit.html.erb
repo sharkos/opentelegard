@@ -1,0 +1,136 @@
+<h1>Editing group</h1>
+
+<% form_for(@group) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :groupname %><br />
+    <%= f.text_field :groupname %>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.label :allowlogin %><br />
+    <%= f.check_box :allowlogin %>
+  </p>
+  <p>
+    <%= f.label :readmail %><br />
+    <%= f.check_box :readmail %>
+  </p>
+  <p>
+    <%= f.label :sendmail %><br />
+    <%= f.check_box :sendmail %>
+  </p>
+  <p>
+    <%= f.label :readpost %><br />
+    <%= f.check_box :readpost %>
+  </p>
+  <p>
+    <%= f.label :writepost %><br />
+    <%= f.check_box :writepost %>
+  </p>
+  <p>
+    <%= f.label :pagesysop %><br />
+    <%= f.check_box :pagesysop %>
+  </p>
+  <p>
+    <%= f.label :chat %><br />
+    <%= f.check_box :chat %>
+  </p>
+  <p>
+    <%= f.label :download %><br />
+    <%= f.check_box :download %>
+  </p>
+  <p>
+    <%= f.label :upload %><br />
+    <%= f.check_box :upload %>
+  </p>
+  <p>
+    <%= f.label :extprogs %><br />
+    <%= f.check_box :extprogs %>
+  </p>
+  <p>
+    <%= f.label :admin_all %><br />
+    <%= f.check_box :admin_all %>
+  </p>
+  <p>
+    <%= f.label :admin_files %><br />
+    <%= f.check_box :admin_files %>
+  </p>
+  <p>
+    <%= f.label :admin_posts %><br />
+    <%= f.check_box :admin_posts %>
+  </p>
+  <p>
+    <%= f.label :admin_chat %><br />
+    <%= f.check_box :admin_chat %>
+  </p>
+  <p>
+    <%= f.label :admin_extprogs %><br />
+    <%= f.check_box :admin_extprogs %>
+  </p>
+  <p>
+    <%= f.label :admin_mail %><br />
+    <%= f.check_box :admin_mail %>
+  </p>
+  <p>
+    <%= f.label :fileareas %><br />
+    <%= f.check_box :fileareas %>
+  </p>
+  <p>
+    <%= f.label :msgareas %><br />
+    <%= f.check_box :msgareas %>
+  </p>
+  <p>
+    <%= f.label :dailytimelimit %><br />
+    <%= f.text_field :dailytimelimit %>
+  </p>
+  <p>
+    <%= f.label :maxtimedeposit %><br />
+    <%= f.text_field :maxtimedeposit %>
+  </p>
+  <p>
+    <%= f.label :maxtimewithdraw %><br />
+    <%= f.text_field :maxtimewithdraw %>
+  </p>
+  <p>
+    <%= f.label :maxcredits %><br />
+    <%= f.text_field :maxcredits %>
+  </p>
+  <p>
+    <%= f.label :maxdownloads %><br />
+    <%= f.text_field :maxdownloads %>
+  </p>
+  <p>
+    <%= f.label :maxdownloadsmb %><br />
+    <%= f.text_field :maxdownloadsmb %>
+  </p>
+  <p>
+    <%= f.label :maxuploads %><br />
+    <%= f.text_field :maxuploads %>
+  </p>
+  <p>
+    <%= f.label :maxuploadsmb %><br />
+    <%= f.text_field :maxuploadsmb %>
+  </p>
+  <p>
+    <%= f.label :mailquota %><br />
+    <%= f.text_field :mailquota %>
+  </p>
+  <p>
+    <%= f.label :maxbulklists %><br />
+    <%= f.text_field :maxbulklists %>
+  </p>
+  <p>
+    <%= f.label :maxposts %><br />
+    <%= f.text_field :maxposts %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @group %> |
+<%= link_to 'Back', groups_path %>

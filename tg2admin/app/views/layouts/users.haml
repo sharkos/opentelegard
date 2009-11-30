@@ -1,0 +1,57 @@
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang=> "en" }
+%head
+  %meta{ :httpequiv => "content-type", :content=> "text/html;charset=UTF-8" }
+  %title
+    Users:
+    = controller.action_name
+
+  %script{ :type=> "text/javascript", :src=>"/javascripts/dojo/dojo/dojo.js", :djConfig=>"parseOnLoad: true" }
+  %script{ :type=> "text/javascript" }
+    dojo.require("dojo.parser")
+    dojo.require("dijit.Dialog");
+    dojo.require("dijit.layout.BorderContainer");
+    dojo.require("dijit.layout.TabContainer");
+    dojo.require("dijit.layout.AccordionContainer");
+    dojo.require("dijit.layout.ContentPane");
+    dojo.require("dijit.form.Button");
+    dojo.require("dijit.form.TextBox");
+    dojo.require("dijit.form.SimpleTextarea");
+    dojo.require("dijit.form.DateTextBox");
+    dojo.require("dijit.form.CheckBox");
+  %link{ :href=> "/javascripts/dojo/dojo/resources/dojo.css", :rel=>"stylesheet", :type=>"text/css", :media=>"screen" }
+  %link{ :href=>"/javascripts/dojo/dijit/themes/tundra/tundra.css", :rel=>"stylesheet", :type=>"text/css", :media=>"screen"}
+%body.tundra
+  %div{ :dojoType => "dijit.layout.BorderContainer", :style => "width: 85%; height: 85%;" }
+    %div{ :dojoType => "dijit.layout.ContentPane", :region=>"top" }
+      OpenTelegard/2 Adminstration Console
+      %p{ :style => "color: green" }
+        = flash[:notice]
+    %div{ :dojoType => "dijit.layout.AccordionContainer", :region => "leading" }
+      %div{ :dojoType => "dijit.layout.AccordionPane", :title => "General Settings" }
+        %ul{ :type => "square" }
+          %li System Information
+          %li Network Settings
+      %div{ :dojoType => "dijit.layout.AccordionPane", :title => "Users  & Groups", :selected => "selected" }
+        %ul{ :type => "square" }
+          %li
+            %a{ :href=>"/users/"}
+              Manage Users
+          %li 
+            %a{ :href=>"/users/new"}
+              Add New User
+          %li
+            %a{ :href=>"/groups/"}
+              Manage Groups
+          %li
+            %a{ :href=>"/groups/new"}
+              Add New Group
+      %div{ :dojoType => "dijit.layout.AccordionPane", :title => "Content Areas" }
+        %ul{ :type => "square" }
+          %li Manage File Areas
+          %li Manage Message Areas
+          %li Manage Chat Feature
+    %div{ :dojoType => "dijit.layout.TabContainer", :region => "center" }
+      = yield
+    %div{ :dojoType => "dijit.layout.ContentPane", :region => "bottom" }
+      %p
+      (C)opyright 2009, OpenTG

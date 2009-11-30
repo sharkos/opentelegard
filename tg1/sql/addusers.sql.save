@@ -1,0 +1,6 @@
+			if curuid = totaluids
+				curuid = 1 
+			else
+				curuid + 1
+			end 
+

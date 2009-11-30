@@ -1,0 +1,10 @@
+INSERT INTO `users` VALUES 
+(2,2,'tgtest2','bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2','Test','Account','Nowhere','TX','US','tgtest@bbs.opentg.org');
+INSERT INTO `users` VALUES 
+(3,3,'tgtest3','bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2','Chris','Tusa','Denver','CO','US','ctusa@bbs.opentg.org');
+INSERT INTO `users` VALUES 
+(4,4,'tgtest4','bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2','Arch','Linux','Nowhere','TX','US','arch@bbs.opentg.org');
+INSERT INTO `users` VALUES 
+(5,5,'tgtest5','bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2','Ruby','Enthusiest','Everywhere','EE','EE','rubyforge@bbs.opentg.org');
+INSERT INTO `users` VALUES 
+(6,6,'tgtest6','bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2','Locked','Account','Limbo','LA','US','locked@bbs.opentg.org');

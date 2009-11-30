@@ -1,0 +1,2 @@
+class UpdaterController < ApplicationController
+end

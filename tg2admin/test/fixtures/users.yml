@@ -1,0 +1,63 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  gid: 1
+  username: MyString
+  firstname: MyString
+  lastname: MyString
+  password: MyString
+  pwexpires: 2009-11-28
+  pwhint: MyString
+  notes: MyText
+  city: MyString
+  state: MyString
+  postalcode: MyString
+  country: MyString
+  email: MyString
+  gender: MyString
+  address1: MyString
+  address2: MyString
+  phone1: MyString
+  phone2: MyString
+  bday: 2009-11-28
+  lastlogin: 2009-11-28 21:02:25
+  enabled: false
+  mailbox: false
+  logintotal: 1
+  timebank: 1
+  loginfailed: 1
+  mailquota: 1
+  totalposts: 1
+  totaluploads: 1
+  totaldownloads: 
+
+two:
+  gid: 1
+  username: MyString
+  firstname: MyString
+  lastname: MyString
+  password: MyString
+  pwexpires: 2009-11-28
+  pwhint: MyString
+  notes: MyText
+  city: MyString
+  state: MyString
+  postalcode: MyString
+  country: MyString
+  email: MyString
+  gender: MyString
+  address1: MyString
+  address2: MyString
+  phone1: MyString
+  phone2: MyString
+  bday: 2009-11-28
+  lastlogin: 2009-11-28 21:02:25
+  enabled: false
+  mailbox: false
+  logintotal: 1
+  timebank: 1
+  loginfailed: 1
+  mailquota: 1
+  totalposts: 1
+  totaluploads: 1
+  totaldownloads: 

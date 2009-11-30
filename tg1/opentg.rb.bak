@@ -1,0 +1,446 @@
+#!/usr/bin/env ruby
+# 
+=begin
+                ===============================================
+                              OpenTG BBS Project
+                        Copyright (C) 2008  Chris Tusa
+                http://www.opentg.org | telnet://bbs.opentg.org
+                ===============================================
+
+
+---[ License & Distribution ]------------------------------------------------
+
+OpenTG is distributed under the GNU General Public License version 3 (GPLv3)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+---[ File Info ]-------------------------------------------------------------
+
+ Source File: opentg.rb
+     Version: 0.02
+   Author(s): Chris Tusa <chris.tusa@opentg.org>
+ Modify Date: 20090312
+ Description: Main execution code
+
+
+---[ Changelog ]-------------------------------------------------------------
+
+ * 20090312 Adapted from ALPS code as a structural template
+
+---[ TODO Items ]------------------------------------------------------------
+ 
+ * Incorporate ANSI colors
+ * As things grow, break out into modules.
+ * Revisit NCurses Menuing System and cleanup code for more friendly style.
+
+=end
+#
+# ---[ Program Code Begins ]-------------------------------------------------
+
+# Location of libraries 
+$:.push '/usr/local/opentg'
+
+## Require ruby default libs
+require 'fileutils'	# Used to work with read/write of files
+require 'tmpdir'		# Identifies OS's temp directory
+require 'yaml'			# Config file format uses YAML standard
+require 'optparse'	# Options Parser (better getopts)
+
+
+## Require add-on gems (keep this separate for tracking & documentation)
+require 'rubygems'			# Third party items
+
+## Require TG libs
+require 'tgversion.rb'
+require 'tgconfig.rb'
+require 'tgoutput.rb'
+
+
+
+Lockfilename = "#{Ostempdir}/opentg.lock"
+Lfexpires = 1000 # Lockfile expiration, time in seconds
+
+
+
+
+##--------------------------------------------------------------##
+# Lockfile handler - Ensures only one instance is running        #
+#  This may not be needed except for certain tasks.              #
+##--------------------------------------------------------------##
+class Lockfile
+ # Define lock file - We only want one instance to run at a time
+ # on certain occassions. Perhaps during a maintainence window or
+ # prevent the config editor from loading more than once. 
+
+ ######[ EXAMPLE OF USING LOCKFILE ]###### 
+ #		## Do lockfile work 
+ #		lockfile = Lockfile.new
+ #		lockcheck = lockfile.exist
+ #		if lockcheck == 1
+ #		 puts "DEBUG: lockfile found"
+ #		 exit 1
+ #		else
+ #		 lockfile.create
+ #		 puts "DEBUG: lockfile not found"
+ #		end
+ ######################################### 
+
+   def exist
+  # Check if lockfile exists
+		if File.exists?(Lockfilename)
+			# Check if previous process is still running
+			f = File.open(Lockfilename, "r")
+			pidof = f.gets.to_i
+			f.close
+			begin
+			Process.kill(0, pidof)
+			 	bout(Masterlog, 3, "Another #{TGversion['shortname']} is running: pidof #{pidof}", nil)
+			 	return 1
+			rescue Errno::EPERM                     # changed uid
+			 	bout(Masterlog, 3, "No permission to query pidof #{pidof}!", nil)
+				return 1
+			rescue Errno::ESRCH
+				bout(Masterlog, 2, "Lockfile pidof #{pidof} is NOT running - removing lockfile", nil);
+				File.delete(Lockfilename)
+				return 0
+			rescue
+				bout(Masterlog, 3, "Unable to determine status for #{pidof} : #{$!}", nil);
+				return 1
+			end
+
+#########################
+# Old method of lockfile expiry time. 
+# Leaving in code in case we need to revisit this
+#
+#			# Check if lockfile expired if all else fails
+#			locktime = File.mtime(Lockfile)
+#			staletime = locktime + Lfexpires
+#			curtime = Time.now
+#			# If PID fails, expire by time
+#			if staletime < curtime
+#				puts "Lockfile expired by time - Removing stale lockfile"
+#				File.delete(Lockfile)
+#				return 0 
+#			else
+#				puts "Another instance of #{Vwversion['shortname']} is already running or stale lockfile.\n" 
+#				return 1
+#			end
+########################
+		else
+		   return 0
+		end
+	end
+
+	def create
+		# if not, create lockfile
+		f = File.open(Lockfilename, "w")
+		f.puts Process.pid
+		f.close
+	end
+
+	def delete
+	   File.delete(Lockfilename)
+	end	
+end
+
+
+##--------------------------------------------------------------##
+# Execution routines - pre-requisites for entire program run     #
+##--------------------------------------------------------------##
+class Execute
+
+	attr_accessor	:distrotype, :level, :releasefile, :release,
+						:osfingerprint, :ostype, :osvendor, :osversion
+
+def start
+end
+
+def detectos
+	# OS release file fingerprints:
+	# CentOS release 5.2 (Final)
+	# Red Hat Enterprise Linux ES release 4 (Nahant Update 7)
+	# Red Hat Enterprise Linux Server release 5.2 (Tikanga)
+	# Fedora release 9 (Sulphur)
+	# Fedora release 10 (Cambridge)
+	   # Notes: (ArchLinux does not have a populated release file)
+		#  Fedora & CentOS still store their release info in redhat-release,
+		#  until this changes, no need to consider these separatly. 
+		#  Debian & SharkOS support not yet written, but we can detect anyway.
+		releasefile = {
+			'rhcompat'	=> '/etc/redhat-release',
+			'arch' 		=> '/etc/arch-release',
+			'debcompat' => '/etc/debian_version',
+			'suse'		=> '/etc/SuSE-release',
+			'sharkos'	=> '/etc/sharkos-release'
+		}
+
+		releasefile.each do |distro, filename|
+			if File.exists?(filename)
+				f = File.open(filename)
+				@release = f.gets
+				@distrotype = distro
+			end
+		end # end DO loop
+
+		case @distrotype
+			when "rhcompat"
+				if @release.match("Red Hat Enterprise Linux")
+					@osvendor = "RHEL"
+					@osversion = @release.scan(/\d+/)
+					revnum = @release.scan(/\d+/)
+					if revnum.length > 1
+						@osversion = revnum.join('.').to_f
+					else 
+						@osversion = revnum.to_f
+					end
+					if @osversion < 5
+						@osrepotype = "up2date"
+					else
+						@osrepotype = "yum"
+					end
+				end
+				if @release.match("CentOS release")
+					@osvendor = "CentOS"
+					revnum = @release.scan(/\d+/)
+					if revnum.length > 1
+						@osversion = revnum.join('.').to_f
+					else
+						@osversion = revnum.to_f
+					end
+					@osrepotype = "yum"
+				end
+				if @release.match("Fedora release")
+					@osvendor = "Fedora"
+					@osversion = @release.scan(/\d+/)[0].to_f
+					@osrepotype = "yum"
+				end
+
+			when "arch"
+				@osvendor = "ArchLinux"
+				@osversion = 0.0	# Arch uses year.month format for release.
+				@osrepotype = "pacman"
+			when "sharkos"
+				@osvendor = "SharkOS"
+				@osversion = 0.0
+				@osrepotype = "pacman"
+			when "debian"
+				@osvendor = "Debian"
+				@osversion = 0.0
+				@osrepotype = "apt"
+			else
+				@osvendor = "Unknown"
+				@osversion = 0.0
+				@osrepotype = "unsupported"
+		end
+		osfingerprint = { "osvendor" => @osvendor, "osversion" => @osversion, "repotype" => @osrepotype }
+	return osfingerprint
+end # end detectos
+
+def finish(level)
+		@level = level
+#		lockfile = Lockfile.new
+#		lockfile.delete
+		exit @level
+end
+
+##--------------------------------------------------------------##
+# Options parser function (uses OptionParse.rb library)	        #
+##--------------------------------------------------------------##
+def getoptions(args)
+	options = {}
+# Display Program Banner
+puts "#{TGversion['shortname']} : #{TGversion['longname']} v#{TGversion['version']} (Ruby v#{RUBY_VERSION}) - Released under #{TGversion['license']}\n#{TGversion['copyright']} #{TGversion['author']} - #{TGversion['vendor']}\n\n"
+
+	opts = OptionParser.new do |opts|
+        opts.banner = "Usage: #{TGversion['shortname']} [options]"
+        opts.separator ""
+        opts.separator "Specific options:"
+
+	opts.on("-a", "--showansi", "Show Ansi Colors") { |options[:ansi]| }
+	opts.on("-c", "--config", "Build or Edit the configuration.") { |options[:config]| }
+	opts.on("-l", "--login", "Login to system.") { |options[:login]| }
+	opts.on("-t", "--crontab", "Generate a fresh crontab.") { |options[:crontab]| }
+	opts.on("-u", "--update", "Check for & Perform Update.") { |options[:update]| }
+	opts.on("-U", "--upgrade", "Upgrade config file to latest revision.") { |options[:upgrade]| }
+	opts.on("-v", "--verbose", "Verbose logging.") { |options[:verbose]| }
+	opts.on("-V", "--version", "Print version and exit.") { |options[:version]| }
+	opts.on("-D", "--debug", "Turn debugging on.") { |options[:debug]| }
+   opts.on_tail("-h", "--help", "Show this help message.") { puts opts; return 0 }
+
+  end  # end opts do
+
+  begin opts.parse!
+   rescue OptionParser::InvalidOption => invalidcmd
+		puts "Invalid command options specified: #{invalidcmd}"
+		puts opts
+		return 1
+	rescue OptionParser::ParseError => error
+		puts error
+  end # end begin
+	if options.empty? == true
+		options[:login] = true
+	end
+  options
+end	# end def
+
+end # end class
+
+
+##--------------------------------------------------------------##
+# Loginshell class - handles all aspects of login until logout   #
+#  This could be considered the main control function that will
+#  handle the passing around of menus and features
+##--------------------------------------------------------------##
+class Loginshell
+
+ attr_accessor :ttynum, :username
+
+def initialize
+end
+
+def start
+ # load any preflight items here
+	puts "login starting... please wait"
+	gets
+	sleep 3
+	#TODO: detect capability from client if possible
+
+	@username = `whoami`.chomp
+	#TODO: Lookup user in database and collect information
+
+	confdata = TGconfig.new
+	@cfgin = confdata.load
+	self.login
+	# stuff in the middle here
+	self.logout
+end
+
+def login
+ # do actual login
+	# Print a welcome graphic
+	printansifile("#{@cfgin.path_ansi}/welcome.ans")
+	# send text welcome
+	puts "\nWelcome, #{@username} to #{@cfgin.bbs_name} (#{@cfgin.bbs_city},#{@cfgin.bbs_state} - #{@cfgin.bbs_country})"	
+
+end
+
+def logout
+ # cleanup for logout
+	puts "OpenTG is still under development.\nIncoming message from the Master Control Process:\n\n PROGRAM EXECUTION TERMINATES HERE\n@END OF LINE"
+	sleep 3
+end
+
+end # END Loginshell class
+
+
+
+##--------------------------------------------------------------##
+# MAIN PROGRAM EXECUTION - Checks, Parses & Passes to subroutine #
+##--------------------------------------------------------------##
+
+# See if we are running as root, otherwise quit.
+currentuser = `whoami`
+# if currentuser.chomp == "root"
+#	puts "This program cannot be run as root."
+#	exit 1
+# end
+
+
+## Parse command switches
+##
+## Note: this may not be the cleanest way to accomplish this.
+##			In the interest of time, get it done, and recode later.
+##
+
+
+# Break out of command parsing to do some startup items
+mainprog = Execute.new
+cmdswitches = mainprog.getoptions(ARGV)
+case cmdswitches[:verbose]
+	when true
+		Verbosemode = true
+   else
+		Verbosemode = false
+#	puts "Verbose output enabled."
+end
+
+mainprog.start
+osfingerprint = mainprog.detectos
+
+
+
+# Continue parsing switches
+
+case cmdswitches[:debug]
+	when true
+	Debug = on
+end
+
+case cmdswitches[:config]
+	when true
+	configprog = TGconfig.new
+	# check if config file exists 0 = yes, 1= no
+	if configprog.check == 0
+		configprog.edit
+	else
+		configprog.build(osfingerprint)
+   end
+	mainprog.finish(0)
+end
+
+case cmdswitches[:update]
+	when true
+	updateprog = Updater.new
+	updateprog.start(osfingerprint, cmdswitches[:manual])
+	mainprog.finish(0)
+end
+
+case cmdswitches[:login]
+	when true
+	loginprog = Loginshell.new
+	loginprog.start
+	mainprog.finish(0)
+end
+
+case cmdswitches[:upgrade]
+	when true
+ 	upgradeprog = TGconfig.new
+ 	upgradeprog.upgrade
+	mainprog.finish(0)
+end
+
+case cmdswitches[:version]
+	when true
+	puts osfingerprint.inspect
+	mainprog.finish(0)
+end
+
+case cmdswitches[:crontab]
+	when true
+	crontabprog = Crontab.new
+	crontabprog.start
+	mainprog.finish(0)
+end
+
+case cmdswitches[:ansi]
+	when true
+	ansicolorlist
+	mainprog.finish(0)
+end
+
+# Exit clean if we get to this point. 
+# This is failsafe in case we forgot to cleanup elsewhere
+mainprog.finish(0)
+#@EOL

@@ -1,0 +1,21 @@
+        ----------------------------------------------------
+       | OpenTelegard  ::  Message of the Day  ::  20090427 |
+        ----------------------------------------------------
+
+This server is running an early pre-alpha development version of the BBS
+software. As such, there will almost certainly be bugs, errors, or missing 
+sections not yet written. Please submit all bug or feature requests to the
+develoment team at http://www.rubyforge.org/projects/opentg
+
+Pleas enjoy this completely un-necessary ascii drawing:
+
+ ------                   ---------   -----
+|  __  |                      ||     /  ___|
+| |  | |                      ||    |  /
+| |  | |  ---   ---   ---     ||    |  \  ____
+|  --  | | O | |__/  |/-\|    ||     \  \__||     
+ ------  |---   \__  || ||    ||      \____||
+         ||
+
+This file demonstrates the run_pager function by ensuring enough scroll for
+consoles @ 24 columns.  
