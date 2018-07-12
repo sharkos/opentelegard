@@ -1,0 +1,2 @@
+${color.lightcyan} TelegardEditor                              ${color.darkgray}(${color.lightmagenta}/H ${color.lightblue} help${color.darkgray}) (${color.lightmagenta}/X ${color.lightblue} save${color.darkgray}) ${color.darkgray}(${color.lightmagenta}/A ${color.lightblue} abort${color.darkgray})
+${color.darkgray}[${color.blue}-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-${color.darkgray}]

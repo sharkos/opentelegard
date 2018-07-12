@@ -1,0 +1,8 @@
+The files in this directory store configuration items specific to an instance
+of the Telegard/2 software. Please refer to the main software documentation.
+
+
+security.conf.yaml : Stores unique security information about this system.
+ ** DO NOT MODIFY THIS FILE AFTER INSTALL OR YOU WILL BREAK YOUR SYSTEM **
+
+telegard.conf.yaml : Stores modifiable runtime settings.

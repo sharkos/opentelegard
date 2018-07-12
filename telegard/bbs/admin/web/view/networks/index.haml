@@ -1,0 +1,35 @@
+%p
+  BBS Networks provide external resources such as Message Areas and Email Gateways
+%table.results
+  %tr
+    %th ID
+    %th Name
+    %th Protocol
+    %th Last Sync
+    %th Enabled
+    %th Actions
+  - @networks.each do |n|
+    %tr
+      %td
+        = n.id
+      %td
+        %a{:href=>"/networks/view/#{n.id}"}
+          = n.name
+        %br
+        %small
+        = n.description
+      %td
+        = n.protocol
+      %td
+        - unless n.lastsync == nil
+          = n.lastsync
+          - else
+            NEVER
+      %td
+        - if n.enabled == false
+          %font{:color => "#FF0000"}NO
+          - else
+            YES
+      %td
+        %small
+          %a{:href=>"/networks/sync/#{n.id}"}Sync

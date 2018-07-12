@@ -1,0 +1,40 @@
+= OpenTelegard BBS
+               ================================================
+                      OpenTelegard/2 Operating SubSystem
+                  Copyright (C) 2010, LeafScale Systems, LLC
+                            http://www.opentg.org
+               ================================================
+
+== TEMPLATES & THEMES
+
+Telegard/2 provides the ability to change the look and feel of the text user
+interface through the use of templates. The template engine uses FreeMarker's
+API wrapped into the core Telegard/2 libraries. Each subdirectory within this
+folder (../bbs/tpls) is a theme. The theme is set in the main configuration
+of the software and optionally may be changed on a per-useraccount preference.
+
+
+=== CREATING THEMES (QuickStart)
+
+To create a new theme for Telegard/2, it is recommended to start by copying the
+default theme directory and its content to a new folder.
+
+  cp -a tpls/opentg tpls/myTheme
+
+From here, you can begin editing the individual theme files.
+
+** Refer to the official Telegard/2 Documentation for information about
+   variable substitution, color codes, etc...
+
+
+=== CONTRIBUTING THEMES
+
+One of the goals of opensource projects such as Telegard/2 is to build strong,
+vibrant user communities. If you have writen a Theme or Translation, please
+consider contributing your work to the Theme Library available from the
+project's website.
+
+
+=== See Also
+* The official Telegard/2 website (http://www.telegard.net)
+* or the WikiPedia article (http://en.wikipedia.org/wiki/Telegard) .

@@ -1,0 +1,32 @@
+%p
+  This is the message areas manager.
+%div.action
+  %a{:href=>"/msgareas/new"}
+    Add New
+%table.results
+  %tr
+    %th ID #
+    %th Area Name
+    %th Area Type
+    %th Enabled
+  - @areas.each do |a|
+    %tr
+      %td
+        = a.id
+      %td
+        %a{:href=>"/msgareas/manage/#{a.id}"}
+          = a.name
+        %small
+          = a.description
+      %td
+        - if a.network == false
+          Local
+          - elsif a.network == true
+            Network
+          - else
+            (error)
+      %td{:width=>10, :align=> "center"}
+        - if a.enabled == true
+          %font{:color=>"#004208"}YES
+          -else
+            NO

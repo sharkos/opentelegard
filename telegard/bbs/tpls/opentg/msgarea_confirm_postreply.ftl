@@ -1,0 +1,1 @@
+${color.white}Post a reply to this message? [y/N]:

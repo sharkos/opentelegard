@@ -1,0 +1,1 @@
+${color.brightred}You have exceed your daily allowed time limit.

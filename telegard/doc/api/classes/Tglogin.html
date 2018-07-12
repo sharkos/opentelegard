@@ -1,0 +1,738 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><title>Module: Tglogin</title><link type="text/css" href=".././rdoc-style.css" media="screen" rel="stylesheet"/><script type="text/javascript">
+// Allison template
+// Copyright 2007, 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file.
+
+var href_base = '.././rdoc-style.css'.replace(/(.*\/).*/, '$1'); // inline js is good for something  
+
+function $(id) {
+    if (document.getElementById)
+      elem = document.getElementById(id);
+    else if ( document.all )
+      elem = eval("document.all." + id);
+    else
+      return false;
+    return elem;
+}
+
+  function toggle(id) {
+    elem = $(id);
+    elemStyle = elem.style;   
+    if (elemStyle.display == "block") {
+      elemStyle.display = "none"
+    } else {
+      elemStyle.display = "block"
+    }
+    return true;
+  }
+
+  function toggleText(id) {
+    elem = $(id)
+    if (m = elem.innerHTML.match(/(Hide)(.*)/)) {
+      elem.innerHTML = "Show" + m[2];
+    } else if (m = elem.innerHTML.match(/(Show)(.*)/)) {
+      elem.innerHTML = "Hide" + m[2];
+    }
+    return true;
+  }
+
+function span(s, klass) {
+  return '<span class="' + klass + '">' + s + '</span>';
+}
+  
+function highlightSymbols() {
+  pres = document.getElementsByTagName('pre');
+  for(var i = 0; i < pres.length; i++) {
+    pre = pres[i];
+    spans = pre.getElementsByTagName('span');
+    for(var k = 0; k < spans.length; k++) {
+      span = spans[k];
+      if (span.className.match(/ruby-identifier/)) {
+        if (span.innerHTML.match(/^:/)) {
+          span.className += " ruby-symbol";
+        }
+      }
+    }
+  }
+}
+
+ function hasClass(obj) {
+     var result = false;
+     if (obj.getAttributeNode("class") != null) {
+         result = obj.getAttributeNode("class").value;
+     }
+     return result;
+  }   
+
+ function stripe() {
+    var even = true;
+    var color = "#e4ebed";
+    var tables = document.getElementsByTagName('table');
+    if (tables.length == 0) { return; }
+    for (var h = 0; h < tables.length; h++) {
+        var trs = tables[h].getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+          var tds = trs[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {       
+              if (hasClass(tds[j]) != "first") {                
+              var mytd = tds[j];
+              if (even) {
+                mytd.style.backgroundColor = color;
+              }         
+            }
+          }
+          even =  ! even;
+      }
+    }
+  }
+  
+function ajaxGet(url) {
+  url = (href_base + url).replace('/./', '/')
+  var req = false;
+
+  if (window.ActiveXObject) {
+    try {
+      // stupid hack because IE7 disables local Ajax with the native xmlhttprequest object
+      // for security purposes. Yet ActiveX still works. Thanks, Microsoft. I hate you. Die.
+      req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (e) {
+      try {
+        /* IE 6 and maybe 5, don't know, don't care */
+        req = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          req = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          req = false;
+        }
+      }
+    }
+  }
+    
+  /* real browsers */
+  if (!req && window.XMLHttpRequest) {
+    try {
+      req = new XMLHttpRequest();
+    } catch (e) {
+      req = false;
+    }
+  } 
+  
+  if (req) {
+    req.open('GET', url, false);
+    req.send(null);
+    return req.responseText;
+  } else {
+    return "Ajax error";  
+  }
+}
+
+
+function addEvent(elm, evType, fn, useCapture) {
+	if (elm.addEventListener) {
+	  elm.addEventListener(evType, fn, useCapture);  
+  	return true;
+	} else if (elm.attachEvent) {
+  	var r = elm.attachEvent('on' + evType, fn);  
+	  return r;  
+	} else {
+  	elm['on' + evType] = fn;
+	}
+}
+
+function insertIndices() {
+  pages = ["class", "file", "method"]
+  for (x in pages) { 
+    $(pages[x]).innerHTML += ajaxGet('fr_' + pages[x] + '_index.html').replace(/(href=")/g, '$1' + href_base);
+  }
+  /* mouseoverify method links */
+  links = $('method').getElementsByTagName('a');
+  for (var x = 0; x < links.length; x++) {
+    if (m = links[x].innerHTML.match(/(.*)\s\((.*)\)/)) {
+      links[x].innerHTML = m[1] + '<br>';
+      links[x].title = m[2];
+    }
+  }
+  /* this is stupid */
+  $('class').style.display = "block";
+  $('file').style.display = "block";
+  
+  /* has to be here because IE7 does not guarantee the onLoad callback order */
+  abbreviateIndicesInner(["class", "file"], 25, "a");
+  /* same, linkTitle() depends on the class link list */
+  linkTitle();
+}
+
+function abbreviateIndices() {
+  var ids = ["defined_in", "child_of", "includes", "requires", "method", "methods"];
+  abbreviateIndicesInner(ids, 25, 'a');
+  abbreviateIndicesInner(ids, 25, 'span');
+}
+
+function abbreviateIndicesInner(indices, amount, tag) {
+  for (var x = 0; x < indices.length; x++) { 
+    var the_index = $(indices[x]);
+    if (the_index) {
+      links = the_index.getElementsByTagName(tag);
+      for (var y = 0; y < links.length; y++) {
+        var link = links[y];
+        if (link.getElementsByTagName('span').length == 0 && link.getElementsByTagName('a').length == 0) {
+          // avoid nesting
+          link.innerHTML = link.innerHTML.replace(/<br>|\n/gi, '');
+          link.title = link.innerHTML;
+          link.innerHTML = abbreviate(link.innerHTML, amount) + '<br>';
+        }
+      }
+    }
+  }
+}
+
+function linkTitle() {
+  
+  /* grab the correct title element from the index */
+  var index_page = ajaxGet('index.html');
+  title_text = index_page.match(/<title>(.*)<\/title>/m)[1];
+  document.title = title_text + " - " + document.title;
+  var p = $('header').getElementsByTagName('p')[0]
+  if (p.innerHTML.match(/^\s*$/)) {
+    p.innerHTML = title_text;
+  } else {
+    p.innerHTML = title_text + ": " + p.innerHTML;
+  }
+  
+  /* set the link properly */
+  title_link = index_page.match(/<a\s+href="(.*?)"/)[1];
+  var element = $('title');
+  var item_type = "";
+  var item_name = "";
+  if (m = element.innerHTML.match(/(Class:|Module:|File:)\s*(.*)/)) {
+    item_type = m[1];
+    item_name = m[2];
+  } else {
+    item_name = element.innerHTML;
+  }
+  element.innerHTML = '<a href="' + href_base + title_link + '">' + item_type + " " + abbreviate(item_name, 45) + '</a>';
+  element.getElementsByTagName('a')[0].title = item_name
+  
+  /* breadcrumb navigation */
+  items = item_name.split("::");
+  items_new = item_name.split("::");
+  file_links = $('class').getElementsByTagName('a');
+  for (var x = 0; x < items.length - 1; x++ ){
+    var item = items[x];
+    link = ("/classes/" + items.slice(0,x).join("/") + "/" + item + ".html").replace('//', '/');
+    regex = new RegExp(RegExp.escape(link) + '$');
+    for (var y = 0; y < file_links.length; y++) {
+      if (file_links[y].href.match(regex)) {
+         items_new[x] = '<a href="' + href_base + link + '">' + item + '</a>';
+         break;
+      }
+    }  
+  }
+  $('item_name').innerHTML = item_type + ' ' + items_new.join(" :: ");
+}
+
+function abbreviate(s, size) {
+  while (s.length > size) {
+    var old_s = s;
+    s = s.replace(/\s|\n/mg, '');
+    s = s.replace(/([A-Z])[a-z]+/m, '$1');
+    if (!s || old_s == s) {
+      return "..." + s.substring(s.length - size, s.length);
+    }
+  }
+  return s;
+}
+
+function disableSubmit(event) {
+  var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+  if (keyCode == 13) {
+    return false;
+  } else {
+    return true;
+  }
+}
+  
+function filterList(id, s, event) {
+  
+  /* some weak escaping */
+  s = s.replace(/[^\w\d\.\_\-\/\:\=\[\]\?\!]/g, '');
+  s = RegExp.escape(s);
+  
+  var show_all = false;
+  if (s.match(/^\s*$/)) {
+    show_all = true;
+  }
+  
+  links = $(id).getElementsByTagName('a')
+  regex = new RegExp(s, 'i');
+  
+  for (var x = 0; x < links.length; x++) {
+    var link = links[x];
+    if (show_all) {
+      link.style.display = 'inline';
+    } else {
+       if (link.innerHTML.match(regex)) {        
+         link.style.display = 'inline';
+       } else {
+         link.style.display = 'none';
+       }
+    }
+  }
+  return true;
+}
+
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function hacks() {
+  // show the spacer if necessary, 
+  divs = document.getElementsByTagName('div');
+  for(var x = 0; x < divs.length; x++) {
+    if (divs[x].className && divs[x].className.match(/top/)) {
+      document.getElementById('spacer').style.display = 'block';
+    }
+  }
+  // remove extra colons from tables
+  tds = document.getElementsByTagName('td');
+  for(var x = 0; x < tds.length; x++) {
+    str = tds[x].innerHTML
+    if (str.charAt(str.length - 1) == ":") {
+      tds[x].innerHTML = str.slice(0, str.length - 1)
+    }
+  }
+}
+
+addEvent(window, 'load', insertIndices, false);
+addEvent(window, 'load', abbreviateIndices, false);
+addEvent(window, 'load', stripe, false);
+addEvent(window, 'load', highlightSymbols, false);
+addEvent(window, 'load', hacks, false);
+</script></head><body><div id="container"><div class="curve" id="preheader_curve_0"></div><div class="curve" id="preheader_curve_1"></div><div class="curve" id="preheader_curve_2"></div><div class="curve" id="preheader_curve_3"></div><div class="curve" id="preheader_curve_4"></div><div class="curve" id="preheader_curve_5"></div><div id="header"><p>
+</p><span><h1 id="title">
+Module: Tglogin
+</h1></span>
+</div><div class="clear"></div><div id="left">
+
+<div class="navigation darker top" id="defined_in"><h3>Defined in</h3>
+
+<a href="../files/bbs/lib/tglogin_rb.html">bbs/lib/tglogin.rb</a>
+
+
+<a href="../files/bbs/lib/tglogin/signup_rb.html">bbs/lib/tglogin/signup.rb</a>
+
+</div>
+
+
+
+<div class="navigation top" id="methods"><h3>Methods</h3>
+
+
+<a href='#M000062'>
+askhint<br/>
+</a>
+
+
+
+
+<a href='#M000063'>
+auth<br/>
+</a>
+
+
+
+
+<a href='#M000058'>
+banner<br/>
+</a>
+
+
+
+
+<a href='#M000061'>
+cryptpassword<br/>
+</a>
+
+
+
+
+<a href='#M000060'>
+passwordprompt<br/>
+</a>
+
+
+
+
+<a href='#M000064'>
+signup<br/>
+</a>
+
+
+
+
+<a href='#M000059'>
+userprompt<br/>
+</a>
+
+
+</div>
+<div id="spacer"></div><div class="navigation darker index" id="class_wrapper"><div class="list_header"><h3>All classes</h3></div><div class="list_header_link"><a onclick="toggle('class'); toggleText('class_link'); return false;" href="#" id="class_link">Hide...</a></div><div class="clear"></div><div id="class"><form><label for="filter_class">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('class', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_class"></input></form></div></div><div class="navigation darker index" id="file_wrapper"><div class="list_header"><h3>All files</h3></div><div class="list_header_link"><a onclick="toggle('file'); toggleText('file_link'); return false;" href="#" id="file_link">Hide...</a></div><div class="clear"></div><div id="file"><form><label for="filter_file">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('file', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_file"></input></form></div></div><div class="navigation darker index" id="method_wrapper"><div class="list_header"><h3>All methods</h3></div><div class="list_header_link"><a onclick="toggle('method'); toggleText('method_link'); return false;" href="#" id="method_link">Show...</a></div><div class="clear"></div><div id="method"><form><label for="filter_method">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('method', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_method"></input></form></div></div></div><div id="content">
+<h1 id="item_name">Module: Tglogin</h1>
+
+<div id="description"><p>
+TODO: ALL SIGNUP NEEDS VALIDATION
+</p>
+</div>
+
+
+
+
+<p></p>
+
+<h1>Child modules and classes</h1><p>Module <a href="Tglogin/Signup.html" class="link">Tglogin::Signup</a><br />
+</p>
+
+
+
+
+
+<h1>Public Class Methods</h1>
+
+
+<a class="small" name="M000062"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000062'>
+
+
+askhint
+
+(login)
+
+</a>
+</h3>
+
+<p class="source_link" id="M000062-show-link"><a onclick="toggle('M000062-source'); toggleText('M000062-link'); return false;" href="#" id="M000062-link">Show source...</a></p><div class="source" id="M000062-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 114</span>
+114:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">askhint</span>(<span class="ruby-identifier">login</span>)
+115:     <span class="ruby-identifier">question</span> = <span class="ruby-constant">User</span>[<span class="ruby-identifier">:login</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">login</span>].<span class="ruby-identifier">pwhint_question</span>
+116:     <span class="ruby-identifier">t</span> = <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-constant">Template</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'login_prompt_pwhint.ftl'</span>)
+117:     <span class="ruby-identifier">t</span>.<span class="ruby-identifier">render</span>(<span class="ruby-value str">&quot;pwhint_question&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">question</span>)
+118:     <span class="ruby-identifier">answer</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputform</span>(<span class="ruby-value">75</span>)
+119:     <span class="ruby-identifier">dbanswer</span>   = <span class="ruby-constant">User</span>[<span class="ruby-identifier">:login</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">login</span>].<span class="ruby-identifier">pwhint_answer</span>
+120: 
+121:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">answer</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">dbanswer</span>
+122:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;VALIDATED - CLEARING LOGIN FAILURES&quot;</span>
+123:       <span class="ruby-constant">User</span>.<span class="ruby-identifier">clearfailed</span>(<span class="ruby-identifier">login</span>)
+124:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+125:     <span class="ruby-keyword kw">else</span>
+126:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;INCORRECT&quot;</span>
+127:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+128:     <span class="ruby-keyword kw">end</span>
+129: 
+130:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000063"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000063'>
+
+
+auth
+
+()
+
+</a>
+</h3>
+<p>
+This function provides the entire login routine logic. Configuration
+variables apply.
+</p>
+
+<p class="source_link" id="M000063-show-link"><a onclick="toggle('M000063-source'); toggleText('M000063-link'); return false;" href="#" id="M000063-link">Show source...</a></p><div class="source" id="M000063-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 133</span>
+133:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">auth</span>
+134:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">banner</span>
+135:     <span class="ruby-identifier">attempt</span> = <span class="ruby-value">0</span>
+136:     <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">attempt</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@logincfg</span>[<span class="ruby-value str">'attempts'</span>] <span class="ruby-keyword kw">do</span>
+137:       <span class="ruby-identifier">login</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">userprompt</span>
+138:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">nil?</span>
+139:         <span class="ruby-identifier">password</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">passwordprompt</span>
+140:         <span class="ruby-identifier">thistry</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">login</span>, <span class="ruby-identifier">password</span>)
+141:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">thistry</span>[<span class="ruby-identifier">:result</span>]
+142:           <span class="ruby-comment cmt"># If user is validated and allowed, then return true and create a session.</span>
+143:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;true&quot;</span>
+144:             <span class="ruby-constant">User</span>.<span class="ruby-identifier">countlogin</span>(<span class="ruby-identifier">login</span>)
+145:             <span class="ruby-constant">User</span>.<span class="ruby-identifier">clearfailed</span>(<span class="ruby-identifier">login</span>)
+146:             <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>[<span class="ruby-identifier">:login</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">login</span>]
+147:             <span class="ruby-identifier">group</span> = <span class="ruby-constant">Group</span>[<span class="ruby-identifier">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">group_id</span>]
+148: 
+149:             <span class="ruby-comment cmt"># Create caller history entry &amp; update session</span>
+150:             <span class="ruby-identifier">$callerid</span> = <span class="ruby-constant">Tgcallhistory</span>.<span class="ruby-identifier">create</span>(
+151:                     <span class="ruby-identifier">:user_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>,
+152:                     <span class="ruby-identifier">:alias</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login</span>,
+153:                     <span class="ruby-identifier">:time_login</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+154:                     )
+155: 
+156:             <span class="ruby-identifier">timeremain</span> = (<span class="ruby-identifier">group</span>.<span class="ruby-identifier">dailytimelimit</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">thisuser_time_today</span>)
+157: 
+158:             <span class="ruby-comment cmt"># Create global session variable</span>
+159:             <span class="ruby-identifier">$session</span> = <span class="ruby-constant">Session</span>.<span class="ruby-identifier">new</span>
+160:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">user_id</span>    = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+161:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">group_id</span>   = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">group_id</span>
+162:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">level</span>      = <span class="ruby-identifier">group</span>.<span class="ruby-identifier">level</span>
+163:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">created</span>    = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+164:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">expires</span>    = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>.<span class="ruby-identifier">hours</span>
+165:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">caller_id</span>  = <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">id</span>
+166:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">filearea</span>   = <span class="ruby-keyword kw">nil</span> <span class="ruby-comment cmt"># Set the filearea tracking to nil. Initialized in FileAreaController.menu</span>
+167:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">msgarea</span>    = <span class="ruby-keyword kw">nil</span>  <span class="ruby-comment cmt"># Set the filearea tracking to nil. Initialized in MsgAreaController.menu</span>
+168:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">chatroom</span>   = <span class="ruby-keyword kw">nil</span>  <span class="ruby-comment cmt"># Set the filearea tracking to nil. Initialized in ChatRoomController.menu</span>
+169:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">expires</span>    = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">timeremain</span>.<span class="ruby-identifier">minutes</span>
+170:                 <span class="ruby-comment cmt"># User preferences go into session so we dont have to query the DB every time.</span>
+171:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">pref_show_menus</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">pref_show_menus</span>
+172:                 <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">pref_term_pager</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">pref_term_pager</span>
+173:             <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">save</span>
+174:             <span class="ruby-comment cmt"># TODO: BUG#:  581982 - $session does not seem to know its record ID in the table on the very first login only.</span>
+175:             <span class="ruby-comment cmt"># TODO: Test if retrieving the saved record back as a dataset will solve this problem.</span>
+176: 
+177: 
+178:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">timeremain</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+179:               <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_dailylimit.ftl'</span>)
+180:               <span class="ruby-constant">Telegard</span><span class="ruby-operator">::</span><span class="ruby-identifier">goodbye_fast</span>
+181:             <span class="ruby-keyword kw">else</span>
+182:               <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_session_info.ftl'</span>, {
+183:                       <span class="ruby-value str">'timetoday'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">thisuser_time_today</span>.<span class="ruby-identifier">to_s</span>,
+184:                       <span class="ruby-value str">'grouplimit'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">dailytimelimit</span>.<span class="ruby-identifier">to_s</span>,
+185:                       <span class="ruby-value str">'logintoday'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">thisuser_logincount_today</span>.<span class="ruby-identifier">to_s</span>,
+186:                       <span class="ruby-value str">'curtime'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_s</span>,
+187:                       <span class="ruby-value str">'expires'</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">expires</span>.<span class="ruby-identifier">to_s</span>,
+188:                       <span class="ruby-value str">'timeremain'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">timeremain</span> })
+189: 
+190:             <span class="ruby-keyword kw">end</span>
+191:             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+192:             <span class="ruby-keyword kw">break</span>
+193:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;false&quot;</span>
+194:             <span class="ruby-identifier">attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+195:             <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_failed.ftl'</span>, {<span class="ruby-value str">&quot;attempt&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{attempt.to_s}&quot;</span>, <span class="ruby-value str">&quot;maxattempts&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{@logincfg['attempts'].to_s}&quot;</span>,<span class="ruby-value str">&quot;failures&quot;</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">thistry</span>[<span class="ruby-identifier">:failures</span>].<span class="ruby-identifier">to_s</span>})
+196:             <span class="ruby-comment cmt"># Test if user.login_failures is equal to 1 less than the configured lockout.</span>
+197:             <span class="ruby-comment cmt"># If so, prompt user for PWHINT if configured</span>
+198:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thistry</span>[<span class="ruby-identifier">:failures</span>] <span class="ruby-operator">==</span> <span class="ruby-ivar">@logincfg</span>[<span class="ruby-value str">'lockout'</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@logincfg</span>[<span class="ruby-value str">'usehint'</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+199:               <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">askhint</span>(<span class="ruby-identifier">login</span>)
+200:             <span class="ruby-keyword kw">end</span>
+201:           <span class="ruby-comment cmt"># -&gt; Chances are, we will NEVER get to this ' when &quot;invalid&quot; ' clause. But if for some reason we do, handle it.</span>
+202:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;invalid&quot;</span>
+203:             <span class="ruby-identifier">attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+204:             <span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;\n&quot;</span>
+205:             <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_invalid.ftl'</span>, <span class="ruby-identifier">tvars</span> = {<span class="ruby-value str">&quot;attempt&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{attempt.to_s}&quot;</span>, <span class="ruby-value str">&quot;maxattempts&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{@logincfg['attempts'].to_s}&quot;</span>})
+206:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;locked&quot;</span>
+207:             <span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;\n&quot;</span>
+208:             <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_locked_user.ftl'</span>, {<span class="ruby-value str">&quot;attempt&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{attempt.to_s}&quot;</span>, <span class="ruby-value str">&quot;maxattempts&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{@logincfg['attempts'].to_s}&quot;</span>})
+209:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt">#/case</span>
+210:       <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># If login is NIL, its an invalid login. Do some stuff here  (Same as case when invalid above)</span>
+211:         <span class="ruby-identifier">attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+212:         <span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;\n&quot;</span>
+213:         <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_invalid.ftl'</span>, {<span class="ruby-value str">&quot;attempt&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{attempt.to_s}&quot;</span>, <span class="ruby-value str">&quot;maxattempts&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{@logincfg['attempts'].to_s}&quot;</span>, <span class="ruby-value str">&quot;allownew&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{@logincfg['allownew']}&quot;</span>})
+214:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt">#/unless login.nil?</span>
+215:     <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt">#/while</span>
+216:     <span class="ruby-comment cmt"># Return nil as a failsafe.</span>
+217:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+218:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000058"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000058'>
+
+
+banner
+
+()
+
+</a>
+</h3>
+<p>
+Displays the template for the login <a
+href="Tglogin.html#M000058">banner</a>.
+</p>
+
+<p class="source_link" id="M000058-show-link"><a onclick="toggle('M000058-source'); toggleText('M000058-link'); return false;" href="#" id="M000058-link">Show source...</a></p><div class="source" id="M000058-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 75</span>
+75:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">banner</span>
+76:     <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_banner.ftl'</span>, {<span class="ruby-value str">&quot;allownew&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logincfg</span>[<span class="ruby-value str">'allownew'</span>].<span class="ruby-identifier">to_s</span>})
+77:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000061"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000061'>
+
+
+cryptpassword
+
+(cleartxt)
+
+</a>
+</h3>
+<p>
+Encrypt the clear text password
+</p>
+
+<p class="source_link" id="M000061-show-link"><a onclick="toggle('M000061-source'); toggleText('M000061-link'); return false;" href="#" id="M000061-link">Show source...</a></p><div class="source" id="M000061-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 109</span>
+109:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">cryptpassword</span>(<span class="ruby-identifier">cleartxt</span>)
+110:     <span class="ruby-identifier">password</span> = <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">cleartxt</span>)
+111:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">password</span>
+112:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000060"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000060'>
+
+
+passwordprompt
+
+()
+
+</a>
+</h3>
+<p>
+Password prompt - displays template, calls highline ask and returns crypted
+password.
+</p>
+
+<p class="source_link" id="M000060-show-link"><a onclick="toggle('M000060-source'); toggleText('M000060-link'); return false;" href="#" id="M000060-link">Show source...</a></p><div class="source" id="M000060-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 101</span>
+101:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">passwordprompt</span>
+102:     <span class="ruby-identifier">t</span> = <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-constant">Template</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'login_prompt_password.ftl'</span>)
+103:     <span class="ruby-identifier">t</span>.<span class="ruby-identifier">render</span>()
+104:     <span class="ruby-identifier">cleartxt</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">passwordform</span>
+105:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">cleartxt</span>
+106:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000064"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000064'>
+
+
+signup
+
+()
+
+</a>
+</h3>
+<p>
+<a href="Tglogin/Signup.html">Signup</a> routine for New Users
+</p>
+
+<p class="source_link" id="M000064-show-link"><a onclick="toggle('M000064-source'); toggleText('M000064-link'); return false;" href="#" id="M000064-link">Show source...</a></p><div class="source" id="M000064-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 221</span>
+221:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">signup</span>
+222:     <span class="ruby-identifier">cfg</span> = <span class="ruby-identifier">$cfg</span>[<span class="ruby-value str">'signup'</span>]
+223:     <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">ansiclear</span>
+224:     <span class="ruby-constant">JLine</span><span class="ruby-operator">::</span><span class="ruby-constant">ConsoleReader</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">set_use_pagination</span>(<span class="ruby-keyword kw">true</span>)
+225:     <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'signup_instructions.ftl'</span>, {<span class="ruby-value str">&quot;bbs&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">$cfg</span>[<span class="ruby-value str">'bbs'</span>]})
+226:     <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputyn</span>(<span class="ruby-value str">'signup_askcontinue.ftl'</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+227:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Goodbye!&quot;</span>
+228:       <span class="ruby-identifier">exit</span> <span class="ruby-value">0</span>
+229:     <span class="ruby-keyword kw">end</span>
+230: 
+231:     <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'signup_aup.ftl'</span>, {<span class="ruby-value str">&quot;bbs&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-identifier">$cfg</span>[<span class="ruby-value str">'bbs'</span>]})
+232:     <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputyn</span>(<span class="ruby-value str">'signup_accept_aup.ftl'</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+233:       <span class="ruby-comment cmt"># Ask required questions</span>
+234:       <span class="ruby-identifier">login</span>     = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">asklogin</span>
+235:       <span class="ruby-identifier">firstname</span> = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askfirstname</span>
+236:       <span class="ruby-identifier">lastname</span>  = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">asklastname</span>
+237:       <span class="ruby-identifier">email</span>     = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askemail</span>
+238:       <span class="ruby-identifier">password</span>  = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askpassword</span>
+239:       <span class="ruby-identifier">pwhint_question</span>  = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askpwhint_question</span>
+240:       <span class="ruby-identifier">pwhint_answer</span>    = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askpwhint_answer</span>
+241:       <span class="ruby-identifier">address1</span>  = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askaddress1</span>
+242:       <span class="ruby-identifier">address2</span>  = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askaddress2</span>
+243:       <span class="ruby-identifier">city</span>      = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askcity</span>
+244:       <span class="ruby-identifier">state</span>     = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askstate</span>
+245:       <span class="ruby-identifier">postal</span>    = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askpostal</span>
+246:       <span class="ruby-identifier">country</span>   = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askcountry</span>
+247:       <span class="ruby-identifier">phone</span>     = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askphone</span>
+248:       <span class="ruby-identifier">gender</span>    = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askgender</span>
+249:       <span class="ruby-identifier">bday</span>      = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askbday</span>
+250:       <span class="ruby-identifier">custom1</span>   = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askcustom</span>(<span class="ruby-value">1</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-value str">'ask_custom1'</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+251:       <span class="ruby-identifier">custom2</span>   = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askcustom</span>(<span class="ruby-value">2</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-value str">'ask_custom2'</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+252:       <span class="ruby-identifier">custom3</span>   = <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">askcustom</span>(<span class="ruby-value">3</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-value str">'ask_custom3'</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+253: 
+254:       <span class="ruby-comment cmt"># Send to review screen</span>
+255:       <span class="ruby-identifier">signupdata</span> = {
+256:         <span class="ruby-value str">&quot;login&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">login</span>,
+257:         <span class="ruby-value str">&quot;password&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">password</span>,
+258:         <span class="ruby-value str">&quot;pwhint_question&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">pwhint_question</span>,
+259:         <span class="ruby-value str">&quot;pwhint_answer&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">pwhint_answer</span>,
+260:         <span class="ruby-value str">&quot;firstname&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">firstname</span>,
+261:         <span class="ruby-value str">&quot;lastname&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lastname</span>,
+262:         <span class="ruby-value str">&quot;email&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">email</span>,
+263:         <span class="ruby-value str">&quot;city&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">city</span>,
+264:         <span class="ruby-value str">&quot;state&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">state</span>,
+265:         <span class="ruby-value str">&quot;country&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">country</span>,
+266:         <span class="ruby-value str">&quot;address1&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">address1</span>,
+267:         <span class="ruby-value str">&quot;address2&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">address2</span>,
+268:         <span class="ruby-value str">&quot;postal&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">postal</span>,
+269:         <span class="ruby-value str">&quot;phone&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">phone</span>,
+270:         <span class="ruby-value str">&quot;gender&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">gender</span>,
+271:         <span class="ruby-value str">&quot;bday&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">bday</span>.<span class="ruby-identifier">to_s</span>,
+272:         <span class="ruby-value str">&quot;custom1&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">custom1</span>,
+273:         <span class="ruby-value str">&quot;custom2&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">custom2</span>,
+274:         <span class="ruby-value str">&quot;custom3&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">custom3</span>,
+275:         <span class="ruby-value str">&quot;pwexpires&quot;</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">+</span> <span class="ruby-value">90</span>.<span class="ruby-identifier">days</span>).<span class="ruby-identifier">to_s</span>
+276:       }
+277:       <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier">confirm</span>(<span class="ruby-identifier">signupdata</span>)
+278:     <span class="ruby-keyword kw">else</span>
+279:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Goodybye!&quot;</span>
+280:       <span class="ruby-identifier">exit</span> <span class="ruby-value">0</span>
+281:     <span class="ruby-keyword kw">end</span>
+282:     <span class="ruby-comment cmt"># Send login name back to login. </span>
+283:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">login</span>
+284:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000059"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000059'>
+
+
+userprompt
+
+()
+
+</a>
+</h3>
+<p>
+Username prompt - displays template, calls highline ask and returns
+username.
+</p>
+
+<p class="source_link" id="M000059-show-link"><a onclick="toggle('M000059-source'); toggleText('M000059-link'); return false;" href="#" id="M000059-link">Show source...</a></p><div class="source" id="M000059-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/tglogin.rb, line 80</span>
+80:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Tglogin</span><span class="ruby-operator">::</span><span class="ruby-identifier">userprompt</span>
+81:     <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_prompt_user.ftl'</span>)
+82:     <span class="ruby-identifier">username</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">loginform</span>
+83:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">username</span>.<span class="ruby-identifier">upcase</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;NEW&quot;</span>
+84:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@logincfg</span>[<span class="ruby-value str">'allownew'</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+85:         <span class="ruby-identifier">username</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">signup</span>
+86:       <span class="ruby-keyword kw">else</span>
+87:         <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-value str">'login_new_disabled.ftl'</span>)
+88:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+89:       <span class="ruby-keyword kw">end</span>
+90:     <span class="ruby-keyword kw">end</span>
+91:     <span class="ruby-comment cmt"># check if the username exists in the DB so as not to waste resources on nonexistent accounts.</span>
+92:     <span class="ruby-keyword kw">if</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">username</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+93:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">username</span>
+94:     <span class="ruby-keyword kw">else</span>
+95:       
+96:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+97:     <span class="ruby-keyword kw">end</span>
+98:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+
+
+
+
+</div><div class="clear" id="footer">Generated on Jan 21, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div></div></body></html>

@@ -1,0 +1,211 @@
+%p
+  Runtime settings and rules are configured in this section.
+  %br
+.flash
+  %div#bbs-form-status
+  %div#database-form-status
+  %div#login-form-status
+  %div#signup-form-status
+%div#config.tab-set
+  %ul
+    %li.tab-selected
+      %a{:href=>"#bbs"}BBS
+    %li
+      %a{:href=>"#database"}Database
+    %li
+      %a{:href=>"#login"}Login
+    %li
+      %a{:href=>"#signup"}Signup
+
+%div.tab-content
+  %div#bbs
+    %form#bbs-form{:name=> "bbs-form",:method => "post", :action => "/tgconfig/update/bbs", :onsubmit=>"return midori.checkRequiredFields( {event: event, formId: 'bbs-form', required: 'bbs_name,bbs_tagline', message: 'Config entries cannot be blank.'})"}
+      %table.results
+        %tr
+          %td BBS Name
+          %td
+            %input#bbs_name{:type=>'text',:name=>"name", :size=>30, :value=>@bbs['name']}
+        %tr
+          %td BBS Tagline
+          %td
+            %input#bbs_tagline{:type=>'text',:name=>'tagline', :size=>75, :value=> @bbs['tagline']}
+        %tr
+          %td Template Theme
+          %td
+            %input#bbs_theme{:type=>'text',:name=>'theme', :size=>30, :value=> @bbs['theme']}
+        %tr
+          %td System Enabled
+          %td
+            - if @bbs['enabled'] == true
+              %input{:type=>'checkbox',:name=>'enabled', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'enabled', :value=> false}
+            -#= @bbs['enabled']
+        %tr
+          %td{:colspan=>2, :align=>"right"}
+            %input{:type=>'submit',:form=>'bbs-form',:name=>'bbs-form-submit', :value => "Save changes to BBS settings"}
+
+  %div#login{:style=>"display: none"}
+    %form#login-form{:name=> "login-form",:method => "post", :action => "/tgconfig/update/login", :onsubmit=>"return midori.checkRequiredFields( {event: event, formId: 'login-form', required: 'login_attempts,login_lockout', message: 'Config entries cannot be blank.'})"}
+      %table.results
+        %tr
+          %td Max Login Attempts Per Connection
+          %td
+            %input#login_attempts{:type=>'number',:name=>"attempts", :size=>3, :min=> 1,:max=>20,:value=>@login['attempts']}
+        %tr
+          %td Lock account after X number of failed attempts
+          %td
+            %input#login_lockout{:type=>'number',:name=>"lockout", :size=>3, :min=> 1,:max=>20,:value=>@login['lockout']}
+        %tr
+          %td Use Password Hints for self-service resets
+          %td
+            - if @login['usehint'] == true
+              %input{:type=>'checkbox',:name=>'usehint', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'usehint', :value=> false}
+        %tr
+          %td Allow NEW user signups
+          %td
+            - if @login['allownew'] == true
+              %input{:type=>'checkbox',:name=>'allownew', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'allownew', :value=> false}
+        %tr
+          %td{:colspan=>2, :align=>"right"}
+            %input{:type=>'submit',:form=>'login-form',:name=>'login-form-submit', :value => "Save changes to Login settings"}
+
+  %div#signup{:style=>"display: none"}
+    %form#signup-form{:name=> "signup-form",:method => "post", :action => "/tgconfig/update/signup", :onsubmit=>"return midori.checkRequiredFields( {event: event, formId: 'signup-form', required: 'signup_defaultgroup', message: 'Config entries cannot be blank.'})"}
+      %table.results
+        %tr
+          %td Assign NEW users to this group
+          %td
+            - groups = Group.select{:name}.all
+            %select{:name=>'default_group',:selected=> @signup['default_group']}
+              - groups.each do |group|
+                %option{:value=> group.name}
+                  = group.name
+        %tr
+          %td Ask for Address
+          %td
+            - if @signup['ask_address'] == true
+              %input{:type=>'checkbox',:name=>'ask_address', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_address', :value=> false}
+        %tr
+          %td Ask for Postal Code
+          %td
+            - if @signup['ask_postal'] == true
+              %input{:type=>'checkbox',:name=>'ask_postal', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_postal', :value=> false}
+        %tr
+          %td Ask for Country
+          %td
+            - if @signup['ask_country'] == true
+              %input{:type=>'checkbox',:name=>'ask_country', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_country', :value=> false}
+        %tr
+          %td Ask for Phone
+          %td
+            - if @signup['ask_phone'] == true
+              %input{:type=>'checkbox',:name=>'ask_phone', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_phone', :value=> false}
+        %tr
+          %td Ask for Gender
+          %td
+            - if @signup['ask_gender'] == true
+              %input{:type=>'checkbox',:name=>'ask_gender', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_gender', :value=> false}
+        %tr
+          %td Ask for Birthdate
+          %td
+            - if @signup['ask_bday'] == true
+              %input{:type=>'checkbox',:name=>'ask_bday', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_bday', :value=> false}
+        %tr
+          %td Ask Custom Question #1
+          %td
+            - if @signup['ask_custom1'] == true
+              %input{:type=>'checkbox',:name=>'ask_custom1', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_custom1', :value=> false}
+        %tr
+          %td Custom #1
+          %td
+            %input{:type=>'text',:name=>'custom1',:size=>75,:max=>75,:value=> @signup['custom1']}
+        %tr
+          %td Ask Custom Question #2
+          %td
+            - if @signup['ask_custom2'] == true
+              %input{:type=>'checkbox',:name=>'ask_custom2', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_custom2', :value=> false}
+        %tr
+          %td Custom #2
+          %td
+            %input{:type=>'text',:name=>'custom2',:size=>75,:max=>75,:value=> @signup['custom2']}
+
+        %tr
+          %td Ask Custom Question #3
+          %td
+            - if @signup['ask_custom3'] == true
+              %input{:type=>'checkbox',:name=>'ask_custom3', :checked=>'checked', :value=> true}
+              -else
+                %input{:type=>'checkbox', :name=>'ask_custom3', :value=> false}
+        %tr
+          %td Custom #3
+          %td
+            %input{:type=>'text',:name=>'custom1',:size=>75,:max=>75,:value=> @signup['custom3']}            
+        %tr
+          %td{:colspan=>2, :align=>"right"}
+            %input{:type=>'submit',:form=>'signup-form',:name=>'signup-form-submit', :value => "Save changes to Signup settings"}
+
+  %div#database{:style=>"display: none"}
+    %table.results
+      %tr
+        %th{:colspan=>2}
+          * Database configuration cannot be changed from the web admin. See documentation.
+      %tr
+        %td Database Type
+        %td
+          = @database['type']
+      - if @database['type'] == 'remote'
+        %tr
+          %td Database Driver
+          %td
+            = @database['driver']
+        %tr
+          %td Database Host
+          %td
+            = @database['host']
+        %tr
+          %td Database Name
+          %td
+            = @database['name']
+        %tr
+          %td Database User
+          %td
+            = @database['user']
+        %tr
+          %td Database Password
+          %td
+            [NOT SHOWN]
+            -#= @database['password']
+      -else
+        %tr
+          %td Database Driver
+          %td Telegard H2 Driver
+
+%script
+  midori.addEventListener(window, 'ready', function (e) {
+  midoriTab.init() } );
+%p
+  %small
+    %strong
+      Note:
+    Changes made in this section take place instantly; however, existing login sessions will not be affected.

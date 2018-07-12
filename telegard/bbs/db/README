@@ -1,0 +1,21 @@
+******************* WARNING *******************
+
+The files contained in this directory house the 
+embedded database files.  Deleting or tampering
+with these  files  will result in complete data
+loss of all messages,  file information,  users
+and any other information stored within the DB.
+
+This directory should be added to a  backup set
+or frequently copied to another location.  When
+performing a backup or upgrade, you should only
+use  the  tools  provided by the OpenTelegard/2 
+distribution.  You may  also  safely copy these 
+files to  another location provided the  OpenTG 
+software is not running  or using the database.
+
+The  OpenTelegard/2 Project  is not responsible
+for any data loss what-so-ever! Please read the
+LicenseAgreement that accompanied this software
+
+***********************************************

@@ -1,0 +1,8 @@
+NOTE: This version of Telegard ships with all required runtime components. 
+
+1) Unpack to a location such as /opt/telegard
+2) Check the variable TELEGARD_HOME in the provided shell scripts:
+   a) /opt/telegard/tg
+   b) /opt/telegard/h2.init.sh
+
+3) The h2.init script should be started before running the application

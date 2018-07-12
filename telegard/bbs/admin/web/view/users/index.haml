@@ -1,0 +1,42 @@
+%p
+  This is the user manager where you can perform administration tasks on members of your system.
+  %table.results
+    %tr
+      %th Username
+      %th Real Name
+      %th Location
+      %th Group
+      %th Locked?
+      %th Actions    
+    - @users.each do |u|
+      %tr
+        %td
+          = u.login
+        %td
+          = u.firstname + ' '
+          = u.lastname
+        %td
+          = u.city
+          ,
+          = u.state
+          (
+          = u.country
+          )
+        %td
+          - g = @groups.where(:id => u.group_id).all
+          = g.first.name
+        %td
+          - if u.islocked == true
+            %font{:color => "#FF0000"}LOCKED
+            - else
+              NO  
+        %td
+          %small
+            %a{:href=>"/users/view/#{u.id}"}View
+            |
+            %a{:href=>"/users/delete/#{u.id}"}Delete
+            |
+            - if u.islocked == false
+              %a{:href=>"/users/lock/#{u.id}"}Lockout
+              - else
+              %a{:href=>"/users/unlock/#{u.id}"}Un-Lock

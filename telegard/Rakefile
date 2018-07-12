@@ -1,0 +1,18 @@
+#
+# OpenTelegard Rakefile
+#
+
+
+require 'rake/rdoctask'
+#require 'rdoc'
+
+  Rake::RDocTask.new do |rdoc|
+        files = ['README', 'LICENSE',
+                 'bbs/**/*.rb', 'doc/**/*.rdoc']
+        rdoc.rdoc_files.add(files)
+        rdoc.main = 'README'
+        rdoc.title = 'OpenTelegard/2 API rdocs'
+        rdoc.template = '/opt/devel/jruby/lib/ruby/gems/1.8/gems/allison-2.0.3/lib/allison'
+        rdoc.rdoc_dir = 'doc/api'        
+        rdoc.options = [ '--line-numbers', '--inline-source' ]
+  end

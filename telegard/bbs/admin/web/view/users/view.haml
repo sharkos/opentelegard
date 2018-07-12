@@ -1,0 +1,107 @@
+%table.results
+  %tr
+    %th{:colspan=>2, :align=>"right"}
+      %small
+        %a{:href=>"/users/edit/#{@user.id}"}
+          Edit
+  %tr
+    %td Username
+    %td
+      = @user.login
+  %tr
+    %td Last Login
+    %td
+      = @user.login_last
+  %tr
+    %td Login Total
+    %td
+      = @user.login_total
+  %tr
+    %td Firstname
+    %td
+      = @user.firstname
+  %tr
+    %td Lastname
+    %td
+      = @user.lastname
+  %tr
+    %td Email
+    %td
+      = @user.email
+  %tr
+    %td City
+    %td
+      = @user.city
+  %tr
+    %td State
+    %td
+      = @user.state
+  %tr
+    %td Country
+    %td
+      = @user.country
+  %tr
+    %td Postal
+    %td
+      = @user.postal
+  %tr
+    %td Phone
+    %td
+      = @user.phone
+  %tr
+    %td Gender
+    %td
+      = @user.gender
+  %tr
+    %td Birthdate
+    %td
+      = @user.bday
+  %tr
+    %td Custom 1
+    %td
+      = @user.custom1
+  %tr
+    %td Custom 2
+    %td
+      = @user.custom2
+  %tr
+    %td Custom 3
+    %td
+      = @user.custom3
+  %tr
+    %td Sysop Notes
+    %td
+      = @user.sysopnote
+  %tr
+    %td Password Expires
+    %td
+      = @user.pwexpires
+  %tr
+    %td Timebank
+    %td
+      = @user.timebank
+  %tr
+    %td Total Files Uploaded
+    %td
+      = @user.total_files_up
+  %tr
+    %td Total Files Downloaded
+    %td
+      = @user.total_files_down
+  %tr
+    %td Total Messages Posted
+    %td
+      = @user.total_messages
+  %tr
+    %td Login Failures
+    %td
+      = @user.login_failures
+  %tr
+    %td Account Locked?
+    %td
+      = @user.islocked
+  %tr
+    %td Account Created
+    %td
+      = @user.created
+

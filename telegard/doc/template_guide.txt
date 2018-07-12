@@ -1,0 +1,104 @@
+               ================================================
+                      OpenTelegard/2 Operating SubSystem
+                  Copyright (C) 2010, LeafScale Systems, LLC
+                            http://www.opentg.org
+               ================================================
+
+                                Template Guide
+-------------------------------------------------------------------------------
+
+
+=== Introduction ===
+
+The OpenTelegard template system is used to render the ANSI screens and other
+text output. The Engine is called FreeMarker+TG. "FreeMarker is a 'template 
+engine'; a generic tool to generate text output." OpenTelegard incorporates
+the FreeMarker engine by wrapping the library into its own Tgtemplate:Template
+class and ensuring that an available set of variables and constants are always
+available to the template designer. This includes the ANSI color set, a set of
+global variables, and of course any variables passed prior to rendering. Thus,
+the +TG is appended to the engine name.
+
+Template files are located in the /tpls directory in the top level of the
+software installation. Files are named based on the calling function/section
+of the BBS session and the filename ends with a '.ftl' extension. Template 
+files are pure text files themselves. During runtime, the engine will compile 
+the text version into a cached version for faster parsing of future calls.
+
+
+=== Creating a Template ===
+
+Creating templates is a painless process, but can be time intensive when 
+tweaking colors and trying to perfect a layout. OpenTelegard ships with a 
+reasonable set of pre-defined layouts for the average user. Others are 
+oncouraged to design and share "Template Sets", similar to themes for many
+popular web bloggin software such as wordpress. 
+
+Template filenames are relative to the section of the system and the calling
+function in the source code. Therefore, you should refer to the API docs or 
+use the "default" template set as a guide. Templates are located in the /tpls
+directory of the BBS root installation (ex: /opt/opentg/bbs/tpls/ ). 
+
+You can use any preferred text-editor or IDE that can save files in UTF-8 
+encoding. Saving in other encodings is NOT recommended and unsupported. A
+list of editors recommended buy the FreeMarker developers can be found at:
+ http://freemarker.sourceforge.net/editors.html
+
+The example template in the next section illustrates the use of colors and
+variables within a template. Substitution occurs on instances of ${somevar}
+where somevar is either a known globally available template variable or 
+constant, or a variable handed off by the calling system function.
+
+=== Example Template ===
+
+Welcome, ${color.lightblue}${user}${color.norm}! 
+You have entered ${color.lightcyan}${bbsname}
+${color.white}${color.on_red}(${tagline})${color.reset}
+
+
+=== Using Colors ===
+
+As demonstrated in the above example, colors are added during the
+rendering of the template through the color variable called in the markup.
+Colors are defined as template constants. Color names always start with a
+prefix of 'color.' within the variable name. The list of color suffixes is
+shown below: 
+
+The following names are modifiers to the text:
+"reset", "norm", "bold", "dark", "italic", "underline", "blink", "rapid",
+"negative", "concealed", "strike"
+
+The following values set the text to a light grey:
+"norm", "gray", "grey", "reset"
+
+The following are nonbolded or dark colors:
+"black", "red", "green", "yellow", "blue", "magenta", "cyan",
+
+The following are bolded or bright colors:
+"lightred", "lightgreen", "lightyellow", "lightblue", "lightmagenta", 
+"lightcyan", "white", "darkgray", "darkgrey"
+
+The following set the background color:
+"on_black", "on_red", "on_green", "on_yellow", "on_blue", "on_magenta",
+"on_cyan", "on_white"
+
+
+*** Important Notes about colors:
+
+"grey" == "gray" & "darkgrey" == "darkgray". These two words have the same
+value. Due to various spelling, they are aliases to the same color code.
+
+"reset" will also set the background color to black, but norm
+will only change the foreground color to normal. 
+
+Setting a background color will change the background for an entire block of
+text until a ${color.reset} is found, it is changed within the template by 
+another background color, or until another template is called.
+
+
+
+=== Constants & Globals ===
+
+<MORE ON THIS LATER>
+
+EOL

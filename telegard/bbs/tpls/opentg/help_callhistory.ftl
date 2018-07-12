@@ -1,0 +1,1 @@
+Call History provides visitors and operators with a historical log of callers.

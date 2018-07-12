@@ -1,0 +1,85 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title
+      Telegard/2 Web Admin (
+      = $tgcfg['bbs']['name']
+      ) :
+      = @title
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %link{:href => "/css/style.css", :rel => "stylesheet", :type => "text/css"}/
+    %script{:src => "/js/midori.js", :type => "text/javascript"}
+    %script{:charset => "utf-8", :type => "text/javascript"}
+  %body
+    .main
+      .left
+        .logo
+          %a{:href => "index.html"}
+            %img{:alt => "picture", :border => "0", :src => "/images/logo.png"}/
+        .menu
+          %ul
+            %li
+              %a{:href => "/"}
+                %span Main Page
+            %li
+              %a{:href => "/tgconfig/index"}
+                %span BBS Config
+            %li
+              %a{:href => "/networks/index"}
+                %span BBS Networks
+            %li
+              %a{:href => "/msgareas/index"}
+                %span Message Areas
+            %li
+              %a{:href => "/fileareas/index"}
+                %span File Areas
+            %li
+              %a{:href => "/chatrooms/index"}
+                %span Chat Rooms
+            %li
+              %a{:href => "/users/index"}
+                %span User Manager
+            %li
+              %a{:href => "/groups/index"}
+                %span Groups Manager
+            %li
+              %a{:href => "/status/index"}
+                %span Status & Logs
+            %li
+              %a{:href => "/tools/index"}
+                %span Tools & Maintenance
+
+      .right
+        .index
+          .search
+            -#%form#form1{:action => "", :method => "post", :name => "form1"}
+              %label
+                %span
+                  %input#textfield.keywords{:maxlength => "50", :name => "q", :type => "text", :value => "Search..."}/
+                %input.button{:name => "b", :src => "/images/search.gif", :type => "image"}/
+          %h4 &nbsp;
+          %p
+            %h2
+              = @subtitle
+            %p
+              - if flash[:message]
+                .flash
+                  .message
+                    = flash[:message]
+              - if flash[:error]
+                .flash
+                  .error
+                    = flash[:error]
+              - if flash[:warning]
+                .flash
+                  .warning
+                    = flash[:warning]
+            = @content
+          .clr
+        .clr
+        .footer
+          .resize
+            %p
+              %a{:href => "http://www.telegard.org"}OpenTelegard/2
+              © Copyright 2008-2011. Chris Tusa & LeafScale Systems, LLC. All Rights Reserved
+            .clr

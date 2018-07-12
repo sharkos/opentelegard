@@ -1,0 +1,1 @@
+${color.white}Include quote of original message in reply?  [y/N]:

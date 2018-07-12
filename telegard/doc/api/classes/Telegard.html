@@ -1,0 +1,807 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><title>Module: Telegard</title><link type="text/css" href=".././rdoc-style.css" media="screen" rel="stylesheet"/><script type="text/javascript">
+// Allison template
+// Copyright 2007, 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file.
+
+var href_base = '.././rdoc-style.css'.replace(/(.*\/).*/, '$1'); // inline js is good for something  
+
+function $(id) {
+    if (document.getElementById)
+      elem = document.getElementById(id);
+    else if ( document.all )
+      elem = eval("document.all." + id);
+    else
+      return false;
+    return elem;
+}
+
+  function toggle(id) {
+    elem = $(id);
+    elemStyle = elem.style;   
+    if (elemStyle.display == "block") {
+      elemStyle.display = "none"
+    } else {
+      elemStyle.display = "block"
+    }
+    return true;
+  }
+
+  function toggleText(id) {
+    elem = $(id)
+    if (m = elem.innerHTML.match(/(Hide)(.*)/)) {
+      elem.innerHTML = "Show" + m[2];
+    } else if (m = elem.innerHTML.match(/(Show)(.*)/)) {
+      elem.innerHTML = "Hide" + m[2];
+    }
+    return true;
+  }
+
+function span(s, klass) {
+  return '<span class="' + klass + '">' + s + '</span>';
+}
+  
+function highlightSymbols() {
+  pres = document.getElementsByTagName('pre');
+  for(var i = 0; i < pres.length; i++) {
+    pre = pres[i];
+    spans = pre.getElementsByTagName('span');
+    for(var k = 0; k < spans.length; k++) {
+      span = spans[k];
+      if (span.className.match(/ruby-identifier/)) {
+        if (span.innerHTML.match(/^:/)) {
+          span.className += " ruby-symbol";
+        }
+      }
+    }
+  }
+}
+
+ function hasClass(obj) {
+     var result = false;
+     if (obj.getAttributeNode("class") != null) {
+         result = obj.getAttributeNode("class").value;
+     }
+     return result;
+  }   
+
+ function stripe() {
+    var even = true;
+    var color = "#e4ebed";
+    var tables = document.getElementsByTagName('table');
+    if (tables.length == 0) { return; }
+    for (var h = 0; h < tables.length; h++) {
+        var trs = tables[h].getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+          var tds = trs[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {       
+              if (hasClass(tds[j]) != "first") {                
+              var mytd = tds[j];
+              if (even) {
+                mytd.style.backgroundColor = color;
+              }         
+            }
+          }
+          even =  ! even;
+      }
+    }
+  }
+  
+function ajaxGet(url) {
+  url = (href_base + url).replace('/./', '/')
+  var req = false;
+
+  if (window.ActiveXObject) {
+    try {
+      // stupid hack because IE7 disables local Ajax with the native xmlhttprequest object
+      // for security purposes. Yet ActiveX still works. Thanks, Microsoft. I hate you. Die.
+      req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (e) {
+      try {
+        /* IE 6 and maybe 5, don't know, don't care */
+        req = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          req = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          req = false;
+        }
+      }
+    }
+  }
+    
+  /* real browsers */
+  if (!req && window.XMLHttpRequest) {
+    try {
+      req = new XMLHttpRequest();
+    } catch (e) {
+      req = false;
+    }
+  } 
+  
+  if (req) {
+    req.open('GET', url, false);
+    req.send(null);
+    return req.responseText;
+  } else {
+    return "Ajax error";  
+  }
+}
+
+
+function addEvent(elm, evType, fn, useCapture) {
+	if (elm.addEventListener) {
+	  elm.addEventListener(evType, fn, useCapture);  
+  	return true;
+	} else if (elm.attachEvent) {
+  	var r = elm.attachEvent('on' + evType, fn);  
+	  return r;  
+	} else {
+  	elm['on' + evType] = fn;
+	}
+}
+
+function insertIndices() {
+  pages = ["class", "file", "method"]
+  for (x in pages) { 
+    $(pages[x]).innerHTML += ajaxGet('fr_' + pages[x] + '_index.html').replace(/(href=")/g, '$1' + href_base);
+  }
+  /* mouseoverify method links */
+  links = $('method').getElementsByTagName('a');
+  for (var x = 0; x < links.length; x++) {
+    if (m = links[x].innerHTML.match(/(.*)\s\((.*)\)/)) {
+      links[x].innerHTML = m[1] + '<br>';
+      links[x].title = m[2];
+    }
+  }
+  /* this is stupid */
+  $('class').style.display = "block";
+  $('file').style.display = "block";
+  
+  /* has to be here because IE7 does not guarantee the onLoad callback order */
+  abbreviateIndicesInner(["class", "file"], 25, "a");
+  /* same, linkTitle() depends on the class link list */
+  linkTitle();
+}
+
+function abbreviateIndices() {
+  var ids = ["defined_in", "child_of", "includes", "requires", "method", "methods"];
+  abbreviateIndicesInner(ids, 25, 'a');
+  abbreviateIndicesInner(ids, 25, 'span');
+}
+
+function abbreviateIndicesInner(indices, amount, tag) {
+  for (var x = 0; x < indices.length; x++) { 
+    var the_index = $(indices[x]);
+    if (the_index) {
+      links = the_index.getElementsByTagName(tag);
+      for (var y = 0; y < links.length; y++) {
+        var link = links[y];
+        if (link.getElementsByTagName('span').length == 0 && link.getElementsByTagName('a').length == 0) {
+          // avoid nesting
+          link.innerHTML = link.innerHTML.replace(/<br>|\n/gi, '');
+          link.title = link.innerHTML;
+          link.innerHTML = abbreviate(link.innerHTML, amount) + '<br>';
+        }
+      }
+    }
+  }
+}
+
+function linkTitle() {
+  
+  /* grab the correct title element from the index */
+  var index_page = ajaxGet('index.html');
+  title_text = index_page.match(/<title>(.*)<\/title>/m)[1];
+  document.title = title_text + " - " + document.title;
+  var p = $('header').getElementsByTagName('p')[0]
+  if (p.innerHTML.match(/^\s*$/)) {
+    p.innerHTML = title_text;
+  } else {
+    p.innerHTML = title_text + ": " + p.innerHTML;
+  }
+  
+  /* set the link properly */
+  title_link = index_page.match(/<a\s+href="(.*?)"/)[1];
+  var element = $('title');
+  var item_type = "";
+  var item_name = "";
+  if (m = element.innerHTML.match(/(Class:|Module:|File:)\s*(.*)/)) {
+    item_type = m[1];
+    item_name = m[2];
+  } else {
+    item_name = element.innerHTML;
+  }
+  element.innerHTML = '<a href="' + href_base + title_link + '">' + item_type + " " + abbreviate(item_name, 45) + '</a>';
+  element.getElementsByTagName('a')[0].title = item_name
+  
+  /* breadcrumb navigation */
+  items = item_name.split("::");
+  items_new = item_name.split("::");
+  file_links = $('class').getElementsByTagName('a');
+  for (var x = 0; x < items.length - 1; x++ ){
+    var item = items[x];
+    link = ("/classes/" + items.slice(0,x).join("/") + "/" + item + ".html").replace('//', '/');
+    regex = new RegExp(RegExp.escape(link) + '$');
+    for (var y = 0; y < file_links.length; y++) {
+      if (file_links[y].href.match(regex)) {
+         items_new[x] = '<a href="' + href_base + link + '">' + item + '</a>';
+         break;
+      }
+    }  
+  }
+  $('item_name').innerHTML = item_type + ' ' + items_new.join(" :: ");
+}
+
+function abbreviate(s, size) {
+  while (s.length > size) {
+    var old_s = s;
+    s = s.replace(/\s|\n/mg, '');
+    s = s.replace(/([A-Z])[a-z]+/m, '$1');
+    if (!s || old_s == s) {
+      return "..." + s.substring(s.length - size, s.length);
+    }
+  }
+  return s;
+}
+
+function disableSubmit(event) {
+  var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+  if (keyCode == 13) {
+    return false;
+  } else {
+    return true;
+  }
+}
+  
+function filterList(id, s, event) {
+  
+  /* some weak escaping */
+  s = s.replace(/[^\w\d\.\_\-\/\:\=\[\]\?\!]/g, '');
+  s = RegExp.escape(s);
+  
+  var show_all = false;
+  if (s.match(/^\s*$/)) {
+    show_all = true;
+  }
+  
+  links = $(id).getElementsByTagName('a')
+  regex = new RegExp(s, 'i');
+  
+  for (var x = 0; x < links.length; x++) {
+    var link = links[x];
+    if (show_all) {
+      link.style.display = 'inline';
+    } else {
+       if (link.innerHTML.match(regex)) {        
+         link.style.display = 'inline';
+       } else {
+         link.style.display = 'none';
+       }
+    }
+  }
+  return true;
+}
+
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function hacks() {
+  // show the spacer if necessary, 
+  divs = document.getElementsByTagName('div');
+  for(var x = 0; x < divs.length; x++) {
+    if (divs[x].className && divs[x].className.match(/top/)) {
+      document.getElementById('spacer').style.display = 'block';
+    }
+  }
+  // remove extra colons from tables
+  tds = document.getElementsByTagName('td');
+  for(var x = 0; x < tds.length; x++) {
+    str = tds[x].innerHTML
+    if (str.charAt(str.length - 1) == ":") {
+      tds[x].innerHTML = str.slice(0, str.length - 1)
+    }
+  }
+}
+
+addEvent(window, 'load', insertIndices, false);
+addEvent(window, 'load', abbreviateIndices, false);
+addEvent(window, 'load', stripe, false);
+addEvent(window, 'load', highlightSymbols, false);
+addEvent(window, 'load', hacks, false);
+</script></head><body><div id="container"><div class="curve" id="preheader_curve_0"></div><div class="curve" id="preheader_curve_1"></div><div class="curve" id="preheader_curve_2"></div><div class="curve" id="preheader_curve_3"></div><div class="curve" id="preheader_curve_4"></div><div class="curve" id="preheader_curve_5"></div><div id="header"><p>
+</p><span><h1 id="title">
+Module: Telegard
+</h1></span>
+</div><div class="clear"></div><div id="left">
+
+<div class="navigation darker top" id="defined_in"><h3>Defined in</h3>
+
+<a href="../files/bbs/lib/telegard_rb.html">bbs/lib/telegard.rb</a>
+
+</div>
+
+
+
+<div class="navigation top" id="methods"><h3>Methods</h3>
+
+
+<a href='#M000099'>
+goodbye<br/>
+</a>
+
+
+
+
+<a href='#M000100'>
+goodbye_fast<br/>
+</a>
+
+
+
+
+<a href='#M000098'>
+init<br/>
+</a>
+
+
+
+
+<a href='#M000094'>
+load_databaseconn<br/>
+</a>
+
+
+
+
+<a href='#M000092'>
+load_tgconfig<br/>
+</a>
+
+
+
+
+<a href='#M000091'>
+loadlib_tgconfig<br/>
+</a>
+
+
+
+
+<a href='#M000089'>
+loadlib_tgconstants<br/>
+</a>
+
+
+
+
+<a href='#M000097'>
+loadlib_tgcontroller<br/>
+</a>
+
+
+
+
+<a href='#M000093'>
+loadlib_tgdatabase<br/>
+</a>
+
+
+
+
+<a href='#M000095'>
+loadlib_tgdatabasemodels<br/>
+</a>
+
+
+
+
+<a href='#M000090'>
+loadlib_tgio<br/>
+</a>
+
+
+
+
+<a href='#M000096'>
+loadlib_tgtemplate<br/>
+</a>
+
+
+
+
+<a href='#M000101'>
+unimplemented<br/>
+</a>
+
+
+</div>
+<div id="spacer"></div><div class="navigation darker index" id="class_wrapper"><div class="list_header"><h3>All classes</h3></div><div class="list_header_link"><a onclick="toggle('class'); toggleText('class_link'); return false;" href="#" id="class_link">Hide...</a></div><div class="clear"></div><div id="class"><form><label for="filter_class">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('class', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_class"></input></form></div></div><div class="navigation darker index" id="file_wrapper"><div class="list_header"><h3>All files</h3></div><div class="list_header_link"><a onclick="toggle('file'); toggleText('file_link'); return false;" href="#" id="file_link">Hide...</a></div><div class="clear"></div><div id="file"><form><label for="filter_file">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('file', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_file"></input></form></div></div><div class="navigation darker index" id="method_wrapper"><div class="list_header"><h3>All methods</h3></div><div class="list_header_link"><a onclick="toggle('method'); toggleText('method_link'); return false;" href="#" id="method_link">Show...</a></div><div class="clear"></div><div id="method"><form><label for="filter_method">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('method', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_method"></input></form></div></div></div><div id="content">
+<h1 id="item_name">Module: Telegard</h1>
+
+<div id="description"><h1><a href="Telegard.html">Telegard</a> (<a href="Telegard.html">Telegard</a>)</h1>
+<p>
+<a href="Telegard.html">Telegard</a> is the main <a
+href="Telegard.html">Telegard</a> library responsible for initialization of
+sub libraries.
+</p>
+</div>
+
+
+
+
+<p></p>
+
+
+
+
+
+
+<h1>Public Class Methods</h1>
+
+
+<a class="small" name="M000099"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000099'>
+
+
+goodbye
+
+()
+
+</a>
+</h3>
+<p>
+Defines normal <a href="Telegard.html#M000099">goodbye</a>
+</p>
+
+<p class="source_link" id="M000099-show-link"><a onclick="toggle('M000099-source'); toggleText('M000099-link'); return false;" href="#" id="M000099-link">Show source...</a></p><div class="source" id="M000099-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 178</span>
+178: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">goodbye</span>
+179:   <span class="ruby-comment cmt"># TODO: Add askny question, and add any other items here.</span>
+180:   <span class="ruby-constant">Tgtemplate</span>.<span class="ruby-identifier">display</span>(<span class="ruby-value str">'logout_prompt_goodbye.ftl'</span>)
+181:   <span class="ruby-identifier">askuser</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">inputyn</span>
+182:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">askuser</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+183:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">goodbye_fast</span>
+184:   <span class="ruby-keyword kw">end</span>
+185: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000100"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000100'>
+
+
+goodbye_fast
+
+()
+
+</a>
+</h3>
+<p>
+Defines fast <a href="Telegard.html#M000099">goodbye</a>
+</p>
+
+<p class="source_link" id="M000100-show-link"><a onclick="toggle('M000100-source'); toggleText('M000100-link'); return false;" href="#" id="M000100-link">Show source...</a></p><div class="source" id="M000100-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 188</span>
+188: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">goodbye_fast</span>
+189:   <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Goodbye!&quot;</span>
+190:   <span class="ruby-comment cmt"># If we have reached this point, the main controller has exited.</span>
+191:   <span class="ruby-comment cmt"># Terminate the session</span>
+192:   <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">time_logout</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+193:   <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">save</span>
+194:   <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$session</span>
+195:   <span class="ruby-identifier">$session</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$session</span>
+196:   <span class="ruby-identifier">exit</span> <span class="ruby-value">0</span>
+197: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000098"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000098'>
+
+
+init
+
+()
+
+</a>
+</h3>
+<p>
+Load the entire stack in the correct order. Use this method for anything
+that requires full <a href="Telegard.html#M000098">init</a>
+</p>
+
+<p class="source_link" id="M000098-show-link"><a onclick="toggle('M000098-source'); toggleText('M000098-link'); return false;" href="#" id="M000098-link">Show source...</a></p><div class="source" id="M000098-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 165</span>
+165: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">init</span>
+166:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgconstants</span>
+167:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgio</span>
+168:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgconfig</span>
+169:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">load_tgconfig</span>
+170:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgdatabase</span>
+171:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">load_databaseconn</span>
+172:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgdatabasemodels</span>
+173:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgtemplate</span>
+174:   <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">loadlib_tgcontroller</span>
+175: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000094"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000094'>
+
+
+load_databaseconn
+
+()
+
+</a>
+</h3>
+<p>
+Connect to the user specified DB engine &amp; load the Sequel models
+</p>
+
+<p class="source_link" id="M000094-show-link"><a onclick="toggle('M000094-source'); toggleText('M000094-link'); return false;" href="#" id="M000094-link">Show source...</a></p><div class="source" id="M000094-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 112</span>
+112: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">load_databaseconn</span>
+113:   <span class="ruby-keyword kw">begin</span>
+114:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-value str">&quot;Initializing database connection&quot;</span>
+115:     <span class="ruby-identifier">$db</span> = <span class="ruby-constant">Tgdatabase</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">$cfg</span>[<span class="ruby-value str">'database'</span>])
+116:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+117:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+118:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+119:     <span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>
+120:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+121:   <span class="ruby-keyword kw">end</span>
+122: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000092"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000092'>
+
+
+load_tgconfig
+
+()
+
+</a>
+</h3>
+<p>
+Loads configuration into a global $cfg variable
+</p>
+
+<p class="source_link" id="M000092-show-link"><a onclick="toggle('M000092-source'); toggleText('M000092-link'); return false;" href="#" id="M000092-link">Show source...</a></p><div class="source" id="M000092-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 89</span>
+89: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">load_tgconfig</span>
+90:   <span class="ruby-keyword kw">begin</span>
+91:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-value str">&quot;Loading Telegard configuration&quot;</span>
+92:     <span class="ruby-identifier">$cfg</span> = <span class="ruby-constant">Tgconfig</span>.<span class="ruby-identifier">load</span>
+93:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+94:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+95:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+96:     <span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>
+97:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+98:   <span class="ruby-keyword kw">end</span>
+99: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000091"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000091'>
+
+
+loadlib_tgconfig
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: <a href="Tgconfig.html">Tgconfig</a>
+</p>
+
+<p class="source_link" id="M000091-show-link"><a onclick="toggle('M000091-source'); toggleText('M000091-link'); return false;" href="#" id="M000091-link">Show source...</a></p><div class="source" id="M000091-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 79</span>
+79: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgconfig</span>
+80:   <span class="ruby-keyword kw">begin</span>
+81:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgconfig'</span>
+82:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+83:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgconfig'.&quot;</span>
+84:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+85:   <span class="ruby-keyword kw">end</span>
+86: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000089"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000089'>
+
+
+loadlib_tgconstants
+
+()
+
+</a>
+</h3>
+<p>
+Load the constants definition
+</p>
+
+<p class="source_link" id="M000089-show-link"><a onclick="toggle('M000089-source'); toggleText('M000089-link'); return false;" href="#" id="M000089-link">Show source...</a></p><div class="source" id="M000089-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 58</span>
+58: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgconstants</span>
+59:   <span class="ruby-keyword kw">begin</span>
+60:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgconstants'</span>
+61:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+62:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgconstants'.&quot;</span>
+63:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+64:   <span class="ruby-keyword kw">end</span>
+65: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000097"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000097'>
+
+
+loadlib_tgcontroller
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: <a href="Tgcontroller.html">Tgcontroller</a>
+</p>
+
+<p class="source_link" id="M000097-show-link"><a onclick="toggle('M000097-source'); toggleText('M000097-link'); return false;" href="#" id="M000097-link">Show source...</a></p><div class="source" id="M000097-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 151</span>
+151: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgcontroller</span>
+152:   <span class="ruby-keyword kw">begin</span>
+153:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-value str">&quot;Loading Master Controller&quot;</span>
+154:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgcontroller'</span>
+155:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+156:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+157:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgcontroller'.&quot;</span>
+158:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+159:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+160:   <span class="ruby-keyword kw">end</span>
+161: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000093"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000093'>
+
+
+loadlib_tgdatabase
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: <a href="Tgdatabase.html">Tgdatabase</a>
+</p>
+
+<p class="source_link" id="M000093-show-link"><a onclick="toggle('M000093-source'); toggleText('M000093-link'); return false;" href="#" id="M000093-link">Show source...</a></p><div class="source" id="M000093-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 102</span>
+102: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgdatabase</span>
+103:   <span class="ruby-keyword kw">begin</span>
+104:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgdatabase'</span>
+105:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+106:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgdatabase'.&quot;</span>
+107:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+108:   <span class="ruby-keyword kw">end</span>
+109: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000095"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000095'>
+
+
+loadlib_tgdatabasemodels
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: Tgdatabase_models
+</p>
+
+<p class="source_link" id="M000095-show-link"><a onclick="toggle('M000095-source'); toggleText('M000095-link'); return false;" href="#" id="M000095-link">Show source...</a></p><div class="source" id="M000095-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 125</span>
+125: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgdatabasemodels</span>
+126:   <span class="ruby-keyword kw">begin</span>
+127:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgdatabase_models'</span>
+128:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+129:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgdatabase_models'.&quot;</span>
+130:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+131:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">DatabaseConnectionError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+132:     <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Unable to connect to database: #{e}&quot;</span>
+133:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+134:   <span class="ruby-keyword kw">end</span>
+135: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000090"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000090'>
+
+
+loadlib_tgio
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: <a href="Tgio.html">Tgio</a>
+</p>
+
+<p class="source_link" id="M000090-show-link"><a onclick="toggle('M000090-source'); toggleText('M000090-link'); return false;" href="#" id="M000090-link">Show source...</a></p><div class="source" id="M000090-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 68</span>
+68: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgio</span>
+69:   <span class="ruby-keyword kw">begin</span>
+70:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgio'</span>
+71:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">mainbanner</span>
+72:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+73:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgio'.&quot;</span>
+74:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+75:   <span class="ruby-keyword kw">end</span>
+76: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000096"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000096'>
+
+
+loadlib_tgtemplate
+
+()
+
+</a>
+</h3>
+<p>
+Load Library: <a href="Tgtemplate.html">Tgtemplate</a>
+</p>
+
+<p class="source_link" id="M000096-show-link"><a onclick="toggle('M000096-source'); toggleText('M000096-link'); return false;" href="#" id="M000096-link">Show source...</a></p><div class="source" id="M000096-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 138</span>
+138: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">loadlib_tgtemplate</span>
+139:   <span class="ruby-keyword kw">begin</span>
+140:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-value str">&quot;Loading FreeMarker+TG template engine&quot;</span>
+141:     <span class="ruby-identifier">require</span> <span class="ruby-value str">'lib/tgtemplate'</span>
+142:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+143:   <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>    
+144:     <span class="ruby-value str">&quot;FATAL: cannot load library 'tgtemplate'.&quot;</span>
+145:     <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+146:     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+147:   <span class="ruby-keyword kw">end</span>
+148: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000101"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000101'>
+
+
+unimplemented
+
+()
+
+</a>
+</h3>
+<p>
+Prints a message when a feature is currently not implemented
+</p>
+
+<p class="source_link" id="M000101-show-link"><a onclick="toggle('M000101-source'); toggleText('M000101-link'); return false;" href="#" id="M000101-link">Show source...</a></p><div class="source" id="M000101-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/telegard.rb, line 200</span>
+200: <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">unimplemented</span>
+201:  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;En: Sorry! Feature not implemented / De: Element nicht geschrieben&quot;</span>
+202: <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+
+
+
+
+</div><div class="clear" id="footer">Generated on Jan 21, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div></div></body></html>

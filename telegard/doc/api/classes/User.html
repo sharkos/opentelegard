@@ -1,0 +1,566 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><title>Class: User</title><link type="text/css" href=".././rdoc-style.css" media="screen" rel="stylesheet"/><script type="text/javascript">
+// Allison template
+// Copyright 2007, 2008 Cloudburst, LLC. Licensed under the AFL 3. See the included LICENSE file.
+
+var href_base = '.././rdoc-style.css'.replace(/(.*\/).*/, '$1'); // inline js is good for something  
+
+function $(id) {
+    if (document.getElementById)
+      elem = document.getElementById(id);
+    else if ( document.all )
+      elem = eval("document.all." + id);
+    else
+      return false;
+    return elem;
+}
+
+  function toggle(id) {
+    elem = $(id);
+    elemStyle = elem.style;   
+    if (elemStyle.display == "block") {
+      elemStyle.display = "none"
+    } else {
+      elemStyle.display = "block"
+    }
+    return true;
+  }
+
+  function toggleText(id) {
+    elem = $(id)
+    if (m = elem.innerHTML.match(/(Hide)(.*)/)) {
+      elem.innerHTML = "Show" + m[2];
+    } else if (m = elem.innerHTML.match(/(Show)(.*)/)) {
+      elem.innerHTML = "Hide" + m[2];
+    }
+    return true;
+  }
+
+function span(s, klass) {
+  return '<span class="' + klass + '">' + s + '</span>';
+}
+  
+function highlightSymbols() {
+  pres = document.getElementsByTagName('pre');
+  for(var i = 0; i < pres.length; i++) {
+    pre = pres[i];
+    spans = pre.getElementsByTagName('span');
+    for(var k = 0; k < spans.length; k++) {
+      span = spans[k];
+      if (span.className.match(/ruby-identifier/)) {
+        if (span.innerHTML.match(/^:/)) {
+          span.className += " ruby-symbol";
+        }
+      }
+    }
+  }
+}
+
+ function hasClass(obj) {
+     var result = false;
+     if (obj.getAttributeNode("class") != null) {
+         result = obj.getAttributeNode("class").value;
+     }
+     return result;
+  }   
+
+ function stripe() {
+    var even = true;
+    var color = "#e4ebed";
+    var tables = document.getElementsByTagName('table');
+    if (tables.length == 0) { return; }
+    for (var h = 0; h < tables.length; h++) {
+        var trs = tables[h].getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+          var tds = trs[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {       
+              if (hasClass(tds[j]) != "first") {                
+              var mytd = tds[j];
+              if (even) {
+                mytd.style.backgroundColor = color;
+              }         
+            }
+          }
+          even =  ! even;
+      }
+    }
+  }
+  
+function ajaxGet(url) {
+  url = (href_base + url).replace('/./', '/')
+  var req = false;
+
+  if (window.ActiveXObject) {
+    try {
+      // stupid hack because IE7 disables local Ajax with the native xmlhttprequest object
+      // for security purposes. Yet ActiveX still works. Thanks, Microsoft. I hate you. Die.
+      req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (e) {
+      try {
+        /* IE 6 and maybe 5, don't know, don't care */
+        req = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          req = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+          req = false;
+        }
+      }
+    }
+  }
+    
+  /* real browsers */
+  if (!req && window.XMLHttpRequest) {
+    try {
+      req = new XMLHttpRequest();
+    } catch (e) {
+      req = false;
+    }
+  } 
+  
+  if (req) {
+    req.open('GET', url, false);
+    req.send(null);
+    return req.responseText;
+  } else {
+    return "Ajax error";  
+  }
+}
+
+
+function addEvent(elm, evType, fn, useCapture) {
+	if (elm.addEventListener) {
+	  elm.addEventListener(evType, fn, useCapture);  
+  	return true;
+	} else if (elm.attachEvent) {
+  	var r = elm.attachEvent('on' + evType, fn);  
+	  return r;  
+	} else {
+  	elm['on' + evType] = fn;
+	}
+}
+
+function insertIndices() {
+  pages = ["class", "file", "method"]
+  for (x in pages) { 
+    $(pages[x]).innerHTML += ajaxGet('fr_' + pages[x] + '_index.html').replace(/(href=")/g, '$1' + href_base);
+  }
+  /* mouseoverify method links */
+  links = $('method').getElementsByTagName('a');
+  for (var x = 0; x < links.length; x++) {
+    if (m = links[x].innerHTML.match(/(.*)\s\((.*)\)/)) {
+      links[x].innerHTML = m[1] + '<br>';
+      links[x].title = m[2];
+    }
+  }
+  /* this is stupid */
+  $('class').style.display = "block";
+  $('file').style.display = "block";
+  
+  /* has to be here because IE7 does not guarantee the onLoad callback order */
+  abbreviateIndicesInner(["class", "file"], 25, "a");
+  /* same, linkTitle() depends on the class link list */
+  linkTitle();
+}
+
+function abbreviateIndices() {
+  var ids = ["defined_in", "child_of", "includes", "requires", "method", "methods"];
+  abbreviateIndicesInner(ids, 25, 'a');
+  abbreviateIndicesInner(ids, 25, 'span');
+}
+
+function abbreviateIndicesInner(indices, amount, tag) {
+  for (var x = 0; x < indices.length; x++) { 
+    var the_index = $(indices[x]);
+    if (the_index) {
+      links = the_index.getElementsByTagName(tag);
+      for (var y = 0; y < links.length; y++) {
+        var link = links[y];
+        if (link.getElementsByTagName('span').length == 0 && link.getElementsByTagName('a').length == 0) {
+          // avoid nesting
+          link.innerHTML = link.innerHTML.replace(/<br>|\n/gi, '');
+          link.title = link.innerHTML;
+          link.innerHTML = abbreviate(link.innerHTML, amount) + '<br>';
+        }
+      }
+    }
+  }
+}
+
+function linkTitle() {
+  
+  /* grab the correct title element from the index */
+  var index_page = ajaxGet('index.html');
+  title_text = index_page.match(/<title>(.*)<\/title>/m)[1];
+  document.title = title_text + " - " + document.title;
+  var p = $('header').getElementsByTagName('p')[0]
+  if (p.innerHTML.match(/^\s*$/)) {
+    p.innerHTML = title_text;
+  } else {
+    p.innerHTML = title_text + ": " + p.innerHTML;
+  }
+  
+  /* set the link properly */
+  title_link = index_page.match(/<a\s+href="(.*?)"/)[1];
+  var element = $('title');
+  var item_type = "";
+  var item_name = "";
+  if (m = element.innerHTML.match(/(Class:|Module:|File:)\s*(.*)/)) {
+    item_type = m[1];
+    item_name = m[2];
+  } else {
+    item_name = element.innerHTML;
+  }
+  element.innerHTML = '<a href="' + href_base + title_link + '">' + item_type + " " + abbreviate(item_name, 45) + '</a>';
+  element.getElementsByTagName('a')[0].title = item_name
+  
+  /* breadcrumb navigation */
+  items = item_name.split("::");
+  items_new = item_name.split("::");
+  file_links = $('class').getElementsByTagName('a');
+  for (var x = 0; x < items.length - 1; x++ ){
+    var item = items[x];
+    link = ("/classes/" + items.slice(0,x).join("/") + "/" + item + ".html").replace('//', '/');
+    regex = new RegExp(RegExp.escape(link) + '$');
+    for (var y = 0; y < file_links.length; y++) {
+      if (file_links[y].href.match(regex)) {
+         items_new[x] = '<a href="' + href_base + link + '">' + item + '</a>';
+         break;
+      }
+    }  
+  }
+  $('item_name').innerHTML = item_type + ' ' + items_new.join(" :: ");
+}
+
+function abbreviate(s, size) {
+  while (s.length > size) {
+    var old_s = s;
+    s = s.replace(/\s|\n/mg, '');
+    s = s.replace(/([A-Z])[a-z]+/m, '$1');
+    if (!s || old_s == s) {
+      return "..." + s.substring(s.length - size, s.length);
+    }
+  }
+  return s;
+}
+
+function disableSubmit(event) {
+  var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+  if (keyCode == 13) {
+    return false;
+  } else {
+    return true;
+  }
+}
+  
+function filterList(id, s, event) {
+  
+  /* some weak escaping */
+  s = s.replace(/[^\w\d\.\_\-\/\:\=\[\]\?\!]/g, '');
+  s = RegExp.escape(s);
+  
+  var show_all = false;
+  if (s.match(/^\s*$/)) {
+    show_all = true;
+  }
+  
+  links = $(id).getElementsByTagName('a')
+  regex = new RegExp(s, 'i');
+  
+  for (var x = 0; x < links.length; x++) {
+    var link = links[x];
+    if (show_all) {
+      link.style.display = 'inline';
+    } else {
+       if (link.innerHTML.match(regex)) {        
+         link.style.display = 'inline';
+       } else {
+         link.style.display = 'none';
+       }
+    }
+  }
+  return true;
+}
+
+RegExp.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}
+
+function hacks() {
+  // show the spacer if necessary, 
+  divs = document.getElementsByTagName('div');
+  for(var x = 0; x < divs.length; x++) {
+    if (divs[x].className && divs[x].className.match(/top/)) {
+      document.getElementById('spacer').style.display = 'block';
+    }
+  }
+  // remove extra colons from tables
+  tds = document.getElementsByTagName('td');
+  for(var x = 0; x < tds.length; x++) {
+    str = tds[x].innerHTML
+    if (str.charAt(str.length - 1) == ":") {
+      tds[x].innerHTML = str.slice(0, str.length - 1)
+    }
+  }
+}
+
+addEvent(window, 'load', insertIndices, false);
+addEvent(window, 'load', abbreviateIndices, false);
+addEvent(window, 'load', stripe, false);
+addEvent(window, 'load', highlightSymbols, false);
+addEvent(window, 'load', hacks, false);
+</script></head><body><div id="container"><div class="curve" id="preheader_curve_0"></div><div class="curve" id="preheader_curve_1"></div><div class="curve" id="preheader_curve_2"></div><div class="curve" id="preheader_curve_3"></div><div class="curve" id="preheader_curve_4"></div><div class="curve" id="preheader_curve_5"></div><div id="header"><p>
+</p><span><h1 id="title">
+Class: User
+</h1></span>
+</div><div class="clear"></div><div id="left">
+<div class="navigation darker top" id="child_of"><h3>Child of</h3><span>
+
+Sequel::Model(:users)
+</span></div>
+
+<div class="navigation darker top" id="defined_in"><h3>Defined in</h3>
+
+<a href="../files/bbs/lib/dbmodels/user_rb.html">bbs/lib/dbmodels/user.rb</a>
+
+</div>
+
+
+
+<div class="navigation top" id="methods"><h3>Methods</h3>
+
+
+<a href='#M000050'>
+authorize<br/>
+</a>
+
+
+
+
+<a href='#M000051'>
+clearfailed<br/>
+</a>
+
+
+
+
+<a href='#M000052'>
+countlogin<br/>
+</a>
+
+
+
+
+<a href='#M000048'>
+cryptpassword<br/>
+</a>
+
+
+
+
+<a href='#M000049'>
+exists?<br/>
+</a>
+
+
+
+
+<a href='#M000053'>
+validatepw<br/>
+</a>
+
+
+</div>
+<div id="spacer"></div><div class="navigation darker index" id="class_wrapper"><div class="list_header"><h3>All classes</h3></div><div class="list_header_link"><a onclick="toggle('class'); toggleText('class_link'); return false;" href="#" id="class_link">Hide...</a></div><div class="clear"></div><div id="class"><form><label for="filter_class">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('class', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_class"></input></form></div></div><div class="navigation darker index" id="file_wrapper"><div class="list_header"><h3>All files</h3></div><div class="list_header_link"><a onclick="toggle('file'); toggleText('file_link'); return false;" href="#" id="file_link">Hide...</a></div><div class="clear"></div><div id="file"><form><label for="filter_file">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('file', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_file"></input></form></div></div><div class="navigation darker index" id="method_wrapper"><div class="list_header"><h3>All methods</h3></div><div class="list_header_link"><a onclick="toggle('method'); toggleText('method_link'); return false;" href="#" id="method_link">Show...</a></div><div class="clear"></div><div id="method"><form><label for="filter_method">Filter:&nbsp;&nbsp;</label><input type="text" onKeyUp="return filterList('method', this.value, event);" onKeyPress="return disableSubmit(event);" id="filter_method"></input></form></div></div></div><div id="content">
+<h1 id="item_name">Class: User</h1>
+
+<div id="description"><p>
+<a href="User.html">User</a> Class
+</p>
+</div>
+
+
+
+
+<p></p>
+
+
+
+
+
+
+<h1>Public Class Methods</h1>
+
+
+<a class="small" name="M000050"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000050'>
+
+
+authorize
+
+(username, cleartxtpw)
+
+</a>
+</h3>
+<p>
+Authorize a user by name. Passes in cleartxt version of password
+</p>
+
+<p class="source_link" id="M000050-show-link"><a onclick="toggle('M000050-source'); toggleText('M000050-link'); return false;" href="#" id="M000050-link">Show source...</a></p><div class="source" id="M000050-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 170</span>
+170:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">cleartxtpw</span>)
+171:     <span class="ruby-identifier">user</span> = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:login=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">username</span>]
+172:     <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">nil?</span>
+173:       <span class="ruby-comment cmt"># Reject user if Group level is 255 or higher, or account is set to locked</span>
+174:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">islocked</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Group</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">group_id</span>).<span class="ruby-identifier">level</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">1</span>
+175:         <span class="ruby-identifier">dbpw</span> = <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{user.password}&quot;</span>)
+176:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dbpw</span> <span class="ruby-operator">==</span> <span class="ruby-node">&quot;#{cleartxtpw}&quot;</span>
+177:           <span class="ruby-keyword kw">return</span> {<span class="ruby-identifier">:result=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;true&quot;</span>}
+178:         <span class="ruby-keyword kw">else</span>
+179:           <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-identifier">:login_failures</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>)
+180:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-value str">'login'</span>][<span class="ruby-value str">'lockout'</span>]
+181:             <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-identifier">:islocked</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">true</span>)
+182:           <span class="ruby-keyword kw">end</span>
+183:           <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+184:           <span class="ruby-keyword kw">return</span> {<span class="ruby-identifier">:result</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;false&quot;</span>, <span class="ruby-identifier">:failures</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span>, <span class="ruby-identifier">:islocked=</span><span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">islocked</span>}
+185:         <span class="ruby-keyword kw">end</span>
+186:       <span class="ruby-keyword kw">else</span>
+187:         <span class="ruby-keyword kw">return</span> {<span class="ruby-identifier">:result</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;locked&quot;</span>}
+188:       <span class="ruby-keyword kw">end</span>
+189:     <span class="ruby-keyword kw">else</span>
+190:         <span class="ruby-keyword kw">return</span> {<span class="ruby-identifier">:result=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">&quot;invalid&quot;</span>}
+191:     <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt">#/unless</span>
+192:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000051"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000051'>
+
+
+clearfailed
+
+(username)
+
+</a>
+</h3>
+<p>
+Clear login_failures count on a user
+</p>
+
+<p class="source_link" id="M000051-show-link"><a onclick="toggle('M000051-source'); toggleText('M000051-link'); return false;" href="#" id="M000051-link">Show source...</a></p><div class="source" id="M000051-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 195</span>
+195:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">clearfailed</span>(<span class="ruby-identifier">username</span>)
+196:     <span class="ruby-identifier">user</span> = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:login=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">username</span>]
+197:     <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-identifier">:islocked=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">:login_failures=</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>)
+198:     <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+199:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000052"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000052'>
+
+
+countlogin
+
+(username)
+
+</a>
+</h3>
+<p>
+Count the login by incrementing the DB login_count and timestamp of
+login_last
+</p>
+
+<p class="source_link" id="M000052-show-link"><a onclick="toggle('M000052-source'); toggleText('M000052-link'); return false;" href="#" id="M000052-link">Show source...</a></p><div class="source" id="M000052-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 202</span>
+202:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">countlogin</span>(<span class="ruby-identifier">username</span>)
+203:     <span class="ruby-identifier">user</span> = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:login=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">username</span>]
+204:     <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-identifier">:login_total=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_total</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-identifier">:login_last</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+205:     <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+206:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000048"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000048'>
+
+
+cryptpassword
+
+(cleartxt)
+
+</a>
+</h3>
+<p>
+Encrypt Password with BCrypt
+</p>
+
+<p class="source_link" id="M000048-show-link"><a onclick="toggle('M000048-source'); toggleText('M000048-link'); return false;" href="#" id="M000048-link">Show source...</a></p><div class="source" id="M000048-source"><pre>    <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 75</span>
+75:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">cryptpassword</span>(<span class="ruby-identifier">cleartxt</span>)
+76:     <span class="ruby-identifier">password</span> = <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">cleartxt</span>)
+77:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">password</span>
+78:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000049"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000049'>
+
+
+exists?
+
+(username)
+
+</a>
+</h3>
+<p>
+Quick validation for login or other routines to see if a specified user
+exists
+</p>
+
+<p class="source_link" id="M000049-show-link"><a onclick="toggle('M000049-source'); toggleText('M000049-link'); return false;" href="#" id="M000049-link">Show source...</a></p><div class="source" id="M000049-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 160</span>
+160:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">username</span>)
+161:     <span class="ruby-identifier">user</span> = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:login=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">username</span>]
+162:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">nil?</span>
+163:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+164:     <span class="ruby-keyword kw">else</span>
+165:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+166:     <span class="ruby-keyword kw">end</span>
+167:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+<a class="small" name="M000053"><br/></a>
+<div class="method_block"><h3>
+<a href='#M000053'>
+
+
+validatepw
+
+(pw1, pw2)
+
+</a>
+</h3>
+<p>
+Simple validator to compare 2 passwords in any presented format
+</p>
+
+<p class="source_link" id="M000053-show-link"><a onclick="toggle('M000053-source'); toggleText('M000053-link'); return false;" href="#" id="M000053-link">Show source...</a></p><div class="source" id="M000053-source"><pre>     <span class="ruby-comment cmt"># File bbs/lib/dbmodels/user.rb, line 209</span>
+209:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">validatepw</span>(<span class="ruby-identifier">pw1</span>, <span class="ruby-identifier">pw2</span>)
+210:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pw1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pw2</span>
+211:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+212:     <span class="ruby-keyword kw">else</span>
+213:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+214:     <span class="ruby-keyword kw">end</span>
+215:   <span class="ruby-keyword kw">end</span></pre></div>
+</div>
+
+
+
+
+
+</div><div class="clear" id="footer">Generated on Jan 21, 2008 / Allison 2 &copy; 2007 <a href="http://cloudbur.st">Cloudburst, LLC</a></div></div></body></html>

@@ -1,0 +1,52 @@
+%table.results
+  %tr
+    %th{:colspan=>2, :align=>"right"}
+      %small
+        %a{:href=>"/networks/edit/#{@network.id}"}
+          Edit
+  %tr
+    %td Name
+    %td
+      = @network.name
+  %tr
+    %td Description
+    %td
+      = @network.description
+  %tr
+    %td Network Added
+    %td
+      = @network.created
+  %tr
+    %td Enabled
+    %td
+      = @network.enabled
+  %tr
+    %td Last Network Sync
+    %td
+      - unless @network.lastsync == nil
+        = @network.lastsync
+        - else
+          Never
+  %tr
+    %td Protocol
+    %td
+      = @network.protocol
+  - if @network.protocol == 'telegard'
+    %tr
+      %td Node Name
+      %td
+        = @network.tgnet_node
+    %tr
+      %td Network Directory Server
+      %td
+        = @network.tgnet_directory
+  -elsif @network.protocol == 'fidonet'
+    %tr
+      %td Node Name
+      %td
+        = @network.fidonet_node
+  -elsif @network.protocol == 'wwivnet'
+    %tr
+      %td Node Name
+      %td
+        = @network.wwivnet_node

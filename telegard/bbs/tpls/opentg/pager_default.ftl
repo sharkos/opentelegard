@@ -1,0 +1,1 @@
+${color.magenta}Next Page? ${color.blue}(${color.brightmagenta}Y${color.blue})${color.brightblue}es, ${color.blue}(${color.brightmagenta}N${color.blue})${color.brightblue}o, ${color.blue}(${color.brightmagenta}C${color.blue})${color.brightblue}ontinue ${color.darkgray}: 

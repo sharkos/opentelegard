@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Short bash script for running fully bundled release
+# which includes the required JVM and JRuby component
+# Set TELEGARD_HOME to the installation prefix.
+ 
+TELEGARD_HOME=/opt/telegard
+
+
+##### DO NOT CHANGE BELOW THIS LINE #####
+#
+
+# Use Sun Java
+#JAVA_HOME=$TELEGARD_HOME/contrib/jre
+
+# Use Apache Harmony
+JAVA_HOME=$TELEGARD_HOME/contrib/harmony/jdk
+
+
+JRUBY_HOME=$TELEGARD_HOME/contrib/jruby
+
+$JAVA_HOME/bin/java -version
+
+cd $TELEGARD_HOME/bbs
+
+trap "echo false" SIGSTOP
+$JRUBY_HOME/bin/jruby -W0 --1.9 tg.rb $*
+$JRUBY_HOME/bin/jirb
+
+#
+#########################################
