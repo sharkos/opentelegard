@@ -67,7 +67,7 @@ but should work on any Sequel JDBC compatible server.
 module Tgdatabase
   require 'rubygems'
   require 'sequel'
-  Sequel::Model.plugin(:schema)
+#  Sequel::Model.plugin(:schema)  # This plugin was depreacted in gem Sequel >= v4.5
   Sequel::Model.plugin(:skip_create_refresh)
   
   # Create Database Connection based on type of either H2 Embedded or External Remote.
@@ -85,7 +85,7 @@ module Tgdatabase
       begin
         require 'java'
       rescue LoadError
-        raise "FATAL: Unable to load JAVA hooks. OpenTG requires JRuby >= 1.5.3"
+        raise "FATAL: Unable to load JAVA hooks. OpenTG requires JRuby >= 2.5.0"
       end
       # -> Try to load H2 Database from JAR.
       # (instead of using the GEM for jdbc-h2 which tends to be outdated)

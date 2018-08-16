@@ -107,6 +107,7 @@ def Telegard.load_tgconfig
     puts e
     exit 1
   end
+pp $cfg
 end
 
 # Load Library: Tgdatabase

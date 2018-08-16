@@ -1,7 +1,7 @@
 =begin
                ================================================
                       OpenTelegard/2 Operating SubSystem
-               Copyright (C) 2008-2011   LeafScale Systems, LLC
+               Copyright (C) 2008-2018   LeafScale Systems, LLC
                            http://www.telegard.org
                ================================================
 
@@ -67,7 +67,7 @@ The Users & Group models are designed to work as follows:
 =end
 
 
-Sequel::Model.plugin(:schema)
+# Sequel::Model.plugin(:schema) # This plugin was depreacted in gem Sequel >= v4.5
 require 'lib/dbmodels/group'
 require 'lib/dbmodels/user'
 require 'lib/dbmodels/network'

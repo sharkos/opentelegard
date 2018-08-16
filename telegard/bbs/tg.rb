@@ -50,7 +50,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 # => Check if the program was called using the correct Ruby Interpreter
 unless JRUBY_VERSION.nil?
-  if RUBY_VERSION < "1.8.7"
+  if RUBY_VERSION < "2.5.0"
     puts "OpenTelegard requires version 1.8.7 or later compatible Ruby."
   end
 else
@@ -88,6 +88,8 @@ if currentuser.chomp == "root"
 puts "This program should not be run as 'root' for security reasons, exiting."
   exit 100
 end
+
+$LOAD_PATH.unshift('.')
 
 # Detect Platform information and store into hash.
 require 'java'
@@ -158,7 +160,7 @@ else
   if cmdswitch[:genconfig]
     sample = 'conf/telegard.conf.yaml.sample'
     unless File.exist?(sample)
-      require 'lib/tgconfig'      
+      require "lib/tgconfig.rb"      
       Tgconfig.makedefault(sample)
       puts "Sample config created: #{sample}"
     else

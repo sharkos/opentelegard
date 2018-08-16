@@ -1,0 +1,45 @@
+---
+bbs:
+  name: Telegard/2 BBS
+  tagline: Another Installation of OpenTelegard/2
+  theme: opentg
+  enabled: true
+database:
+  type: embedded
+  driver: jdbc:h2
+  host: localhost
+  name: opentg
+  user: sa
+  pass: 4vxbha7ehuVUqyySoduZL9wNzboSoqJO
+login:
+  attempts: 5
+  lockout: 8
+  usehint: true
+  allownew: true
+signup:
+  default_group: USERS
+  ask_address: true
+  ask_postal: true
+  ask_country: true
+  ask_phone: true
+  ask_gender: true
+  ask_bday: true
+  ask_custom1: true
+  custom1: How did you hear about us? (75 chars max)
+  ask_custom2: false
+  custom2: ''
+  ask_custom3: false
+  custom3: ''
+notify:
+  notify_user: true
+  user_name: SYSOP
+  notify_group: true
+  group_name: SYSOPS
+  on_signup: true
+  on_bbslist_submission: true
+  on_user_lockout: true
+feature:
+  bbslist: true
+webadmin:
+  username: tgadmin
+  password: kZUvuE+icIllQBM95sqM5LJ4m/wJqcfm

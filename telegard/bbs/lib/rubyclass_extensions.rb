@@ -111,7 +111,7 @@ end
 
 
 # Extends fixunum class for some date/time shortcuts.
-class Fixnum
+class Integer
   # Default fixnum class is in seconds (self).
   def seconds
     self
