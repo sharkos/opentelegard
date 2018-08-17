@@ -3,16 +3,108 @@
 #
 
 
-require 'rake/rdoctask'
-#require 'rdoc'
+require 'rdoc/task'
+$LOAD_PATH.unshift('./bbs')
+require 'lib/tgconstants'
+require 'lib/tgio'
+    
+  task :default do
+  desc "Telegard - rake help"
+  puts "Telegard uses ruby's rake facility to automate specific tasks."
+  puts "usage:  rake [ns:task]\n"
+  puts "Documentation"
+  puts "  doc:rdoc          - Build the API documentation"
+  puts "\n"
+  puts "Database"
+  puts "  db:migrate        - Run Sequel DB migration tasks"
+  puts "  db:viewconf       - View database configuration"
+  puts "  db:testconnect    - Test connection to database"
+  puts "\n"
+  end
 
+#==============================================================================
+# Documentation Namespace
+#==============================================================================
+
+namespace :doc do
+  desc "Create documentation"
   Rake::RDocTask.new do |rdoc|
         files = ['README', 'LICENSE',
                  'bbs/**/*.rb', 'doc/**/*.rdoc']
         rdoc.rdoc_files.add(files)
         rdoc.main = 'README'
         rdoc.title = 'OpenTelegard/2 API rdocs'
-        rdoc.template = '/opt/devel/jruby/lib/ruby/gems/1.8/gems/allison-2.0.3/lib/allison'
+        rdoc.template = '/opt/telegard/contrib/jruby/lib/ruby/gems/shared/gems/allison-2.0.3/lib/allison'
         rdoc.rdoc_dir = 'doc/api'        
-        rdoc.options = [ '--line-numbers', '--inline-source' ]
+        rdoc.options = [ '--line-numbers' ]
   end
+end
+#==============================================================================
+# Database Namespace  
+#==============================================================================
+namespace :db do
+  # Need to load the configuration file to access the DB
+
+  require "lib/tgconfig.rb"
+  cfg = Tgconfig.load
+
+  require 'lib/tgdatabase'
+ 
+  # ----------------------------------   
+  desc "Show Database Configuration"
+  task :viewconf do
+    pp cfg['database']
+  end
+  
+  desc "Reveal Database Password"
+  task :viewsapwd do  
+    dbpwd = Security::ConfigPassword.new.decrypt(cfg['database']['pass'])
+    puts dbpwd
+  end  
+    
+  desc "Test Database Connection"
+  task :testconnect do
+    begin
+      Tgio.printstart "Testing database connection"
+        dbconn = Tgdatabase.connect(cfg['database'])
+      Tgio.printreturn(0)
+    rescue Exception => e
+      Tgio.printreturn(1)
+        puts e
+      exit 1
+    end
+  end
+  
+  desc "Run migrations"
+  task :migrate, [:version] do |t, args|
+    Sequel.extension :migration
+    version = args[:version].to_i if args[:version]
+    begin
+      Tgio.printstart "Running Sequel migrations on database"
+        dbconn = Tgdatabase.connect(cfg['database'])
+        Sequel::Migrator.run(dbconn, "bbs/db/migrations", target: version)    
+      Tgio.printreturn(0)
+    rescue Exception => e
+      Tgio.printreturn(1)
+        puts e
+      exit 1
+    end
+  end
+
+  desc "Run de-migrations"
+  task :demigrate do
+    Sequel.extension :migration
+    begin
+      Tgio.printstart "Running Sequel migration to version 0 on database"
+        dbconn = Tgdatabase.connect(cfg['database'])
+        Sequel::Migrator.run(dbconn, "bbs/db/migrations", target: 0)    
+      Tgio.printreturn(0)
+    rescue Exception => e
+      Tgio.printreturn(1)
+        puts e
+      exit 1
+    end
+  end
+  
+end
+#==============================================================================

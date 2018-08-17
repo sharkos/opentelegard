@@ -60,32 +60,6 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 class Session < Sequel::Model(:sessions)
   Tgio.printstart " DB Model: sessions"
 
-  set_schema do
-    # User pointers
-    primary_key  :id           # Session ID.
-    integer      :user_id      # UID of user
-    String       :username     # Alias of User
-    integer      :group_id     # Group id for RBAC
-    integer      :caller_id    # User's callerid in history
-    integer      :level        # Permission Level
-
-    # User Tracking
-    integer      :filearea     # ID of user's current filearea
-    integer      :msgarea      # ID of user's current msgarea
-    integer      :chatroom     # ID of user's current chatroom
-    String       :current_area # String defining user's current location
-    TimeStamp    :expires      # Time session expires
-    TimeStamp    :created      # Time session created
-
-    # User preferences
-    boolean      :pref_show_menus # User has menus toggled on/off
-    boolean      :pref_term_pager # User has pager toggled on/off
-    String       :pref_editor     # User selected editor
-
-  end
-
-  create_table unless table_exists?
-
   if empty?
     #create  :label => 'value'
   end

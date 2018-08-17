@@ -63,27 +63,6 @@ class TgemailInbox < Sequel::Model(:inbox)
 
   many_to_one :user
 
-  set_schema do
-    primary_key  :id              # Mail ID
-    integer      :user_id         # Owner ID
-    integer      :from_id         # ID of sender
-    boolean      :read            # ? Message Read or Unread
-    boolean      :network         # ? Message is Local or Network
-    integer      :network_id      # ID of network (in network configs)
-    String       :network_node    # Network address of remote node
-    String       :from            # From Header
-    String       :to              # To Header
-    String       :cc              # CC Header
-    String       :bcc             # BCC Header
-    String       :subject         # Subject Header
-    text         :body            # Message
-    TimeStamp    :composed        # Message composed timestamp
-    TimeStamp    :received        # Message recieved timestamp
-    TimeStamp    :read_at         # Time email first read
-  end
-
-  create_table unless table_exists?
-
   if empty?
     # Test data for DropBox - Criteria = New Uploaded file, not approved nor enabled. SHA256 Checksum used.
     create  :user_id => '1',

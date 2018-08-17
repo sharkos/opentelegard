@@ -59,19 +59,6 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 # Chat Room Structure
 class Tgbbslist < Sequel::Model(:bbslist)
   Tgio.printstart " DB Model: bbslist"
-  set_schema do
-    primary_key  :id
-    varchar      :bbsname
-    Text         :description
-    varchar      :sysopname
-    varchar      :bbsurl
-    varchar      :homepage
-    varchar      :submitted_by
-    TimeStamp    :created
-
-  end
-
-  create_table unless table_exists?
 
   if empty?
     create  :bbsname => 'OpenTelegard Official BBS',

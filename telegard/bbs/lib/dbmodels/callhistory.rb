@@ -58,16 +58,7 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 
 class Tgcallhistory < Sequel::Model(:callhistory)
   Tgio.printstart " DB Model: callhistory"
-  set_schema do
-    primary_key  :id
-    integer      :user_id
-    String       :alias       # Added for convenience.        
-    Timestamp    :time_login
-    TimeStamp    :time_logout
-  end
-
-  create_table unless table_exists?
-
+ 
   if empty?
     #create  :label => 'value'
   end

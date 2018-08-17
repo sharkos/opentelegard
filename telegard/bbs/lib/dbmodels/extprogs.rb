@@ -58,15 +58,6 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 # External Programs (DOORS) Structure
 class Tgextprogs < Sequel::Model(:extprogs)
   Tgio.printstart " DB Model: extprogs"
-  set_schema do
-    primary_key  :id
-    varchar      :name
-    varchar      :description
-    varchar      :command
-    TimeStamp    :created
-  end
-
-  create_table unless table_exists?
 
   if empty?
     #create  :label => 'value'

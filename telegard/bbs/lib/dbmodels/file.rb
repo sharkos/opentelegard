@@ -63,29 +63,6 @@ class Tgfile < Sequel::Model(:files)
   many_to_one :tgfilearea
   many_to_one :user
 
-  set_schema do
-    primary_key  :id              # File ID
-    integer      :tgfilearea_id   # Area ID
-    integer      :owner_id        # File Owner (maintainer)
-    integer      :uploaded_by     # User who submitted file
-    integer      :approved_by     # User who approved file (if any)
-    boolean      :enabled         # File available for download?
-    String       :filename        # Filename
-    String       :name            # Friendly Short Name
-    text         :description     # Long description
-    text         :checksum        # Some Checksum Value (MD5/SHA,etc)
-    String       :version         # Version of file (optional)
-    String       :vendor          # Vendor of the file (optional)
-    String       :license         # License file distributed under (optional)
-    String       :url             # URL for more information (optional)
-    integer      :size            # Size of file in bytes on storage
-    TimeStamp    :mtime           # File's mtime on storage
-    TimeStamp    :created_at      # Time file added to DB
-    TimeStamp    :modified_at     # Time file modified in DB
-  end
-
-  create_table unless table_exists?
-
   if empty?
     # Test data for DropBox - Criteria = New Uploaded file, not approved nor enabled. SHA256 Checksum used.
     create  :tgfilearea_id => '1',

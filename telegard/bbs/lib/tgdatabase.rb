@@ -73,9 +73,12 @@ module Tgdatabase
   # Create Database Connection based on type of either H2 Embedded or External Remote.
   def Tgdatabase.connect(db)
     dbpwd = Security::ConfigPassword.new.decrypt(db['pass'])
+    # DEPRECATION WARNING: Remote option will go away in favor of H2
     if db['type'] == "remote"
       begin
-        Sequel.connect("#{db['driver']}://#{db['host']}/#{db['name']}?user=#{db['user']}&password=#{dbpwd}")
+        require 'class/h2.jar'          # This loads the entire DB engine from jar
+        Java::org.h2.Driver             # This loads the native JDBC driver
+        Sequel.connect("#{db['driver']}:tcp://#{db['host']}/#{db['name']}", :user=> "#{db['user']}", :password=> "#{dbpwd}")
       # TODO: Try to enhance this rescue as it doesn't seem to respond to JDBC driver errors.
       rescue Exception, NativeException, Sequel::DatabaseConnectionError => e
         raise "ERROR: Unable to connect to remote database. (#{e})"
@@ -85,7 +88,7 @@ module Tgdatabase
       begin
         require 'java'
       rescue LoadError
-        raise "FATAL: Unable to load JAVA hooks. OpenTG requires JRuby >= 2.5.0"
+        raise "FATAL: Unable to load JAVA hooks. Missing JRuby >= 9.2.0"
       end
       # -> Try to load H2 Database from JAR.
       # (instead of using the GEM for jdbc-h2 which tends to be outdated)

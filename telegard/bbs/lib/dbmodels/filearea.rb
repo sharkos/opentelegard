@@ -62,18 +62,6 @@ class Tgfilearea < Sequel::Model(:fileareas)
   # => Create association of ONE Group to Many Users
   one_to_many :tgfiles
 
-  set_schema do
-    primary_key  :id            # ID
-    varchar      :name          # File Area Short Name
-    Text         :description   # Short Description of Area
-    Boolean      :read          # File Area is "READ" by users: list or download
-    Boolean      :write         # File Area is "WRITE" by users: delete or upload
-    varchar      :path          # Filesystem path to filestore
-    TimeStamp    :created_at    # File Area Creation time
-  end
-
-  create_table unless table_exists?
-
   if empty?
     create  :name => 'dropbox',
             :description => 'Uploads (write-only)',

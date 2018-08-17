@@ -1,7 +1,7 @@
 =begin
                ================================================
                       OpenTelegard/2 Operating SubSystem
-                  Copyright (C) 2010, LeafScale Systems, LLC
+                  Copyright (C) 2010-2018, LeafScale Systems, LLC
                             http://www.opentg.org
                ================================================
 

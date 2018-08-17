@@ -51,7 +51,7 @@ POSSIBILITY OF SUCH DAMAGE.
 # => Check if the program was called using the correct Ruby Interpreter
 unless JRUBY_VERSION.nil?
   if RUBY_VERSION < "2.5.0"
-    puts "OpenTelegard requires version 1.8.7 or later compatible Ruby."
+    puts "OpenTelegard requires version 2.5.0 or later compatible Ruby."
   end
 else
   puts "OpenTelegard requires JRuby. Please visit ( http://www.jruby.org/ )."

@@ -1,14 +1,14 @@
 =begin
                ================================================
                       OpenTelegard/2 Operating SubSystem
-               Copyright (C) 2008-2011   LeafScale Systems, LLC
+               Copyright (C) 2008-2018   LeafScale Systems, LLC
                            http://www.telegard.org
                ================================================
 
 
 ---[ License & Distribution ]------------------------------------------------
 
-Copyright (c) 2010, Chris Tusa & LeafScale Systems, LLC
+Copyright (c) 2008-2018, Chris Tusa & LeafScale Systems, LLC
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,6 @@ The Users & Group models are designed to work as follows:
 
 # User Class
 class User < Sequel::Model(:users)
-
   require 'bcrypt'
 
   # Encrypt Password with BCrypt
@@ -77,57 +76,9 @@ class User < Sequel::Model(:users)
     return password
   end
 
-
   Tgio.printstart " DB Model: users"
   # => Create association of Many Users to ONE Group
   #many_to_one   :group
-
-  set_schema do
-    primary_key  :id
-    boolean      :islocked
-    String      :login,          :size=>16, :unique=>true
-    String      :firstname,      :size=>25
-    String      :lastname,       :size=>25
-    String      :password
-    String      :address1
-    String      :address2
-    String      :city,           :size=>25
-    String      :state,          :size=>5
-    String      :postal,         :size=>15
-    String      :country,        :size=>5
-    String      :phone,          :size=>18
-    String      :gender,         :size=>1
-    String      :email
-    String      :custom1,        :size=>80
-    String      :custom2,        :size=>80
-    String      :custom3,        :size=>80
-    String      :sysopnote,      :text=>true
-    String      :pwhint_question
-    String      :pwhint_answer
-    Date        :bday
-    Date        :pwexpires
-    Fixnum      :group_id
-    Fixnum      :timebank
-    Fixnum      :total_files_up
-    Fixnum      :total_files_down
-    Fixnum      :total_messages
-    Fixnum      :login_failures
-    Fixnum      :login_total
-    TimeStamp   :login_last
-    TimeStamp   :created
-
-    # Define Users' Preferences
-    boolean     :pref_fastlogin,  :default => false
-    Fixnum      :pref_term_height,:default => 24
-    Fixnum      :pref_term_width, :default => 80
-    boolean     :pref_term_pager, :default => true
-    boolean     :pref_term_color, :default => true
-    boolean     :pref_show_menus, :default => true
-    String      :pref_editor,     :default => 'nano'
-
-  end
-
-  create_table unless table_exists?
 
   if empty?    
     create  :login => 'SYSOP',

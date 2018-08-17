@@ -62,28 +62,6 @@ class Tgmsg < Sequel::Model(:msgs)
   # => Create association of ONE Group to Many Users
   many_to_one :msgarea
 
-  set_schema do
-    primary_key  :id              # Message ID
-    integer      :msgarea_id      # Message Area ID
-    integer      :from_id         # ID of sender
-    integer      :to_id           # ID of destination if local
-    boolean      :read            # ? Message Read or Unread
-    boolean      :network         # ? Message is Local or Network
-    integer      :network_id      # ID of network (in network configs)
-    String       :network_node    # Network address of remote node
-    String       :from            # From Header
-    String       :to              # To Header
-    String       :cc              # CC Header
-    String       :bcc             # BCC Header
-    String       :subject         # Subject Header
-    text         :body            # Message
-    TimeStamp    :composed        # Message composed timestamp
-    TimeStamp    :received        # Message received by this system timestamp
-    Array        :read_by         # Array of User_Id's that have read this article.
-  end
-
-  create_table unless table_exists?
-
   if empty?
     #create  :label => 'value'
   end

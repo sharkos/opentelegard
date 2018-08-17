@@ -13,5 +13,5 @@ ${color.cyan}OpenTelegard was made possible by open-source software:
   ${color.lightcyan}* ${color.lightblue}H2 Database${color.darkgray}...........(${color.brightyellow}http://h2database.com${color.darkgray})
   ${color.lightcyan}* ${color.lightblue}JaSypt${color.darkgray}................(${color.brightyellow}http://jasypt.org${color.darkgray})
   ${color.lightcyan}* ${color.lightblue}JLine${color.darkgray}.................(${color.brightyellow}http://jline.sf.net${color.darkgray})
-  ${color.lightcyan}* ${color.lightblue}Ramaze${color.darkgray}................(${color.brightyellow}http://ramaze.net${color.darkgray})
+  ${color.lightcyan}* ${color.lightblue}OpenJDK${color.darkgray}................(${color.brightyellow}http://openjdk.java.net${color.darkgray})
 

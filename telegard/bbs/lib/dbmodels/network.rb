@@ -59,27 +59,6 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 # Network Sequel CLass
 class Network < Sequel::Model(:networks)
   Tgio.printstart " DB Model: network"
-  set_schema do
-    primary_key  :id              # Network ID
-    String       :name            # Network Logical Name
-    text         :description     # Detailed description
-    varchar      :protocol            # Type of: 'tgnet', 'fidonet', 'wwiv'  etc...
-    boolean      :enabled         # Is enabled?
-    TimeStamp    :lastsync        # Timestamp of last sync
-    TimeStamp    :created         # Date network added to DB
-
-    # Define TGnet Properties
-    String       :tgnet_directory # Directory Server
-    String       :tgnet_node      # Node Name    
-
-    # Define FidoNET Properties
-    String       :fidonet_node    # Node Address
-
-    # Define WWIVnet Properties
-    String       :wwivnet_node    # Node Address
-  end
-
-  create_table unless table_exists?
 
   if empty?
     # Default Telegard Network

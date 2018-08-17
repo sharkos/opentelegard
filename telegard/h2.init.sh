@@ -47,10 +47,10 @@
 #-----------------------------------------------------------------------------
 
 # The install path or symlink to the Telegard installation bbs directory
-#TELEGARD_HOME=/opt/telegard/bbs
+TELEGARD_HOME=/opt/telegard/bbs
 
 ## TODO: This path is hardset due to a bug in h2 that does not follow symlinks-waiting for maintainer to fix. 
-TELEGARD_HOME=/media/dstick/data/repos/telegard/bbs
+#TELEGARD_HOME=/media/dstick/data/repos/telegard/bbs
 ##
 
 H2_HOME=$TELEGARD_HOME/class
@@ -59,7 +59,7 @@ case $1 in
   start)
     cd $H2_HOME
     echo "Starting H2 Database Server"
-    java -cp $H2_HOME/h2.jar org.h2.tools.Server -tcp -baseDir $TELEGARD_HOME/db &
+    java -cp $H2_HOME/h2.jar org.h2.tools.Server -tcpDaemon -baseDir $TELEGARD_HOME/db &
   ;;
   stop)
     echo "Shutting down H2 Database Server"
@@ -67,7 +67,7 @@ case $1 in
   ;;
   web)
     echo "Starting H2 Web Server Admin Tool :: [CTRL-C] to terminate..."
-    java -cp $H2_HOME/h2.jar org.h2.tools.Server -web
+    java -cp $H2_HOME/h2.jar org.h2.tools.Server -web -baseDir $TELEGARD_HOME/db
     #echo "NOTE: The webserver administration tool must be"
     #echo "      shutdown from either the browser interface"
     #echo "      or by killing the PID of the service."

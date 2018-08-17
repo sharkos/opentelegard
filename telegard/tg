@@ -10,22 +10,19 @@ TELEGARD_HOME=/opt/telegard
 ##### DO NOT CHANGE BELOW THIS LINE #####
 #
 
-# Use Sun Java
-#JAVA_HOME=$TELEGARD_HOME/contrib/jre
+# Uncomment to use Sun Java in contrib.
+#JAVA_HOME=$TELEGARD_HOME/contrib/jdk
+#$JAVA_HOME/bin/java -version
 
-# Use Apache Harmony
-JAVA_HOME=$TELEGARD_HOME/contrib/harmony/jdk
-
-
+# JRuby
 JRUBY_HOME=$TELEGARD_HOME/contrib/jruby
 
-$JAVA_HOME/bin/java -version
-
+java -version
 cd $TELEGARD_HOME/bbs
 
 trap "echo false" SIGSTOP
-$JRUBY_HOME/bin/jruby -W0 --1.9 tg.rb $*
-$JRUBY_HOME/bin/jirb
+$JRUBY_HOME/bin/jruby -W0 -I bbs/lib tg.rb $*
+#$JRUBY_HOME/bin/jirb
 
 #
 #########################################

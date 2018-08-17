@@ -59,15 +59,6 @@ Tgdatabase_models defines the Sequel Model classes for the data structures.
 # Chat Room Structure
 class Tgchatroom < Sequel::Model(:chatrooms)
   Tgio.printstart " DB Model: chatrooms"
-  set_schema do
-    primary_key  :id
-    varchar      :room
-    varchar      :description
-    integer      :limit
-    TimeStamp    :created
-  end
-
-  create_table unless table_exists?
 
   if empty?
     #create  :label => 'value'

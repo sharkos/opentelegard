@@ -61,20 +61,6 @@ class Tgmsgarea < Sequel::Model(:msgareas)
   # => Create association of ONE Group to Many Users
   one_to_many :msgs
 
-  set_schema do
-    primary_key   :id                   # ID
-    String        :name                 # Name of Area
-    text          :description          # Friendly Description
-    boolean       :network              # Is this a network feed?
-    integer       :network_id           # Network to use if type = 1
-    integer       :minlevel_read        # Minimum Group Level allowed read access
-    integer       :minlevel_write       # Minimum Group Level allowed write access
-    boolean       :enabled              # Area is enabled
-    TimeStamp     :created              # Timestamp
-  end
-
-  create_table unless table_exists?
-
   if empty?
     # GENERAL : A default message group - Anyone can read, only members of "USERS" group (level 100) can write
     create  :name           => 'GENERAL',

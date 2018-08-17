@@ -1,8 +1,98 @@
-NOTE: This version of Telegard ships with all required runtime components. 
+This software is incomplete. You are installing a development snapshot.
+These instructions are the easiest way to configure and run Telegard
+in its current iteration. While other directories or runtimes may 
+work, they have not bee tested. You should take care to ensure
+permissions are set properly. This program is NOT intended to be 
+run as the root user, but as a regular non-priveleged user.
 
-1) Unpack to a location such as /opt/telegard
-2) Check the variable TELEGARD_HOME in the provided shell scripts:
+1) Clone the git/hg repository or download and extract a snapshot.
+
+2) mkdir -p /opt/telegard
+
+3) cp -a opentelegard/telegard /opt/telegard
+
+4) Install openjdk >=8 from your distro's package manager:
+   DEB/UBUNTU  : sudo apt-get install openjdk-9-jre
+   RHEL/CENTOS : sudo yum install openjdk
+
+5) Download version 9.2.0 or later of JRuby
+   http://www.jruby.org/download 
+   * DO NOT use a pre-packed jruby from a linux distro.
+
+6) Extract the JRuby distribution to the 'contrib' directory in /opt/telegard
+
+   cd /opt/telegard/contrib ; tar -xzvf jruby-dist-9.2.0.0-bin.tar.gz
+   ln -sf /opt/telegard/contrib/jruby-9.2.0.0 /opt/telegard/contrib/jruby
+
+7) Check the variable TELEGARD_HOME in the provided shell scripts:
    a) /opt/telegard/tg
    b) /opt/telegard/h2.init.sh
+   c) /opt/telegard/runtime.sh
 
-3) The h2.init script should be started before running the application
+8) If you are using a different JRE, such as the official OpenJDK binary or 
+   the Oracle JDK, you will need to enable and set JAVA_HOME for the files 
+   in step 7.
+
+9) Load the runtime environment for starting Telegard 
+
+  source /opt/telegard/runtime.sh
+
+10) Install the required JRuby GEMS:
+
+ jgem install rake
+ jgem install allison
+ jgem install bcrypt
+ jgem install sequel
+ jgem install rdoc-rake
+
+When finished, you can run 'jgem list' and should see:
+
+*** LOCAL GEMS ***
+
+allison (2.0.3)
+bcrypt (3.1.12 java)
+cmath (default: 1.0.0)
+csv (default: 1.0.0)
+fileutils (default: 1.1.0)
+ipaddr (default: 1.2.0)
+jar-dependencies (default: 0.3.12)
+jruby-openssl (default: 0.10.0 java)
+jruby-readline (default: 1.2.2 java)
+json (default: 2.1.0 java, 1.8.6 java)
+psych (default: 3.0.2 java)
+rake (12.3.1)
+rake-ant (default: 1.0.4)
+rdoc (default: 6.0.1, 3.12.2)
+rdoc-rake (1.0.1)
+scanf (default: 1.0.0)
+sequel (5.11.0)
+webrick (default: 1.4.2)
+
+11) Start the database server
+
+  cd /opt/telegard ; ./h2.init.sh start
+
+12) Generate & edit the sample configuration file
+
+  ./tg -g
+  cp bbs/conf/telegard.conf.yaml.sample bbs/conf/telegard.conf.yaml
+  # launch your favorite editor: [vim, nano, ee, nv, kate, ...etc]
+  nano bbs/conf/telegard.conf.yaml
+
+You should probably also alter the security.conf.yaml secret line.
+Somewhere in the middle.  This will be fixed in a later release,
+but doing this will ensure your passwords are salted with a more
+unique key than what is shipped with this dev release.
+  
+13) Create the database schema
+
+  rake db:migrate
+
+14) Create the documentation
+
+  rake doc:rdoc
+
+15) Login
+  ./tg
+
+16) Your username is 'sysop' and the pwd is 'changeme'
