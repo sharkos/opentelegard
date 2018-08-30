@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class String - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Object.html">Object</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-inbounds">#inbounds</a>
+    
+    <li ><a href="#method-i-is_alpha-3F">#is_alpha?</a>
+    
+    <li ><a href="#method-i-is_alphanumeric-3F">#is_alphanumeric?</a>
+    
+    <li ><a href="#method-i-is_blank-3F">#is_blank?</a>
+    
+    <li ><a href="#method-i-is_email-3F">#is_email?</a>
+    
+    <li ><a href="#method-i-is_notblank-3F">#is_notblank?</a>
+    
+    <li ><a href="#method-i-is_numeric-3F">#is_numeric?</a>
+    
+    <li ><a href="#method-i-is_spaced_alpha-3F">#is_spaced_alpha?</a>
+    
+    <li ><a href="#method-i-is_spaced_alphanumeric-3F">#is_spaced_alphanumeric?</a>
+    
+    <li ><a href="#method-i-is_spaced_numeric-3F">#is_spaced_numeric?</a>
+    
+    <li ><a href="#method-i-is_url-3F">#is_url?</a>
+    
+    <li ><a href="#method-i-maxlength-3F">#maxlength?</a>
+    
+    <li ><a href="#method-i-minlength-3F">#minlength?</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-String">
+  <h1 id="class-String" class="class">
+    class String
+  </h1>
+
+  <section class="description">
+    
+<p>Extend the <a href="String.html">String</a> Class with validation methods</p>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-inbounds" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inbounds</span><span
+            class="method-args">(min, max)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string size is within bounds.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="inbounds-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inbounds</span>(<span class="ruby-identifier">min</span>, <span class="ruby-identifier">max</span>)
+   <span class="ruby-constant">ApacheCommonsValidator</span><span class="ruby-operator">::</span><span class="ruby-constant">GenericValidator</span>.<span class="ruby-identifier">isInRange</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">min</span>, <span class="ruby-identifier">max</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_alpha-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_alpha?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return true if string contains only Alpha characters</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_alpha-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_alpha?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isAlpha</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_alphanumeric-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_alphanumeric?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string is AlphaNumeric</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_alphanumeric-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_alphanumeric?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isAlphanumeric</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_blank-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_blank?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string is Blank. Similar to empty, but looks for whitespace
+entries.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_blank-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_blank?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isBlank</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_email-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_email?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <pre>Returns true if string meets email address criteria
+Pure Ruby way, replaced with Apache Commons Validator</pre>
+
+<p>def is_email?</p>
+
+<pre class="ruby"><span class="ruby-keyword">if</span> <span class="ruby-regexp">/^([0-9a-zA-Z]+[-._+&amp;amp;])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-keyword">self</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">else</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>end</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_email-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_email?</span>    
+  <span class="ruby-constant">ApacheCommonsValidator</span><span class="ruby-operator">::</span><span class="ruby-constant">GenericValidator</span>.<span class="ruby-identifier">isEmail</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_notblank-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_notblank?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string is NOT Blank.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_notblank-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_notblank?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isNotBlank</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_numeric-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_numeric?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string constains only Numeric characters</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_numeric-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 123</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_numeric?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isNumeric</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_spaced_alpha-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_spaced_alpha?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return true if string contains only Alpha characters</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_spaced_alpha-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_spaced_alpha?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isAlphaSpace</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_spaced_alphanumeric-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_spaced_alphanumeric?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string is AlphaNumeric</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_spaced_alphanumeric-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_spaced_alphanumeric?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isAlphanumericSpace</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_spaced_numeric-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_spaced_numeric?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string constains only Numeric characters</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_spaced_numeric-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_spaced_numeric?</span>
+  <span class="ruby-constant">ApacheCommonsLang</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtils</span>.<span class="ruby-identifier">isNumericSpace</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-is_url-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_url?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string is a valid url</p>
+          
+          
+
+          
+          <div class="method-source-code" id="is_url-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_url?</span>
+  <span class="ruby-constant">ApacheCommonsValidator</span><span class="ruby-operator">::</span><span class="ruby-constant">GenericValidator</span>.<span class="ruby-identifier">isUrl</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-maxlength-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">maxlength?</span><span
+            class="method-args">(size)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string meets maximum length</p>
+          
+          
+
+          
+          <div class="method-source-code" id="maxlength-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">maxlength?</span>(<span class="ruby-identifier">size</span>)
+  <span class="ruby-constant">ApacheCommonsValidator</span><span class="ruby-operator">::</span><span class="ruby-constant">GenericValidator</span>.<span class="ruby-identifier">maxLength</span>(<span class="ruby-keyword">self</span>,<span class="ruby-identifier">size</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-minlength-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">minlength?</span><span
+            class="method-args">(size)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if string meets minimum length</p>
+          
+          
+
+          
+          <div class="method-source-code" id="minlength-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/rubyclass_extensions.rb, line 177</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">minlength?</span>(<span class="ruby-identifier">size</span>)
+  <span class="ruby-constant">ApacheCommonsValidator</span><span class="ruby-operator">::</span><span class="ruby-constant">GenericValidator</span>.<span class="ruby-identifier">minLength</span>(<span class="ruby-keyword">self</span>,<span class="ruby-identifier">size</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

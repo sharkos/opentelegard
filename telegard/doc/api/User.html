@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class User - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Sequel::Model(:users)
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-authorize">::authorize</a>
+    
+    <li ><a href="#method-c-clearfailed">::clearfailed</a>
+    
+    <li ><a href="#method-c-countlogin">::countlogin</a>
+    
+    <li ><a href="#method-c-cryptpassword">::cryptpassword</a>
+    
+    <li ><a href="#method-c-exists-3F">::exists?</a>
+    
+    <li ><a href="#method-c-validatepw">::validatepw</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-User">
+  <h1 id="class-User" class="class">
+    class User
+  </h1>
+
+  <section class="description">
+    
+<p><a href="User.html">User</a> Class</p>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-authorize" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">authorize</span><span
+            class="method-args">(username, cleartxtpw)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Authorize a user by name. Passes in cleartxt version of password</p>
+          
+          
+
+          
+          <div class="method-source-code" id="authorize-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">authorize</span>(<span class="ruby-identifier">username</span>, <span class="ruby-identifier">cleartxtpw</span>)
+  <span class="ruby-identifier">user</span> = <span class="ruby-keyword">self</span>[<span class="ruby-value">:login</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">username</span>]
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-comment"># Reject user if Group level is 255 or higher, or account is set to locked</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">islocked</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Group</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:id</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">group_id</span>).<span class="ruby-identifier">level</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">dbpw</span> = <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{user.password}&quot;</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">dbpw</span> <span class="ruby-operator">==</span> <span class="ruby-node">&quot;#{cleartxtpw}&quot;</span>
+        <span class="ruby-keyword">return</span> {<span class="ruby-value">:result</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;true&quot;</span>}
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-value">:login_failures</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span><span class="ruby-value">+1</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;login&#39;</span>][<span class="ruby-string">&#39;lockout&#39;</span>]
+          <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-value">:islocked</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>)
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+        <span class="ruby-keyword">return</span> {<span class="ruby-value">:result</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;false&quot;</span>, <span class="ruby-value">:failures</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_failures</span>, <span class="ruby-value">:islocked</span><span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">islocked</span>}
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">return</span> {<span class="ruby-value">:result</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;locked&quot;</span>}
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">return</span> {<span class="ruby-value">:result</span><span class="ruby-operator">=&gt;</span><span class="ruby-string">&quot;invalid&quot;</span>}
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/unless</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-clearfailed" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">clearfailed</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Clear login_failures count on a user</p>
+          
+          
+
+          
+          <div class="method-source-code" id="clearfailed-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 123</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">clearfailed</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-identifier">user</span> = <span class="ruby-keyword">self</span>[<span class="ruby-value">:login</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">username</span>]
+  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-value">:islocked</span><span class="ruby-operator">=&gt;</span><span class="ruby-keyword">false</span>, <span class="ruby-value">:login_failures</span><span class="ruby-operator">=&gt;</span><span class="ruby-value">0</span>)
+  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-countlogin" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">countlogin</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Count the login by incrementing the DB login_count and timestamp of
+login_last</p>
+          
+          
+
+          
+          <div class="method-source-code" id="countlogin-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">countlogin</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-identifier">user</span> = <span class="ruby-keyword">self</span>[<span class="ruby-value">:login</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">username</span>]
+  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">set</span>(<span class="ruby-value">:login_total</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">user</span>.<span class="ruby-identifier">login_total</span><span class="ruby-value">+1</span>, <span class="ruby-value">:login_last</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-cryptpassword" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cryptpassword</span><span
+            class="method-args">(cleartxt)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Encrypt Password with BCrypt</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cryptpassword-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">cryptpassword</span>(<span class="ruby-identifier">cleartxt</span>)
+  <span class="ruby-identifier">password</span> = <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">cleartxt</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">password</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-exists-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">exists?</span><span
+            class="method-args">(username)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Quick validation for login or other routines to see if a specified user
+exists</p>
+          
+          
+
+          
+          <div class="method-source-code" id="exists-3F-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">exists?</span>(<span class="ruby-identifier">username</span>)
+  <span class="ruby-identifier">user</span> = <span class="ruby-keyword">self</span>[<span class="ruby-value">:login</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">username</span>]
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-validatepw" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">validatepw</span><span
+            class="method-args">(pw1, pw2)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Simple validator to compare 2 passwords in any presented format</p>
+          
+          
+
+          
+          <div class="method-source-code" id="validatepw-source">
+            <pre><span class="ruby-comment"># File bbs/lib/dbmodels/user.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">validatepw</span>(<span class="ruby-identifier">pw1</span>, <span class="ruby-identifier">pw2</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">pw1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pw2</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -40,6 +40,7 @@ notify:
   on_user_lockout: true
 feature:
   bbslist: true
-webadmin:
-  username: tgadmin
-  password: kZUvuE+icIllQBM95sqM5LJ4m/wJqcfm
+limits:
+  timebank_max: 300
+  files_upload_max: 1024
+

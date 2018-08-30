@@ -1,47 +1,16 @@
 =begin
-               ================================================
-                      OpenTelegard/2 Operating SubSystem
-               Copyright (C) 2008-2018   LeafScale Systems, LLC
-                           http://www.telegard.org
-               ================================================
 
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
 
----[ License & Distribution ]------------------------------------------------
-
-Copyright (c) 2008-2018, Chris Tusa & LeafScale Systems, LLC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of LeafScale Systems nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-
+See "LICENSE" file for distribution and copyright information. 
+ 
 ---[ File Info ]-------------------------------------------------------------
 
  Source File: /lib/dbmodels/user.rb
      Version: 1.00
-   Author(s): Chris Tusa <chris.tusa@telegard.org>
+   Author(s): Chris Tusa <chris.tusa@opentg.org>
  Description: User Schema for Database
 
 -----------------------------------------------------------------------------
@@ -77,6 +46,7 @@ class User < Sequel::Model(:users)
   end
 
   Tgio.printstart " DB Model: users"
+
   # => Create association of Many Users to ONE Group
   #many_to_one   :group
 
@@ -98,10 +68,10 @@ class User < Sequel::Model(:users)
             :pwexpires => Time.now + 90.days,
             :created => Time.now,
             :login_last => Time.now,
-            :sysopnote => 'This is the default all powerful User Account.',
+            :sysopnote => 'This is the all powerful admin account.',
             :login_failures => 0,
             :login_total => 0,
-            :timebank => -1,
+            :timebank => 0,
             :pwhint_question => "What is the meaning of life?",
             :pwhint_answer => "42",
             :pref_fastlogin   => false,
@@ -115,7 +85,8 @@ class User < Sequel::Model(:users)
   end
   Tgio.printreturn(0)
 
-  #  Quick validation for login or other routines to see if a specified user exists
+  # Test if the user exists in the database
+  # Use-case: Validation for login or other routines to see if a specified user exists
   def self.exists?(username)
     user = self[:login=>username]
     if user.nil?

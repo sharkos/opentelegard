@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Telegard - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#module-Telegard-label-begin+rdoc+++++++++++++++">begin rdoc               </a>
+    <li><a href="#module-Telegard-label-Telegard+-28Telegard-29">Telegard (Telegard)</a>
+    <li><a href="#module-Telegard-label-end">end</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-goodbye">::goodbye</a>
+    
+    <li ><a href="#method-c-goodbye_fast">::goodbye_fast</a>
+    
+    <li ><a href="#method-c-init">::init</a>
+    
+    <li ><a href="#method-c-load_databaseconn">::load_databaseconn</a>
+    
+    <li ><a href="#method-c-load_tgconfig">::load_tgconfig</a>
+    
+    <li ><a href="#method-c-loadlib_security">::loadlib_security</a>
+    
+    <li ><a href="#method-c-loadlib_tgconfig">::loadlib_tgconfig</a>
+    
+    <li ><a href="#method-c-loadlib_tgconstants">::loadlib_tgconstants</a>
+    
+    <li ><a href="#method-c-loadlib_tgcontroller">::loadlib_tgcontroller</a>
+    
+    <li ><a href="#method-c-loadlib_tgdatabase">::loadlib_tgdatabase</a>
+    
+    <li ><a href="#method-c-loadlib_tgdatabasemodels">::loadlib_tgdatabasemodels</a>
+    
+    <li ><a href="#method-c-loadlib_tgio">::loadlib_tgio</a>
+    
+    <li ><a href="#method-c-loadlib_tgtemplate">::loadlib_tgtemplate</a>
+    
+    <li ><a href="#method-c-unimplemented">::unimplemented</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Telegard">
+  <h1 id="module-Telegard" class="module">
+    module Telegard
+  </h1>
+
+  <section class="description">
+    
+<h1 id="module-Telegard-label-begin+rdoc+++++++++++++++">begin rdoc               <span><a href="#module-Telegard-label-begin+rdoc+++++++++++++++">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<h1 id="module-Telegard-label-Telegard+-28Telegard-29"><a href="Telegard.html">Telegard</a> (Telegard)<span><a href="#module-Telegard-label-Telegard+-28Telegard-29">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="Telegard.html">Telegard</a> is the main <a
+href="Telegard.html">Telegard</a> library responsible for initialization of
+sub libraries.</p>
+
+<h1 id="module-Telegard-label-end">end<span><a href="#module-Telegard-label-end">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-goodbye" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">goodbye</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Defines normal goodbye</p>
+          
+          
+
+          
+          <div class="method-source-code" id="goodbye-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 162</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">goodbye</span>
+  <span class="ruby-comment"># TODO: Add askny question, and add any other items here.</span>
+  <span class="ruby-constant">Tgtemplate</span>.<span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;logout_prompt_goodbye.ftl&#39;</span>)
+  <span class="ruby-identifier">askuser</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">inputyn</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">askuser</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">goodbye_fast</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-goodbye_fast" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">goodbye_fast</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Defines fast goodbye</p>
+          
+          
+
+          
+          <div class="method-source-code" id="goodbye_fast-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">goodbye_fast</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Goodbye!&quot;</span>
+  <span class="ruby-comment"># If we have reached this point, the main controller has exited.</span>
+  <span class="ruby-comment"># Terminate the session</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$session</span>
+    <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">time_logout</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+    <span class="ruby-identifier">$callerid</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">destroy</span>
+    <span class="ruby-identifier">$session</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">exit</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-init" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">init</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load the entire stack in the correct order. Use this method for anything
+that requires full init</p>
+          
+          
+
+          
+          <div class="method-source-code" id="init-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">init</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgconstants</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgio</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgconfig</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_tgconfig</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgdatabase</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_databaseconn</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgdatabasemodels</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgtemplate</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">loadlib_tgcontroller</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-load_databaseconn" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_databaseconn</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Connect to the user specified DB engine &amp; load the Sequel models</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load_databaseconn-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">load_databaseconn</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Initializing database connection&quot;</span>
+    <span class="ruby-identifier">$db</span> = <span class="ruby-constant">Tgdatabase</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;database&#39;</span>])
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-load_tgconfig" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_tgconfig</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Loads configuration into a global $cfg variable</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load_tgconfig-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">load_tgconfig</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Loading Telegard configuration&quot;</span>
+    <span class="ruby-identifier">$cfg</span> = <span class="ruby-constant">Tgconfig</span>.<span class="ruby-identifier">load</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_security" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_security</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Security.html">Security</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_security-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_security</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/security&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;security&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgconfig" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgconfig</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Tgconfig.html">Tgconfig</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgconfig-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgconfig</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgconfig&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgconfig&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgconstants" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgconstants</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load the constants definition</p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgconstants-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgconstants</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgconstants&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgconstants&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgcontroller" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgcontroller</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Tgcontroller.html">Tgcontroller</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgcontroller-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgcontroller</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Loading Master Controller&quot;</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgcontroller&#39;</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgcontroller&#39;.&quot;</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgdatabase" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgdatabase</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Tgdatabase.html">Tgdatabase</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgdatabase-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgdatabase</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgdatabase&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgdatabase&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgdatabasemodels" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgdatabasemodels</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: Tgdatabase_models</p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgdatabasemodels-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgdatabasemodels</span>
+  <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Initializing Database Models&quot;</span>
+  <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">2</span>)
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgdatabase_models&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgdatabase_models&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">DatabaseConnectionError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Unable to connect to database: #{e}&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Database Models Initialized OK&quot;</span>
+  <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgio" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgio</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Tgio.html">Tgio</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgio-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 48</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgio</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgio&#39;</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">mainbanner</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgio&#39;.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-loadlib_tgtemplate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loadlib_tgtemplate</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load Library: <a href="Tgtemplate.html">Tgtemplate</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="loadlib_tgtemplate-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 122</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">loadlib_tgtemplate</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printstart</span> <span class="ruby-string">&quot;Loading FreeMarker+TG template engine&quot;</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;lib/tgtemplate&#39;</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>    
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: cannot load library &#39;tgtemplate&#39;.&quot;</span>
+    <span class="ruby-constant">Tgio</span>.<span class="ruby-identifier">printreturn</span>(<span class="ruby-value">1</span>)
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-unimplemented" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">unimplemented</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prints a message when a feature is currently not implemented</p>
+          
+          
+
+          
+          <div class="method-source-code" id="unimplemented-source">
+            <pre><span class="ruby-comment"># File bbs/lib/telegard.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier ruby-title">unimplemented</span>
+ <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;En: Sorry! Feature not implemented / De: Element nicht geschrieben&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

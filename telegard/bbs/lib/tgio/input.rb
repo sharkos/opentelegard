@@ -1,46 +1,15 @@
 =begin
-               ================================================
-                      OpenTelegard/2 Operating SubSystem
-                  Copyright (C) 2010, LeafScale Systems, LLC
-                            http://www.opentg.org
-               ================================================
 
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
 
----[ License & Distribution ]------------------------------------------------
-
-Copyright (c) 2010, Chris Tusa & LeafScale Systems, LLC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of LeafScale Systems nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-
+See "LICENSE" file for distribution and copyright information. 
+ 
 ---[ File Info ]-------------------------------------------------------------
 
  Source File: /lib/tgio/input.rb
-     Version: 0.01
+     Version: 1.00
    Author(s): Chris Tusa <chris.tusa@opentg.org>
  Description: Input Handler Library
 
@@ -191,55 +160,75 @@ module Tgio
     # the input is read character by character into an array. The array is
     # a set of numbers which represent the character code. Before returning
     # the value, it is converted to a string. (replaces ansigets)
-    def Input::inputform(length)
+    #
+    # TODO: add 'type=' to this list of possible parameters
+    # TODO: the purpose of this is to be able to perform validation or more
+    # TODO: specifically, limits of what sort of input is allowed. For example
+    # TODO: the timebank needs the ability to only allow postive integers (posint)
+    # TODO: also restrict alphanumeric characters.
+    def Input::inputform(length=0, type='text')
       trap("INT") do
         # ignore "CTRL-C"
       end
-      tr = JLine::ConsoleReader.new
-      char = nil
-      enterkey = false
-      input = []
-      cursize = 0
-      print ANSI_RESET+(ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+" "*length)
-      print "\b" * length
-      # initialize
-      # Start loop until enter key is pressed
-      until enterkey == true
-        #print ANSI_RESET
-        char = tr.readVirtualKey
-        # handle [ENTER] key
-        if char == 10
-          enterkey = true
-        else
-          # handle [Backspace] key
-          if char == 8
-            unless cursize == 0
-              print "\b"+ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+" \b"
-              input.pop #remove last type value
-              cursize -=1 unless cursize <= 0 #decrement cursize counter
-            end
-            # handle everything else
+      # If the length is not a positive integer, return a nil value.
+      if length < 1
+        # TODO: Should this condition raise an error?
+        return nil
+      else
+        tr = JLine::ConsoleReader.new
+        char = nil
+        enterkey = false
+        input = []
+        cursize = 0
+        print ANSI_RESET+(ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+" "*length)
+        print "\b" * length
+
+        numberkeys = 48..57
+
+        # initialize
+        # Start loop until enter key is pressed
+        until enterkey == true
+          #print ANSI_RESET
+          char = tr.readVirtualKey
+          # handle [ENTER] key
+          if char == 10
+            enterkey = true
           else
-            if cursize < length
-              print ""+ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+char.chr
-              input.push(char) #add new value
-              cursize += 1 #increment cursize counter
+            # handle [Backspace] key
+            if char == 8
+              unless cursize == 0
+                print "\b"+ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+" \b"
+                input.pop #remove last type value
+                cursize -=1 unless cursize <= 0 #decrement cursize counter
+              end
+              # Test for numeric
+            elsif !numberkeys.member?(char) and type='posint'
+              # we want to ignore input on the above condition here
+
+            # handle everything else
             else
-              # if the size of the current input is > length, then drop the char
-              print "\b \b"
-              char = nil
+              if cursize < length
+                print ""+ANSI_BRIGHT_WHITE+ANSI_ON_BLUE+char.chr
+                input.push(char) #add new value
+                cursize += 1 #increment cursize counter
+              else
+                # if the size of the current input is > length, then drop the char
+                #print "\b \b"   # commenting this line may fix bug#0000003
+                char = nil
+              end
             end
           end
+          print ANSI_RESET
         end
-        print ANSI_RESET
-      end
-      # convert input array of character codes back into string
-      print ANSI_ON_BLUE+(" "*input.size)+ANSI_RESET+"\n"
-      value = ""
-      input.each do |c|
-        value.concat(c)
-      end
-      return value
+        # convert input array of character codes back into string
+        print ANSI_ON_BLUE+(" "*input.size)+ANSI_RESET+"\n"
+        value = ""
+        input.each do |c|
+          value.concat(c)
+        end
+        return value
+      end #/end if length < 1
+
     end
 
     #/def inputform

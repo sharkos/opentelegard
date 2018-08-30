@@ -1,42 +1,11 @@
 =begin
-               ================================================
-                      OpenTelegard/2 Operating SubSystem
-                  Copyright (C) 2010, LeafScale Systems, LLC
-                            http://www.opentg.org
-               ================================================
 
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
 
----[ License & Distribution ]------------------------------------------------
-
-Copyright (c) 2010, LeafScale Systems, LLC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of LeafScale Systems nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-
+See "LICENSE" file for distribution and copyright information. 
+ 
 ---[ File Info ]-------------------------------------------------------------
 
  Source File: /lib/tglogin.rb
@@ -144,7 +113,7 @@ module Tglogin
             User.countlogin(login)
             User.clearfailed(login)
             user = User[:login => login]
-            group = Group[:id => user.group_id]
+            $group = Group[:id => user.group_id]
 
             # Create caller history entry & update session
             $callerid = Tgcallhistory.create(
@@ -153,14 +122,14 @@ module Tglogin
                     :time_login => Time.now
                     )
 
-            timeremain = (group.dailytimelimit - $callerid.thisuser_time_today)
+            timeremain = ($group.dailytimelimit - $callerid.thisuser_time_today)
 
             # Create global session variable
             $session = Session.new
                 $session.user_id    = user.id
                 $session.username   = login
                 $session.group_id   = user.group_id
-                $session.level      = group.level
+                $session.level      = $group.level
                 $session.created    = Time.now
                 $session.expires    = Time.now + 1.hours
                 $session.caller_id  = $callerid.id
@@ -184,7 +153,7 @@ module Tglogin
             else
               Tgtemplate::display('login_session_info.ftl', {
                       'timetoday' => $callerid.thisuser_time_today.to_s,
-                      'grouplimit'=> group.dailytimelimit.to_s,
+                      'grouplimit'=> $group.dailytimelimit.to_s,
                       'logintoday'=> $callerid.thisuser_logincount_today.to_s,
                       'curtime'   => Time.now.to_s,
                       'expires'   => $session.expires.to_s,

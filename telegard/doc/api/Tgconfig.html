@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Tgconfig - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#module-Tgconfig-label-begin+rdoc+++++++++++++++">begin rdoc               </a>
+    <li><a href="#module-Tgconfig-label-Tgconfig+-28Configuration-29">Tgconfig (Configuration)</a>
+    <li><a href="#module-Tgconfig-label-end">end</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-load">::load</a>
+    
+    <li ><a href="#method-c-makedefault">::makedefault</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Tgconfig">
+  <h1 id="module-Tgconfig" class="module">
+    module Tgconfig
+  </h1>
+
+  <section class="description">
+    
+<h1 id="module-Tgconfig-label-begin+rdoc+++++++++++++++">begin rdoc               <span><a href="#module-Tgconfig-label-begin+rdoc+++++++++++++++">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<h1 id="module-Tgconfig-label-Tgconfig+-28Configuration-29"><a href="Tgconfig.html">Tgconfig</a> (Configuration)<span><a href="#module-Tgconfig-label-Tgconfig+-28Configuration-29">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="Tgconfig.html">Tgconfig</a> handles configuration file management
+Configuration is stored in YAML syntax formatting.</p>
+
+<h1 id="module-Tgconfig-label-end">end<span><a href="#module-Tgconfig-label-end">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="Configfile">Configfile
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-load" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load in the YAML configuration file and returns</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tgconfig.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Tgconfig</span>.<span class="ruby-identifier ruby-title">load</span>
+  <span class="ruby-identifier">cfg</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">Configfile</span>)  { <span class="ruby-operator">|</span><span class="ruby-identifier">yf</span><span class="ruby-operator">|</span> <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load</span>( <span class="ruby-identifier">yf</span> ) }
+  <span class="ruby-comment"># =&gt; Ensure loaded data is a hash. ie: YAML load was OK</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Hash</span>
+     <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - invalid format or parsing error.&quot;</span>
+  <span class="ruby-comment"># =&gt; If all is well, perform deeper validation</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># =&gt; PARSE &amp; CHECK: Database Section</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>].<span class="ruby-identifier">nil?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database section not defined.&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;type&#39;</span>]
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;embedded&quot;</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;remote&quot;</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database driver field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;driver&#39;</span>].<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database host field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;host&#39;</span>].<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database name field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>].<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database user field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;user&#39;</span>].<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - database pass field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;database&#39;</span>][<span class="ruby-string">&#39;pass&#39;</span>].<span class="ruby-identifier">nil?</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - datbase configuration type is invalid.&quot;</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#-&gt; /case</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#-&gt; /Parse DB</span>
+
+    <span class="ruby-comment"># =&gt; PARSE &amp; CHECK: BBS Section</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;bbs&#39;</span>].<span class="ruby-identifier">nil?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - bbs section not defined.&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - bbs name field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;bbs&#39;</span>][<span class="ruby-string">&#39;name&#39;</span>].<span class="ruby-identifier">nil?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: Tgconfig - bbs tagline field missing.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cfg</span>[<span class="ruby-string">&#39;bbs&#39;</span>][<span class="ruby-string">&#39;tagline&#39;</span>].<span class="ruby-identifier">nil?</span>        
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#-&gt; /Parse BBS</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#-&gt; /if !Hash</span>
+
+  <span class="ruby-comment"># =&gt; If all is well, return the configuration</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">cfg</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-makedefault" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">makedefault</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Builds a default YAML configuration and outputs the filename specified.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="makedefault-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tgconfig.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Tgconfig</span>.<span class="ruby-identifier ruby-title">makedefault</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-identifier">cfghash</span> = {
+          <span class="ruby-string">&quot;bbs&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;name&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;Telegard/2 BBS&quot;</span>,
+                  <span class="ruby-string">&quot;tagline&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;Another Installation of OpenTelegard/2&quot;</span>,
+                  <span class="ruby-string">&quot;theme&quot;</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;opentg&quot;</span>,
+                  <span class="ruby-string">&quot;enabled&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>
+          },
+          <span class="ruby-string">&quot;database&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;type&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;embedded&quot;</span>,
+                  <span class="ruby-string">&quot;driver&quot;</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;jdbc:h2&quot;</span>,
+                  <span class="ruby-string">&quot;host&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;localhost&quot;</span>,
+                  <span class="ruby-string">&quot;name&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;opentg&quot;</span>,
+                  <span class="ruby-string">&quot;user&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;sa&quot;</span>,
+                  <span class="ruby-string">&quot;pass&quot;</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">encrypt</span>(<span class="ruby-string">&quot;changeme&quot;</span>)
+          },
+          <span class="ruby-string">&quot;login&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;attempts&quot;</span><span class="ruby-operator">=&gt;</span> <span class="ruby-value">5</span>,
+                  <span class="ruby-string">&quot;lockout&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">8</span>,
+                  <span class="ruby-string">&quot;usehint&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;allownew&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>
+          },
+          <span class="ruby-string">&quot;signup&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;default_group&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;USERS&quot;</span>,
+                  <span class="ruby-string">&quot;ask_address&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_postal&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_country&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_phone&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_gender&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_bday&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;ask_custom1&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;custom1&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;How did you hear about us? (75 chars max)&quot;</span>,
+                  <span class="ruby-string">&quot;ask_custom2&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
+                  <span class="ruby-string">&quot;custom2&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+                  <span class="ruby-string">&quot;ask_custom3&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
+                  <span class="ruby-string">&quot;custom3&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;&quot;</span>
+          },
+          <span class="ruby-string">&quot;notify&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;notify_user&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;user_name&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;SYSOP&quot;</span>,
+                  <span class="ruby-string">&quot;notify_group&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;group_name&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;SYSOPS&quot;</span>,
+                  <span class="ruby-string">&quot;on_signup&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;on_bbslist_submission&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+                  <span class="ruby-string">&quot;on_user_lockout&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>
+                  },
+          <span class="ruby-string">&quot;feature&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;bbslist&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>
+                  },
+          <span class="ruby-string">&quot;webadmin&quot;</span> <span class="ruby-operator">=&gt;</span> {
+                  <span class="ruby-string">&quot;username&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&#39;tgadmin&#39;</span>,
+                  <span class="ruby-string">&quot;password&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">encrypt</span>(<span class="ruby-string">&quot;changeme&quot;</span>)
+                  }
+
+  }
+  <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-string">&quot;w&quot;</span>)
+  <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>(<span class="ruby-identifier">cfghash</span>)
+  <span class="ruby-identifier">f</span>.<span class="ruby-identifier">close</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

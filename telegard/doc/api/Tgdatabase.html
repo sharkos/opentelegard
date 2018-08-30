@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Tgdatabase - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#module-Tgdatabase-label-begin+rdoc+++++++++++++++">begin rdoc               </a>
+    <li><a href="#module-Tgdatabase-label-Tgdatabase+-28Database-29">Tgdatabase (Database)</a>
+    <li><a href="#module-Tgdatabase-label-Embedded">Embedded</a>
+    <li><a href="#module-Tgdatabase-label-Remote">Remote</a>
+    <li><a href="#module-Tgdatabase-label-end">end</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-connect">::connect</a>
+    
+    <li ><a href="#method-c-initdb">::initdb</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Tgdatabase">
+  <h1 id="module-Tgdatabase" class="module">
+    module Tgdatabase
+  </h1>
+
+  <section class="description">
+    
+<h1 id="module-Tgdatabase-label-begin+rdoc+++++++++++++++">begin rdoc               <span><a href="#module-Tgdatabase-label-begin+rdoc+++++++++++++++">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<h1 id="module-Tgdatabase-label-Tgdatabase+-28Database-29"><a href="Tgdatabase.html">Tgdatabase</a> (Database)<span><a href="#module-Tgdatabase-label-Tgdatabase+-28Database-29">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="Tgdatabase.html">Tgdatabase</a> provides the database connectivity
+and initialization routines.</p>
+
+<h2 id="module-Tgdatabase-label-Embedded">Embedded<span><a href="#module-Tgdatabase-label-Embedded">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>OpenTelegard includes an embedded database option for installations that do
+not need a larger database server, or for users not comfortable managing a
+database engine separately. H2 is the included database, and is provided as
+a JAR file with the distribution. see (<a
+href="http://h2database.com">h2database.com</a>).</p>
+
+<h2 id="module-Tgdatabase-label-Remote">Remote<span><a href="#module-Tgdatabase-label-Remote">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>For larger deployments, cloud deployments, or for advanced users,
+OpenTelegard supports external database connections. remote is only tested
+against Postgresql, but should work on any Sequel JDBC compatible server.</p>
+
+<h1 id="module-Tgdatabase-label-end">end<span><a href="#module-Tgdatabase-label-end">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-connect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connect</span><span
+            class="method-args">(db)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create Database Connection based on type of either H2 Embedded or External
+Remote.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="connect-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tgdatabase.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Tgdatabase</span>.<span class="ruby-identifier ruby-title">connect</span>(<span class="ruby-identifier">db</span>)
+  <span class="ruby-identifier">dbpwd</span> = <span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">decrypt</span>(<span class="ruby-identifier">db</span>[<span class="ruby-string">&#39;pass&#39;</span>])
+  <span class="ruby-comment"># DEPRECATION WARNING: Remote option will go away in favor of H2</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">db</span>[<span class="ruby-string">&#39;type&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;remote&quot;</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;class/h2.jar&#39;</span>          <span class="ruby-comment"># This loads the entire DB engine from jar</span>
+      <span class="ruby-constant">Java</span><span class="ruby-operator">::</span><span class="ruby-identifier">org</span>.<span class="ruby-identifier">h2</span>.<span class="ruby-constant">Driver</span>             <span class="ruby-comment"># This loads the native JDBC driver</span>
+      <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-node">&quot;#{db[&#39;driver&#39;]}:tcp://#{db[&#39;host&#39;]}/#{db[&#39;name&#39;]}&quot;</span>, <span class="ruby-value">:user</span><span class="ruby-operator">=&gt;</span> <span class="ruby-node">&quot;#{db[&#39;user&#39;]}&quot;</span>, <span class="ruby-value">:password</span><span class="ruby-operator">=&gt;</span> <span class="ruby-node">&quot;#{dbpwd}&quot;</span>)
+    <span class="ruby-comment"># TODO: Try to enhance this rescue as it doesn&#39;t seem to respond to JDBC driver errors.</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span>, <span class="ruby-constant">NativeException</span>, <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">DatabaseConnectionError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;ERROR: Unable to connect to remote database. (#{e})&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">db</span>[<span class="ruby-string">&#39;type&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;embedded&quot;</span>
+    <span class="ruby-comment"># -&gt; Try to load Java support</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;java&#39;</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;FATAL: Unable to load JAVA hooks. Missing JRuby &gt;= 9.2.0&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># -&gt; Try to load H2 Database from JAR.</span>
+    <span class="ruby-comment"># (instead of using the GEM for jdbc-h2 which tends to be outdated)</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;class/h2.jar&#39;</span>          <span class="ruby-comment"># This loads the entire DB engine from jar</span>
+      <span class="ruby-constant">Java</span><span class="ruby-operator">::</span><span class="ruby-identifier">org</span>.<span class="ruby-identifier">h2</span>.<span class="ruby-constant">Driver</span>             <span class="ruby-comment"># This loads the native JDBC driver</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;ERROR: unable to load embedded database engine.&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># -&gt; Try to connect to H2 Database from Sequel.</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-string">&quot;jdbc:h2:tcp://localhost/opentg&quot;</span>, <span class="ruby-value">:user</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-node">&quot;#{db[&#39;user&#39;]}&quot;</span>, <span class="ruby-value">:password</span><span class="ruby-operator">=&gt;</span><span class="ruby-identifier">dbpwd</span>)
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Sequel</span><span class="ruby-operator">::</span><span class="ruby-constant">DatabaseConnectionError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;ERROR: Unable to connect to embedded database. (#{e})&quot;</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Java</span><span class="ruby-operator">::</span><span class="ruby-constant">NativeException</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;ERROR: Unable to connect to embedded database. (#{e})&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;FATAL: Database type has been improperly set or is missing.&quot;</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-value">100</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-initdb" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">initdb</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h1 id="method-c-initdb-label-3E+Initialize+the+database+-28reserved-29">&gt; Initialize the database (reserved)<span><a href="#method-c-initdb-label-3E+Initialize+the+database+-28reserved-29">&para;</a> <a href="#top">&uarr;</a></span></h1>
+          
+          
+
+          
+          <div class="method-source-code" id="initdb-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tgdatabase.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Tgdatabase</span>.<span class="ruby-identifier ruby-title">initdb</span>
+  <span class="ruby-comment"># THIS IS PROBABLY NOT NEEDED AS THIS IS HANDLED VIA Sequel::Model - BUT RESERVE THE NAME</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

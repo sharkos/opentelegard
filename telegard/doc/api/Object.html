@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Object - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">BasicObject
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-cryptpassword">#cryptpassword</a>
+    
+    <li ><a href="#method-i-getoptions">#getoptions</a>
+    
+    <li ><a href="#method-i-getpwentry">#getpwentry</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Object">
+  <h1 id="class-Object" class="class">
+    class Object
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="ANSICOLORS">ANSICOLORS
+        
+        <dd><p>Defines the full list of ANSI codes as a Hash for use elsewhere</p>
+        
+      
+        <dt id="ANSI_BLACK">ANSI_BLACK
+        
+        <dd><p>-&gt; BASE COLORS</p>
+        
+      
+        <dt id="ANSI_BLINK">ANSI_BLINK
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BLUE">ANSI_BLUE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BOLD">ANSI_BOLD
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_BLUE">ANSI_BRIGHT_BLUE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_CYAN">ANSI_BRIGHT_CYAN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_GREEN">ANSI_BRIGHT_GREEN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_MAGENTA">ANSI_BRIGHT_MAGENTA
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_RED">ANSI_BRIGHT_RED
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_WHITE">ANSI_BRIGHT_WHITE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_BRIGHT_YELLOW">ANSI_BRIGHT_YELLOW
+        
+        <dd>
+        
+      
+        <dt id="ANSI_CONCEALED">ANSI_CONCEALED
+        
+        <dd>
+        
+      
+        <dt id="ANSI_CYAN">ANSI_CYAN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_DARK">ANSI_DARK
+        
+        <dd>
+        
+      
+        <dt id="ANSI_DARK_GRAY">ANSI_DARK_GRAY
+        
+        <dd><p>-&gt; BRIGHTENED BASE COLORS</p>
+        
+      
+        <dt id="ANSI_GRAY">ANSI_GRAY
+        
+        <dd>
+        
+      
+        <dt id="ANSI_GREEN">ANSI_GREEN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ITALIC">ANSI_ITALIC
+        
+        <dd>
+        
+      
+        <dt id="ANSI_MAGENTA">ANSI_MAGENTA
+        
+        <dd>
+        
+      
+        <dt id="ANSI_NEGATIVE">ANSI_NEGATIVE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_BLACK">ANSI_ON_BLACK
+        
+        <dd><p>-&gt; BACKGROUND COLORS</p>
+        
+      
+        <dt id="ANSI_ON_BLUE">ANSI_ON_BLUE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_CYAN">ANSI_ON_CYAN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_GREEN">ANSI_ON_GREEN
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_MAGENTA">ANSI_ON_MAGENTA
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_RED">ANSI_ON_RED
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_WHITE">ANSI_ON_WHITE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_ON_YELLOW">ANSI_ON_YELLOW
+        
+        <dd>
+        
+      
+        <dt id="ANSI_RAPID">ANSI_RAPID
+        
+        <dd>
+        
+      
+        <dt id="ANSI_RED">ANSI_RED
+        
+        <dd>
+        
+      
+        <dt id="ANSI_RESET">ANSI_RESET
+        
+        <dd><p>ANSI COLORS DEFINITIONS (not Term::ANSIColor)</p>
+        
+      
+        <dt id="ANSI_STRIKE">ANSI_STRIKE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_UNDERLINE">ANSI_UNDERLINE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_WHITE">ANSI_WHITE
+        
+        <dd>
+        
+      
+        <dt id="ANSI_YELLOW">ANSI_YELLOW
+        
+        <dd>
+        
+      
+        <dt id="TELEGARD_VERSION">TELEGARD_VERSION
+        
+        <dd><p>Version Information</p>
+        
+      
+        <dt id="TPL_DEFAULT">TPL_DEFAULT
+        
+        <dd><p>Fallback theme if user-defined does not exist</p>
+        
+      
+        <dt id="TPL_DIR">TPL_DIR
+        
+        <dd><p>Template Directory for FreeMarker templates</p>
+        
+      
+        <dt id="VERSION_IS_STABLE">VERSION_IS_STABLE
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-cryptpassword" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cryptpassword</span><span
+            class="method-args">(mode, cleartxt)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Encrypt Password with BCrypt</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cryptpassword-source">
+            <pre><span class="ruby-comment"># File bbs/pwgen.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cryptpassword</span>(<span class="ruby-identifier">mode</span>, <span class="ruby-identifier">cleartxt</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">mode</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;user&#39;</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">UserPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">cryptpassword</span>(<span class="ruby-identifier">cleartxt</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;config&#39;</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">encrypt</span>(<span class="ruby-identifier">cleartxt</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-getoptions" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">getoptions</span><span
+            class="method-args">(args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="getoptions-source">
+            <pre><span class="ruby-comment"># File bbs/pwgen.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">getoptions</span>(<span class="ruby-identifier">args</span>)
+
+        <span class="ruby-identifier">options</span> = {}
+
+        <span class="ruby-identifier">opts</span> = <span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opts</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">banner</span> = <span class="ruby-string">&quot;OpenTelegard/2 :: Copyright (c) 2008-2010, Chris Tusa.\nDistributed by LeafScale Systems, All rights reserved.\n
+The password generator takes cleartext password input
+and returns a hashed output for use within Telegard.\nusage:\n&quot;</span>
+        <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&quot;&quot;</span>
+
+        <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;-c&quot;</span>, <span class="ruby-string">&quot;--config&quot;</span>, <span class="ruby-string">&quot;Format used by configuration files.&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">options</span>[<span class="ruby-value">:config</span>] = <span class="ruby-identifier">g</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;-u&quot;</span>, <span class="ruby-string">&quot;--userdb&quot;</span>, <span class="ruby-string">&quot;Format used by database table &#39;users&#39;.&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">options</span>[<span class="ruby-value">:userdb</span>] = <span class="ruby-identifier">l</span>
+    <span class="ruby-keyword">end</span>
+   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on_tail</span>(<span class="ruby-string">&quot;-h&quot;</span>, <span class="ruby-string">&quot;--help&quot;</span>, <span class="ruby-string">&quot;Show this help message.&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span>
+         <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>; <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
+        <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>  <span class="ruby-comment"># end opts do</span>
+
+  <span class="ruby-keyword">begin</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">parse!</span>
+   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">OptionParser</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidOption</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">invalidcmd</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Invalid command options specified: #{invalidcmd}&quot;</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword">rescue</span> <span class="ruby-constant">OptionParser</span><span class="ruby-operator">::</span><span class="ruby-constant">ParseError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">error</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-identifier">error</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment"># end begin</span>
+
+    <span class="ruby-comment"># DEFAULT BEHAVIOR</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>
+        <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-getpwentry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">getpwentry</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get the password text</p>
+          
+          
+
+          
+          <div class="method-source-code" id="getpwentry-source">
+            <pre><span class="ruby-comment"># File bbs/pwgen.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">getpwentry</span>
+  <span class="ruby-identifier">tr</span> = <span class="ruby-constant">JLine</span><span class="ruby-operator">::</span><span class="ruby-constant">ConsoleReader</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">echochar</span> = <span class="ruby-constant">JavaLang</span><span class="ruby-operator">::</span><span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;%&quot;</span>).<span class="ruby-identifier">charAt</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-comment">#tr.setEchoCharacter(echochar)</span>
+  <span class="ruby-identifier">match</span> = <span class="ruby-keyword">false</span>
+
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">match</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">pw1</span> = <span class="ruby-identifier">tr</span>.<span class="ruby-identifier">readLine</span>(<span class="ruby-string">&quot;Password: &quot;</span>, <span class="ruby-identifier">echochar</span>)
+    <span class="ruby-identifier">pw2</span> = <span class="ruby-identifier">tr</span>.<span class="ruby-identifier">readLine</span>(<span class="ruby-string">&quot;Confirm : &quot;</span>, <span class="ruby-identifier">echochar</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pw1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pw2</span>
+      <span class="ruby-identifier">match</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;\nEncrypted version:\n&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;\nERROR: Passwords did not match! Please try again.\n\n&quot;</span>
+      <span class="ruby-identifier">pw1</span> = <span class="ruby-keyword">nil</span>
+      <span class="ruby-identifier">pw2</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">pw2</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

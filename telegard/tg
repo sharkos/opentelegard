@@ -1,28 +1,48 @@
 #!/bin/bash
 #
+#=============================================================================
+#                 OpenTG (Telegard/2)  http://www.opentg.org                    
+#=============================================================================
+#
+#See "LICENSE" file for distribution and copyright information. 
+# 
+#---[ File Info ]-------------------------------------------------------------
+#
+# Source File: /tg
+#     Version: 1.00
+#   Author(s): Chris Tusa <chris.tusa@opentg.org>
+# Description: BASH Shell script. Wrapper to setup the environment and run
+#              the software.
+#
 # Short bash script for running fully bundled release
 # which includes the required JVM and JRuby component
 # Set TELEGARD_HOME to the installation prefix.
+#
+#-----------------------------------------------------------------------------
+#
  
 TELEGARD_HOME=/opt/telegard
 
+# The default is to use JAVA installed from the OS vendor package system.
+
+# Uncomment to use a JRE unpacked into contrib.
+#JAVA_HOME=$TELEGARD_HOME/contrib/jdk
+
+# The next line will print the Java version for verification.
+#$JAVA_HOME/bin/java -version
 
 ##### DO NOT CHANGE BELOW THIS LINE #####
 #
 
-# Uncomment to use Sun Java in contrib.
-#JAVA_HOME=$TELEGARD_HOME/contrib/jdk
-#$JAVA_HOME/bin/java -version
 
 # JRuby
 JRUBY_HOME=$TELEGARD_HOME/contrib/jruby
 
-java -version
+#java -version
 cd $TELEGARD_HOME/bbs
 
 trap "echo false" SIGSTOP
 $JRUBY_HOME/bin/jruby -W0 -I bbs/lib tg.rb $*
-#$JRUBY_HOME/bin/jirb
 
 #
 #########################################

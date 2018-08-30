@@ -1,2 +1,19 @@
 #!/bin/bash
+#
+#=============================================================================
+#                 OpenTG (Telegard/2)  http://www.opentg.org                    
+#=============================================================================
+#
+#See "LICENSE" file for distribution and copyright information. 
+# 
+#---[ File Info ]-------------------------------------------------------------
+#
+# Source File: /tgshell
+#     Version: 1.00
+#   Author(s): Chris Tusa <chris.tusa@opentg.org>
+# Description: BASH Shell script to run the login. Could be used as a login
+#              shell for a user.
+#
+#-----------------------------------------------------------------------------
+#
 exec /opt/telegard/tg -l

@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Tglogin::Signup - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-askaddress1">::askaddress1</a>
+    
+    <li ><a href="#method-c-askaddress2">::askaddress2</a>
+    
+    <li ><a href="#method-c-askbday">::askbday</a>
+    
+    <li ><a href="#method-c-askcity">::askcity</a>
+    
+    <li ><a href="#method-c-askcountry">::askcountry</a>
+    
+    <li ><a href="#method-c-askcustom">::askcustom</a>
+    
+    <li ><a href="#method-c-askemail">::askemail</a>
+    
+    <li ><a href="#method-c-askfirstname">::askfirstname</a>
+    
+    <li ><a href="#method-c-askgender">::askgender</a>
+    
+    <li ><a href="#method-c-asklastname">::asklastname</a>
+    
+    <li ><a href="#method-c-asklogin">::asklogin</a>
+    
+    <li ><a href="#method-c-askpassword">::askpassword</a>
+    
+    <li ><a href="#method-c-askphone">::askphone</a>
+    
+    <li ><a href="#method-c-askpostal">::askpostal</a>
+    
+    <li ><a href="#method-c-askpwhint_answer">::askpwhint_answer</a>
+    
+    <li ><a href="#method-c-askpwhint_question">::askpwhint_question</a>
+    
+    <li ><a href="#method-c-askstate">::askstate</a>
+    
+    <li ><a href="#method-c-confirm">::confirm</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Tglogin::Signup">
+  <h1 id="module-Tglogin::Signup" class="module">
+    module Tglogin::Signup
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-askaddress1" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askaddress1</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their address line 1</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askaddress1-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askaddress1</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_address&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">address1</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askaddress1.ftl&#39;</span>, <span class="ruby-value">40</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">address1</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">address1</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">3</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">address1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askaddress2" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askaddress2</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their address line 2</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askaddress2-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 113</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askaddress2</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_address&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">address2</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askaddress2.ftl&#39;</span>, <span class="ruby-value">40</span>)          
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">address2</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">address2</span>.<span class="ruby-identifier">is_spaced_alphanumeric?</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">address2</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askbday" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askbday</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their bday YYYY/MM/DD</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askbday-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askbday</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_bday&#39;</span>]    <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_askbday.ftl&#39;</span>)
+    <span class="ruby-identifier">bday</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Dates</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputdate</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">bday</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askcity" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askcity</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their city</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askcity-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 129</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askcity</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">city</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askcity.ftl&#39;</span>, <span class="ruby-value">30</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">city</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">city</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">3</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">city</span>.<span class="ruby-identifier">is_spaced_alpha?</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">city</span>.<span class="ruby-identifier">capitalize</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askcountry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askcountry</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their country</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askcountry-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askcountry</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_country&#39;</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">country</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askcountry.ftl&#39;</span>, <span class="ruby-value">5</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">country</span>.<span class="ruby-identifier">is_blank?</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">country</span>.<span class="ruby-identifier">is_alpha?</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">country</span>.<span class="ruby-identifier">upcase</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askcustom" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askcustom</span><span
+            class="method-args">(num=1,val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user a operator designated question</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askcustom-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 291</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askcustom</span>(<span class="ruby-identifier">num</span>=<span class="ruby-value">1</span>,<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">num</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">q</span> = {<span class="ruby-string">&#39;question&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;custom1&#39;</span>]}
+    <span class="ruby-keyword">when</span> <span class="ruby-value">2</span>
+      <span class="ruby-identifier">q</span> = {<span class="ruby-string">&#39;question&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;custom2&#39;</span>]}
+    <span class="ruby-keyword">when</span> <span class="ruby-value">3</span>
+      <span class="ruby-identifier">q</span> = {<span class="ruby-string">&#39;question&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;custom3&#39;</span>]}
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_askcustom.ftl&#39;</span>, <span class="ruby-identifier">q</span>)
+    <span class="ruby-identifier">custom</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputform</span>(<span class="ruby-value">75</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">custom</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">custom</span>.<span class="ruby-identifier">is_blank?</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">custom</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askemail" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askemail</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their email address</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askemail-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askemail</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">email</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askemail.ftl&#39;</span>, <span class="ruby-value">60</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">email</span>.<span class="ruby-identifier">is_blank?</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">email</span>.<span class="ruby-identifier">is_email?</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">email</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askfirstname" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askfirstname</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their first name.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askfirstname-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askfirstname</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">firstname</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askfirstname.ftl&#39;</span>, <span class="ruby-value">25</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">firstname</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">firstname</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">3</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">firstname</span>.<span class="ruby-identifier">is_alpha?</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">firstname</span>.<span class="ruby-identifier">capitalize</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askgender" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askgender</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their gender</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askgender-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 201</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askgender</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_gender&#39;</span>]  <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">gender</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputgender</span>(<span class="ruby-string">&#39;signup_askgender.ftl&#39;</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">gender</span>.<span class="ruby-identifier">nil?</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">gender</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-asklastname" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">asklastname</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their last name.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="asklastname-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">asklastname</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">lastname</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_asklastname.ftl&#39;</span>, <span class="ruby-value">25</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">lastname</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">lastname</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">2</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">lastname</span>.<span class="ruby-identifier">is_alpha?</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">lastname</span>.<span class="ruby-identifier">capitalize</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-asklogin" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">asklogin</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their login name or Alias.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="asklogin-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">asklogin</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_asklogin.ftl&#39;</span>)
+    <span class="ruby-identifier">login</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">loginform</span>
+      <span class="ruby-comment"># login = Tgio::question(&#39;signup_asklogin.ftl&#39;, 16)</span>
+    <span class="ruby-comment"># Validate Login Name</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">4</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">User</span>[<span class="ruby-value">:login</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">upcase</span>].<span class="ruby-identifier">nil?</span>            
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">is_alphanumeric?</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+        <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_login_taken.ftl&#39;</span>)
+        <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n\n&quot;</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+      <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_login_invalid.ftl&#39;</span>)
+      <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n\n&quot;</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/unless</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">login</span>.<span class="ruby-identifier">upcase</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askpassword" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askpassword</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their password.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askpassword-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askpassword</span>
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">pwentry1</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">pwentry2</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">entry1</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">entry2</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">password</span> = <span class="ruby-keyword">nil</span>
+
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">pwentry1</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_askpassword.ftl&#39;</span>)
+      <span class="ruby-identifier">entry1</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">passwordform</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">entry1</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">entry1</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">6</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-identifier">pwentry1</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until entry1</span>
+
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">pwentry2</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_confirmpassword.ftl&#39;</span>)
+      <span class="ruby-identifier">entry2</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">passwordform</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">entry2</span>.<span class="ruby-identifier">is_blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">entry2</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">6</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-identifier">pwentry2</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until entry1</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">entry2</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">password</span> = <span class="ruby-identifier">entry1</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_passwordmismatch.ftl&#39;</span>)
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until complete</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">password</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askphone" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askphone</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their phone</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askphone-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askphone</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_phone&#39;</span>]   <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">phone</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askphone.ftl&#39;</span>, <span class="ruby-value">18</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">phone</span>.<span class="ruby-identifier">is_blank?</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">phone</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askpostal" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askpostal</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their postalcode</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askpostal-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askpostal</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;ask_postal&#39;</span>]  <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">postal</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askpostal.ftl&#39;</span>, <span class="ruby-value">10</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">postal</span>.<span class="ruby-identifier">is_blank?</span>
+        <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">postal</span>.<span class="ruby-identifier">is_alphanumeric?</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">postal</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askpwhint_answer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askpwhint_answer</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their pw hint answer</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askpwhint_answer-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 279</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askpwhint_answer</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">pwhinta</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askpwhint_answer.ftl&#39;</span>, <span class="ruby-value">75</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pwhinta</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">pwhinta</span>.<span class="ruby-identifier">is_blank?</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">pwhinta</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askpwhint_question" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askpwhint_question</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their pw hint question</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askpwhint_question-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 267</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askpwhint_question</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">pwhintq</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askpwhint_question.ftl&#39;</span>, <span class="ruby-value">75</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pwhintq</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">pwhintq</span>.<span class="ruby-identifier">is_blank?</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">pwhintq</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-askstate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">askstate</span><span
+            class="method-args">(val=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asks user for their state</p>
+          
+          
+
+          
+          <div class="method-source-code" id="askstate-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">askstate</span>(<span class="ruby-identifier">val</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">complete</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">state</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-identifier">question</span>(<span class="ruby-string">&#39;signup_askstate.ftl&#39;</span>, <span class="ruby-value">5</span>)
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">is_blank?</span>  <span class="ruby-operator">||</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">minlength?</span>(<span class="ruby-value">2</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">is_alpha?</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/if</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">state</span>.<span class="ruby-identifier">upcase</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-confirm" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">confirm</span><span
+            class="method-args">(signupdata)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Displays a confirmation screen and allows the caller to change their
+account settings before creating the account</p>
+          
+          
+
+          
+          <div class="method-source-code" id="confirm-source">
+            <pre><span class="ruby-comment"># File bbs/lib/tglogin/signup.rb, line 314</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">Signup</span><span class="ruby-operator">::</span><span class="ruby-identifier ruby-title">confirm</span>(<span class="ruby-identifier">signupdata</span>)
+  <span class="ruby-identifier">dosave</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-comment">#Tgtemplate::display(&#39;signup_confirmdata.ftl&#39;, signupdata)</span>
+  <span class="ruby-identifier">validkeys</span>=[<span class="ruby-string">&#39;A&#39;</span>,<span class="ruby-string">&#39;B&#39;</span>,<span class="ruby-string">&#39;C&#39;</span>,<span class="ruby-string">&#39;D&#39;</span>,<span class="ruby-string">&#39;E&#39;</span>,<span class="ruby-string">&#39;F&#39;</span>,<span class="ruby-string">&#39;G&#39;</span>,<span class="ruby-string">&#39;L&#39;</span>,<span class="ruby-string">&#39;P&#39;</span>,<span class="ruby-string">&#39;Q&#39;</span>,<span class="ruby-string">&#39;R&#39;</span>,<span class="ruby-string">&#39;S&#39;</span>,<span class="ruby-string">&#39;U&#39;</span>,<span class="ruby-string">&#39;Y&#39;</span>,<span class="ruby-string">&#39;Z&#39;</span>,<span class="ruby-string">&#39;1&#39;</span>,<span class="ruby-string">&#39;2&#39;</span>,<span class="ruby-string">&#39;3&#39;</span>,<span class="ruby-string">&#39;X&#39;</span>]
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">dosave</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">menuprompt</span>(<span class="ruby-string">&#39;signup_confirmdata.ftl&#39;</span>,<span class="ruby-identifier">validkeys</span>,<span class="ruby-identifier">signupdata</span>)
+    <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;A&#39;</span> <span class="ruby-comment"># Hint Answer</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;pwhint_answer&#39;</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">askpwhint_answer</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;B&#39;</span> <span class="ruby-comment"># Birthdate</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;bday&#39;</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">askbday</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;C&#39;</span> <span class="ruby-comment"># City</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;city&#39;</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">askcity</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;E&#39;</span> <span class="ruby-comment"># Email</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;email&#39;</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">askemail</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;F&#39;</span> <span class="ruby-comment"># First Name</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;firstname&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askfirstname</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;G&#39;</span> <span class="ruby-comment"># Gender</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;gender&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askgender</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;L&#39;</span> <span class="ruby-comment"># Last Name</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;firstname&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">asklastname</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;P&#39;</span> <span class="ruby-comment"># Password</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;password&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askpassword</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;Q&#39;</span> <span class="ruby-comment"># Hint Question</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;pwhint_question&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askpwhint_question</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;S&#39;</span> <span class="ruby-comment"># State</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;state&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askstate</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;U&#39;</span> <span class="ruby-comment"># Login Alias</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;login&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">asklogin</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;Y&#39;</span> <span class="ruby-comment"># Country</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;country&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askcountry</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;D&#39;</span> <span class="ruby-comment"># Address Line 1 &amp; 2</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;address1&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askaddress1</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;address2&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askaddress2</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;Z&#39;</span> <span class="ruby-comment"># Zipcode/Postal</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;postal&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askpostal</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;1&#39;</span> <span class="ruby-comment"># Custom Question 1</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom1&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askcustom</span>(<span class="ruby-value">1</span>)
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;2&#39;</span> <span class="ruby-comment"># Custom Question 2</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom2&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askcustom</span>(<span class="ruby-value">2</span>)
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;3&#39;</span> <span class="ruby-comment"># Custom Question 3</span>
+        <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom3&#39;</span>]=<span class="ruby-keyword">self</span>.<span class="ruby-identifier">askcustom</span>(<span class="ruby-value">3</span>)
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;X&#39;</span> <span class="ruby-comment"># Exit &amp; Save</span>
+        <span class="ruby-identifier">dosave</span> = <span class="ruby-keyword">true</span>
+        <span class="ruby-identifier">gid</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:name</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;signup&#39;</span>][<span class="ruby-string">&#39;default_group&#39;</span>].<span class="ruby-identifier">upcase</span>).<span class="ruby-identifier">id</span>
+        <span class="ruby-constant">User</span>.<span class="ruby-identifier">create</span>(
+          <span class="ruby-value">:login</span>            <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;login&#39;</span>],
+          <span class="ruby-value">:firstname</span>        <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;firstname&#39;</span>],
+          <span class="ruby-value">:lastname</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;lastname&#39;</span>],
+          <span class="ruby-value">:password</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">cryptpassword</span>(<span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;password&#39;</span>]),
+          <span class="ruby-value">:address1</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;address1&#39;</span>],
+          <span class="ruby-value">:address2</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;address2&#39;</span>],
+          <span class="ruby-value">:city</span>             <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;city&#39;</span>],
+          <span class="ruby-value">:state</span>            <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;state&#39;</span>],
+          <span class="ruby-value">:postal</span>           <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;postal&#39;</span>],
+          <span class="ruby-value">:country</span>          <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;country&#39;</span>],
+          <span class="ruby-value">:phone</span>            <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;phone&#39;</span>],
+          <span class="ruby-value">:gender</span>           <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;gender&#39;</span>],
+          <span class="ruby-value">:email</span>            <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;email&#39;</span>],
+          <span class="ruby-value">:custom1</span>          <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom1&#39;</span>],
+          <span class="ruby-value">:custom2</span>          <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom1&#39;</span>],
+          <span class="ruby-value">:custom3</span>          <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;custom1&#39;</span>],
+          <span class="ruby-value">:sysopnote</span>        <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">nil</span>,
+          <span class="ruby-value">:pwhint_question</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;pwhint_question&#39;</span>],
+          <span class="ruby-value">:pwhint_answer</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;pwhint_answer&#39;</span>],
+          <span class="ruby-value">:bday</span>             <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">signupdata</span>[<span class="ruby-string">&#39;bday&#39;</span>],
+          <span class="ruby-value">:pwexpires</span>        <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span><span class="ruby-value">+90</span>.<span class="ruby-identifier">days</span>,
+          <span class="ruby-value">:group_id</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">gid</span>,
+          <span class="ruby-value">:timebank</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>,
+          <span class="ruby-value">:total_files_up</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>,
+          <span class="ruby-value">:total_files_down</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>,
+          <span class="ruby-value">:total_messages</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>,
+          <span class="ruby-value">:login_failures</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>,
+          <span class="ruby-value">:login_total</span>      <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>,
+          <span class="ruby-value">:login_last</span>       <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>,
+          <span class="ruby-value">:pref_fastlogin</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
+          <span class="ruby-value">:pref_term_height</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-value">24</span>,
+          <span class="ruby-value">:pref_term_width</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-value">80</span>,
+          <span class="ruby-value">:pref_term_pager</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+          <span class="ruby-value">:pref_term_color</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+          <span class="ruby-value">:pref_show_menus</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>,
+          <span class="ruby-value">:pref_editor</span>      <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&#39;nano&#39;</span>,
+          <span class="ruby-value">:created</span>          <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+        ) <span class="ruby-comment"># /User.create</span>
+      <span class="ruby-comment"># TODO: Catch/throw for Sequel create errors</span>
+      <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;signup_saved.ftl&#39;</span>)
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/case</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-comment"># Create Account</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

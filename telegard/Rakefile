@@ -1,16 +1,30 @@
-#
-# OpenTelegard Rakefile
-#
+=begin
 
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
 
+See "LICENSE" file for distribution and copyright information. 
+ 
+---[ File Info ]-------------------------------------------------------------
+
+ Source File: Rakefile
+     Version: 1.00
+   Author(s): Chris Tusa <chris.tusa@opentg.org>
+ Description: Distributon Rake file used to generate various tasks
+
+-----------------------------------------------------------------------------
+
+=end
+require 'rake'
 require 'rdoc/task'
 $LOAD_PATH.unshift('./bbs')
 require 'lib/tgconstants'
 require 'lib/tgio'
     
   task :default do
-  desc "Telegard - rake help"
-  puts "Telegard uses ruby's rake facility to automate specific tasks."
+  desc "OpenTG - rake help"
+  puts "OpenTG uses ruby's rake facility to automate specific tasks."
   puts "usage:  rake [ns:task]\n"
   puts "Documentation"
   puts "  doc:rdoc          - Build the API documentation"
@@ -20,6 +34,9 @@ require 'lib/tgio'
   puts "  db:viewconf       - View database configuration"
   puts "  db:testconnect    - Test connection to database"
   puts "\n"
+  puts "Installation"
+  puts "  install:backup    - Take a backup of /opt/telegard"
+  puts "  install:hg        - Install the software from repo checkout"
   end
 
 #==============================================================================
@@ -33,9 +50,8 @@ namespace :doc do
                  'bbs/**/*.rb', 'doc/**/*.rdoc']
         rdoc.rdoc_files.add(files)
         rdoc.main = 'README'
-        rdoc.title = 'OpenTelegard/2 API rdocs'
-        rdoc.template = '/opt/telegard/contrib/jruby/lib/ruby/gems/shared/gems/allison-2.0.3/lib/allison'
-        rdoc.rdoc_dir = 'doc/api'        
+        rdoc.title = 'OpenTG API rdocs'
+        rdoc.rdoc_dir = 'doc/api'
         rdoc.options = [ '--line-numbers' ]
   end
 end
@@ -107,4 +123,31 @@ namespace :db do
   end
   
 end
+
+#==============================================================================
+# Installation Namespace
+#==============================================================================
+
+namespace :install do
+  desc "Take a backup of the current installation"
+  task :backup do
+    backupdir = '/opt/telegard_backups'
+    timestamp = Time.now.to_i
+    mkdir_p backupdir
+    sh "tar -cvf #{backupdir}/#{timestamp}.tar /opt/telegard"
+#    sourcefiles = Rake::FileList.new("/opt/telegard/**/**")
+#    sourcefiles.exclude("/opt/telegard/rake_backups")
+#    sourcefiles.each do |srcfile|
+#      #puts file.inspect
+#      tgtfile = srcfile.sub("/opt/telegard", "/opt/telegard/rake_backups")
+#      cp srcfile, tgtfile, :verbose => true
+#    end
+  end  
+  
+  desc "Install the distribution from developer checkout"
+  task :hg do
+    sh "cp -av * /opt/telegard"
+  end
+end
+
 #==============================================================================

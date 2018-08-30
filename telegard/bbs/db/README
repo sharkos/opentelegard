@@ -1,3 +1,8 @@
+
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
+
 ******************* WARNING *******************
 
 The files contained in this directory house the 
@@ -14,8 +19,8 @@ distribution.  You may  also  safely copy these
 files to  another location provided the  OpenTG 
 software is not running  or using the database.
 
-The  OpenTelegard/2 Project  is not responsible
-for any data loss what-so-ever! Please read the
-LicenseAgreement that accompanied this software
+The  OpenTG Project  is not responsible for any
+data loss what-so-ever! Please read the LICENSE
+file  that accompanies this software.
 
 ***********************************************

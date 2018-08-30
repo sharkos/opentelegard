@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class BBSlistController - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Tgcontroller.html">Tgcontroller</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-add">#add</a>
+    
+    <li ><a href="#method-i-menu">#menu</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-BBSlistController">
+  <h1 id="class-BBSlistController" class="class">
+    class BBSlistController
+  </h1>
+
+  <section class="description">
+    
+<p>Help Controller Class</p>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-add" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Adds an entry to the local bbs list.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add-source">
+            <pre><span class="ruby-comment"># File bbs/lib/controllers/bbslist.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add</span>
+   <span class="ruby-identifier">listdata</span> = { <span class="ruby-string">&#39;bbsname&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">askbbsname</span>,
+                <span class="ruby-string">&#39;description&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">askdescription</span>,
+                <span class="ruby-string">&#39;sysopname&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">asksysopname</span>,
+                <span class="ruby-string">&#39;bbsurl&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">askbbsurl</span>,
+                <span class="ruby-string">&#39;homepage&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">askhomepage</span> }
+   <span class="ruby-identifier">done</span> = <span class="ruby-keyword">false</span>
+   <span class="ruby-identifier">validkeys</span>=[<span class="ruby-string">&#39;B&#39;</span>,<span class="ruby-string">&#39;D&#39;</span>,<span class="ruby-string">&#39;H&#39;</span>,<span class="ruby-string">&#39;S&#39;</span>,<span class="ruby-string">&#39;U&#39;</span>,<span class="ruby-string">&#39;X&#39;</span>,<span class="ruby-string">&#39;.&#39;</span>]
+   <span class="ruby-keyword">until</span> <span class="ruby-identifier">done</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+     <span class="ruby-identifier">key</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">menuprompt</span>(<span class="ruby-string">&#39;bbslist_confirmadd.ftl&#39;</span>,<span class="ruby-identifier">validkeys</span>, <span class="ruby-identifier">listdata</span>) <span class="ruby-comment"># nil is for tpl vars hash</span>
+     <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+     <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;B&quot;</span> <span class="ruby-comment"># BBS Name</span>
+         <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;bbsname&#39;</span>] = <span class="ruby-identifier">askbbsname</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;D&quot;</span> <span class="ruby-comment"># Description</span>
+         <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;description&#39;</span>] = <span class="ruby-identifier">askdescription</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;H&quot;</span> <span class="ruby-comment"># Homepage</span>
+         <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;homepage&#39;</span>] = <span class="ruby-identifier">askhomepage</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;S&quot;</span> <span class="ruby-comment"># Sysop Name</span>
+         <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;sysopname&#39;</span>] = <span class="ruby-identifier">asksysopname</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;U&quot;</span> <span class="ruby-comment"># URL</span>
+         <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;bbsurl&#39;</span>] = <span class="ruby-identifier">askbbsurl</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;.&quot;</span> <span class="ruby-comment"># Quit NO SAVE</span>
+         <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
+       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;X&quot;</span> <span class="ruby-comment"># Quit + SAVE</span>
+         <span class="ruby-constant">Tgbbslist</span>.<span class="ruby-identifier">create</span>(
+                 <span class="ruby-value">:bbsname</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;bbsname&#39;</span>],
+                 <span class="ruby-value">:description</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;description&#39;</span>],
+                 <span class="ruby-value">:sysopname</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;sysopname&#39;</span>],
+                 <span class="ruby-value">:bbsurl</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;bbsurl&#39;</span>],
+                 <span class="ruby-value">:homepage</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">listdata</span>[<span class="ruby-string">&#39;homepage&#39;</span>],
+                 <span class="ruby-value">:submitted_by</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$session</span>.<span class="ruby-identifier">username</span>,
+                 <span class="ruby-value">:created</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> 
+                 )
+         <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
+
+     <span class="ruby-keyword">end</span>
+   <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-menu" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">menu</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="menu-source">
+            <pre><span class="ruby-comment"># File bbs/lib/controllers/bbslist.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">menu</span>
+  <span class="ruby-identifier">done</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">validkeys</span>=[<span class="ruby-string">&#39;A&#39;</span>,<span class="ruby-string">&#39;L&#39;</span>,<span class="ruby-string">&#39;N&#39;</span>,<span class="ruby-string">&#39;S&#39;</span>,<span class="ruby-string">&#39;X&#39;</span>]
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">done</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">menuprompt</span>(<span class="ruby-string">&#39;menu_bbslist.ftl&#39;</span>,<span class="ruby-identifier">validkeys</span>, <span class="ruby-keyword">nil</span>) <span class="ruby-comment"># nil is for tpl vars hash</span>
+    <span class="ruby-identifier">test_session</span>
+    <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;A&quot;</span> <span class="ruby-comment"># Add to local directory</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span><span class="ruby-operator">::</span><span class="ruby-identifier">inputyn</span>(<span class="ruby-string">&#39;bbslist_askstart.ftl&#39;</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+          <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;L&quot;</span> <span class="ruby-comment"># List local directory</span>
+        <span class="ruby-identifier">bbslist</span> = <span class="ruby-constant">Tgtemplate</span><span class="ruby-operator">::</span><span class="ruby-constant">Template</span>.<span class="ruby-identifier">parse_dataset</span>(<span class="ruby-identifier">$db</span>[<span class="ruby-value">:bbslist</span>].<span class="ruby-identifier">all</span>)
+        <span class="ruby-constant">Tgtemplate</span>.<span class="ruby-identifier">display</span>(<span class="ruby-string">&#39;bbslist_list_local.ftl&#39;</span>, {<span class="ruby-string">&#39;bbslist&#39;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">bbslist</span>})
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;N&quot;</span> <span class="ruby-comment"># Network Lookup</span>
+        <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">unimplemented</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;S&quot;</span> <span class="ruby-comment"># Search</span>
+        <span class="ruby-constant">Telegard</span>.<span class="ruby-identifier">unimplemented</span>
+
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;X&quot;</span> <span class="ruby-comment"># Return to Main</span>
+        <span class="ruby-identifier">done</span> = <span class="ruby-keyword">true</span>          
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/case</span>
+    <span class="ruby-identifier">test_session</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

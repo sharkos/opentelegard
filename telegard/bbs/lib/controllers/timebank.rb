@@ -1,42 +1,11 @@
 =begin
-               ================================================
-                      OpenTelegard/2 Operating SubSystem
-                  Copyright (C) 2010, LeafScale Systems, LLC
-                            http://www.opentg.org
-               ================================================
 
+===============================================================================
+                 OpenTG (Telegard/2)  http://www.opentg.org                    
+===============================================================================
 
----[ License & Distribution ]------------------------------------------------
-
-Copyright (c) 2010, LeafScale Systems, LLC
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of LeafScale Systems nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-
+See "LICENSE" file for distribution and copyright information. 
+ 
 ---[ File Info ]-------------------------------------------------------------
 
  Source File: /lib/controllers/timebank.rb
@@ -49,24 +18,96 @@ POSSIBILITY OF SUCH DAMAGE.
 
 =begin rdoc
 = TimebankController
-The Timebank controller.
+The Timebank controller manipulates the user's timebank balance. It provides
+a menu for the user to check balance, withdraw, deposit and offer time to 
+other users. 
+
+The Timebank is stored in 'Users'.'timebank' in the database.
+
 =end
 
 class TimebankController < Tgcontroller
 
   def menu
     done = false
-    validkeys=['/G']
+    validkeys=['B','D','O','W','X']
     until done == true
       key = Tgio::Input.menuprompt('menu_timebank.ftl',validkeys, nil) # nil is for tpl vars hash
       print "\n"
       case key
-        when "/G"
-          puts "Goodbye!"
-          done = true
+        when "B" # Show Time Bank Balance
+          self.showbalance
+        when "D" # Deposit
+          self.deposit
+        when "G" # Give time slices to other users
+        when "W" # Withdraw from timebank
+          self.withdraw
+        when "X" # Quit time bank menu
           return 0
       end #/case
     end #/until
   end #/def menu
- 
+
+  # Show balance for the current user 
+  def showbalance
+    curuser = User.where(:id => $session.user_id).first
+    Tgtemplate.display('timebank_balance.ftl', {'balance' => curuser.timebank.to_s})
+  end 
+
+  # User makes a deposit in the bank
+  # TODO: A potential bug exists in 'deposit' and 'withdraw'
+  #   - if a user adds a minus or non-numeric character, it could cheat the bank or cause a crash.
+  #   - fix the question dialog in 'askamount' to input and test only for numbers
+  def deposit
+    # TODO: Check the GROUP limits and enforce
+    maxbalance = $cfg['limits']['timebank_max']
+    curuser = User.where(:id => $session.user_id).first
+    balance = curuser.timebank
+    remain = $session.timeremain
+    amount = self.askamount
+
+    # Verify the amount deposited is available from the current session and will not exceed the system defined limit
+    if (balance + amount > maxbalance)
+      Tgtemplate.display('timebank_limit_exceeded.ftl', {'amount' => amount.to_s, 'maxbalance'=>maxbalance.to_s})
+    elsif (amount > remain )
+      Tgtemplate.display('timebank_insufficent_funds.ftl', {'amount' => amount.to_s, 'remain'=>remain.to_s})
+    else
+      # If ok, then deduct from the session & update the user's timebank balance.
+      $session.timeadjust(-amount)
+      curuser.timebank = (curuser.timebank + amount)
+      Tgtemplate.display('timebank_deposit.ftl', {'amount' => amount.to_s, 'remain'=>$session.timeremain.to_s})
+      curuser.save
+    end
+  end
+
+  # User withdraws from the bank
+  def withdraw
+    curuser = User.where(:id => $session.user_id).first
+    balance = curuser.timebank
+    amount = self.askamount
+    # Verify the user has enough available balance
+    if amount > balance
+      Tgtemplate.display('timebank_insufficent_funds.ftl', {'amount' => amount.to_s, 'remain'=>balance.to_s})
+    else
+      # If ok, then withdraw from the bank balance & update the user's session time remaining.
+      curuser.timebank = (curuser.timebank - amount)
+      $session.timeadjust(+amount)
+      Tgtemplate.display('timebank_withdraw.ftl', {'amount' => amount.to_s, 'remain'=>$session.timeremain.to_s})
+      curuser.save
+    end
+  end
+
+  # Asks user for the amount to be deposit/withdraw/lend
+  # TODO: Fix the input to allow ONLY positive integer values
+  def askamount(val=nil)
+    complete = false
+    until complete == true
+      amount = Tgio::question('timebank_askamount.ftl', 3, 'posint')
+      unless amount.is_blank?
+        complete = true if amount.is_alphanumeric?
+      end #/if
+    end #/until
+    return amount.to_i
+end #/def askpostal
+
 end

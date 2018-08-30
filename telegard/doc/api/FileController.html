@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class FileController - OpenTG API rdocs</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#class-FileController-label-begin+rdoc">begin rdoc</a>
+    <li><a href="#class-FileController-label-FileController">FileController</a>
+    <li><a href="#class-FileController-label-end">end</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Tgcontroller.html">Tgcontroller</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-menu">#menu</a>
+    
+    <li ><a href="#method-i-uninitialize">#uninitialize</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-FileController">
+  <h1 id="class-FileController" class="class">
+    class FileController
+  </h1>
+
+  <section class="description">
+    
+<h1 id="class-FileController-label-begin+rdoc">begin rdoc<span><a href="#class-FileController-label-begin+rdoc">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<h1 id="class-FileController-label-FileController"><a href="FileController.html">FileController</a><span><a href="#class-FileController-label-FileController">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>The File controller.</p>
+
+<h1 id="class-FileController-label-end">end<span><a href="#class-FileController-label-end">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(curarea)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File bbs/lib/controllers/file.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">curarea</span>)
+  <span class="ruby-ivar">@areameta</span> = <span class="ruby-identifier">$db</span>[<span class="ruby-value">:fileareas</span>].<span class="ruby-identifier">where</span>(<span class="ruby-value">:id</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">curarea</span>).<span class="ruby-identifier">first</span>
+  <span class="ruby-comment"># Create instance of Area&#39;s DB</span>
+  <span class="ruby-identifier">dbcfg</span> = <span class="ruby-identifier">$cfg</span>[<span class="ruby-string">&#39;database&#39;</span>]
+  <span class="ruby-ivar">@areadb</span> = <span class="ruby-constant">Sequel</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-node">&quot;jdbc:h2:tcp://localhost/fileareas/#{@areameta[:id]}&quot;</span>, <span class="ruby-value">:user</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">dbcfg</span>[<span class="ruby-string">&#39;user&#39;</span>], <span class="ruby-value">:password</span><span class="ruby-operator">=&gt;</span><span class="ruby-constant">Security</span><span class="ruby-operator">::</span><span class="ruby-constant">ConfigPassword</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">decrypt</span>(<span class="ruby-identifier">dbcfg</span>[<span class="ruby-string">&#39;pass&#39;</span>]))
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@areadb</span>.<span class="ruby-identifier">table_exists?</span>(<span class="ruby-value">:files</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-ivar">@areadb</span>.<span class="ruby-identifier">create_table</span> <span class="ruby-value">:files</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">primary_key</span>  <span class="ruby-value">:id</span>              <span class="ruby-comment"># File ID</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:tgfilearea_id</span>   <span class="ruby-comment"># Area ID</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:owner_id</span>        <span class="ruby-comment"># File Owner (maintainer)</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:uploaded_by</span>     <span class="ruby-comment"># User who submitted file</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:approved_by</span>     <span class="ruby-comment"># User who approved file (if any)</span>
+      <span class="ruby-identifier">boolean</span>      <span class="ruby-value">:enabled</span>         <span class="ruby-comment"># File available for download?</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:filename</span>        <span class="ruby-comment"># Filename</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:name</span>            <span class="ruby-comment"># Friendly Short Name</span>
+      <span class="ruby-identifier">text</span>         <span class="ruby-value">:description</span>     <span class="ruby-comment"># Long description</span>
+      <span class="ruby-identifier">text</span>         <span class="ruby-value">:checksum</span>        <span class="ruby-comment"># Some Checksum Value (MD5/SHA,etc)</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:version</span>         <span class="ruby-comment"># Version of file (optional)</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:vendor</span>          <span class="ruby-comment"># Vendor of the file (optional)</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:license</span>         <span class="ruby-comment"># License file distributed under (optional)</span>
+      <span class="ruby-constant">String</span>       <span class="ruby-value">:url</span>             <span class="ruby-comment"># URL for more information (optional)</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:size</span>            <span class="ruby-comment"># Size of file in bytes on storage</span>
+      <span class="ruby-identifier">integer</span>      <span class="ruby-value">:downloaded</span>      <span class="ruby-comment"># Number of downloads</span>
+      <span class="ruby-constant">TimeStamp</span>    <span class="ruby-value">:mtime</span>           <span class="ruby-comment"># File&#39;s mtime on storage</span>
+      <span class="ruby-constant">TimeStamp</span>    <span class="ruby-value">:created_at</span>      <span class="ruby-comment"># Time file added to DB</span>
+      <span class="ruby-constant">TimeStamp</span>    <span class="ruby-value">:modified_at</span>     <span class="ruby-comment"># Time file modified in DB</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-menu" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">menu</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="menu-source">
+            <pre><span class="ruby-comment"># File bbs/lib/controllers/file.rb, line 63</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">menu</span>
+  <span class="ruby-identifier">done</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">validkeys</span>=[<span class="ruby-string">&#39;/G&#39;</span>]
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">done</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-constant">Tgio</span><span class="ruby-operator">::</span><span class="ruby-constant">Input</span>.<span class="ruby-identifier">menuprompt</span>(<span class="ruby-string">&#39;menu_file.ftl&#39;</span>,<span class="ruby-identifier">validkeys</span>, <span class="ruby-keyword">nil</span>) <span class="ruby-comment"># nil is for tpl vars hash</span>
+    <span class="ruby-identifier">print</span> <span class="ruby-string">&quot;\n&quot;</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">key</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;/G&quot;</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Goodbye!&quot;</span>
+        <span class="ruby-identifier">done</span> = <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#/case</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment">#/until</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-uninitialize" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">uninitialize</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="uninitialize-source">
+            <pre><span class="ruby-comment"># File bbs/lib/controllers/file.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">uninitialize</span>
+  <span class="ruby-comment"># Disconnect and destroy instance</span>
+  <span class="ruby-ivar">@areadb</span>.<span class="ruby-identifier">disconnect</span>
+  <span class="ruby-ivar">@areadb</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
